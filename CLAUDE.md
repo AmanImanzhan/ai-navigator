@@ -9,7 +9,7 @@ After changes, explain what each new file/function does. Keep tasks small.
 
 ## Stack
 - Monorepo with npm workspaces:
-  - apps/mobile — Expo SDK 57 + React Native + TypeScript + Expo Router
+  - apps/mobile — Expo SDK 58 + React Native + TypeScript + Expo Router
   - apps/web — Next.js (later)
   - packages/shared — shared types and theme tokens (later)
 - Backend (later): Supabase (Postgres, Auth with Apple/Google), Next.js API, Vercel AI SDK
@@ -19,7 +19,8 @@ After changes, explain what each new file/function does. Keep tasks small.
 Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on memory.
 
 ## Design system
-- Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-subtle #FBEAE3,
+- Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,
+  on-accent #FFFFFF (text on accent),
   text #2A1E18, text-secondary #6E625B, border #ECE5DC, success #2F7D4A / #E7F3E9,
   warning #9A6A12 / #FDF2DD, track #EFE8E0
 - Font: system font (SF Pro). Sizes: Display 28 bold, Title 22 semibold, Headline 17 semibold,
