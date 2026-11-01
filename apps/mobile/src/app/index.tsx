@@ -1,31 +1,54 @@
-import { Stack } from "expo-router";
+import { router } from "expo-router";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/Button";
+import { ChoiceCard } from "@/components/ChoiceCard";
 import { theme } from "@/theme";
 
-// Временный демо-экран приветствия для проверки темы и кнопок.
-export default function Index() {
+type Language = {
+  code: "en" | "ru" | "es";
+  badge: string;
+  title: string;
+  subtitle?: string;
+};
+
+type LanguageCode = Language["code"];
+
+// Список языков. Сохранение и перевод приложения добавим позже через i18n.
+const LANGUAGES: Language[] = [
+  { code: "en", badge: "EN", title: "English" },
+  { code: "ru", badge: "RU", title: "Русский", subtitle: "Russian" },
+  { code: "es", badge: "ES", title: "Español", subtitle: "Spanish" },
+];
+
+// Первый экран: выбор языка.
+export default function LanguageSelect() {
+  const [selected, setSelected] = useState<LanguageCode>("en");
+
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
-      <Stack.Screen options={{ headerShown: false }} />
+      <View style={styles.header}>
+        <Text style={styles.title}>Choose your language</Text>
+        <Text style={styles.caption}>Выберите язык · Elige tu idioma</Text>
+      </View>
 
-      <View style={styles.content}>
-        <Text style={styles.title}>AI — это просто</Text>
-        <Text style={styles.body}>
-          Короткие практичные уроки помогут вам начать пользоваться
-          AI-инструментами уже сегодня.
-        </Text>
+      <View style={styles.list} accessibilityRole="radiogroup">
+        {LANGUAGES.map((language) => (
+          <ChoiceCard
+            key={language.code}
+            badge={language.badge}
+            title={language.title}
+            subtitle={language.subtitle}
+            selected={selected === language.code}
+            onPress={() => setSelected(language.code)}
+          />
+        ))}
       </View>
 
       <View style={styles.actions}>
-        <Button title="Начать" onPress={() => {}} />
-        <Button
-          title="У меня уже есть аккаунт"
-          variant="ghost"
-          onPress={() => {}}
-        />
+        <Button title="Continue" onPress={() => router.push("/welcome")} />
       </View>
     </SafeAreaView>
   );
@@ -37,21 +60,24 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.bg,
     paddingHorizontal: theme.spacing.xl,
   },
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    gap: theme.spacing.sm,
+  header: {
+    gap: theme.spacing.xs,
+    paddingTop: theme.spacing.xxl,
+    paddingBottom: theme.spacing.xl,
   },
   title: {
     ...theme.typography.display,
     color: theme.colors.text,
   },
-  body: {
-    ...theme.typography.body,
+  caption: {
+    ...theme.typography.caption,
     color: theme.colors.textSecondary,
   },
+  list: {
+    flex: 1,
+    gap: theme.spacing.sm,
+  },
   actions: {
-    gap: theme.spacing.xs,
     paddingBottom: theme.spacing.md,
   },
 });
