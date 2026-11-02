@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/Button";
 import { ChoiceCard } from "@/components/ChoiceCard";
-import { OnboardingHeader } from "@/components/OnboardingHeader";
+import { ProgressHeader } from "@/components/ProgressHeader";
 import { theme } from "@/theme";
 
 type DailyTime = {
@@ -38,7 +38,7 @@ export default function OnboardingTime() {
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
       <View style={styles.top}>
-        <OnboardingHeader step={3} total={3} />
+        <ProgressHeader button="back" step={3} total={3} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
