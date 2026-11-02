@@ -33,3 +33,8 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - Only screens and layouts in apps/mobile/src/app;
   components in apps/mobile/src/components; theme in apps/mobile/src/theme
 - Commit messages: Conventional Commits (feat:, fix:, chore:)
+
+After each task, end with a short breakdown:
+1) which files changed and why they belong in that folder;
+2) up to 3 new concepts, explained via backend analogies (Express, Prisma, REST);
+3) what to check on the phone.

@@ -1,4 +1,4 @@
-import { SymbolView } from "expo-symbols";
+import { SymbolView, type SFSymbol } from "expo-symbols";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { theme } from "@/theme";
@@ -6,18 +6,22 @@ import { theme } from "@/theme";
 type ChoiceCardProps = {
   title: string;
   subtitle?: string;
-  badge: string;
+  // В кружке слева: короткий текст (badge) или иконка (icon). Если нет обоих — кружка нет.
+  badge?: string;
+  icon?: SFSymbol;
   selected: boolean;
   onPress: () => void;
 };
 
 const BADGE_SIZE = 40;
+const ICON_SIZE = 20;
 const CHECK_SIZE = 24;
 
 export function ChoiceCard({
   title,
   subtitle,
   badge,
+  icon,
   selected,
   onPress,
 }: ChoiceCardProps) {
@@ -32,9 +36,19 @@ export function ChoiceCard({
         pressed && !selected && styles.pressed,
       ]}
     >
-      <View style={[styles.badge, selected && styles.badgeSelected]}>
-        <Text style={styles.badgeText}>{badge}</Text>
-      </View>
+      {icon || badge ? (
+        <View style={[styles.badge, selected && styles.badgeSelected]}>
+          {icon ? (
+            <SymbolView
+              name={icon}
+              size={ICON_SIZE}
+              tintColor={theme.colors.accent}
+            />
+          ) : (
+            <Text style={styles.badgeText}>{badge}</Text>
+          )}
+        </View>
+      ) : null}
 
       <View style={styles.texts}>
         <Text style={styles.title}>{title}</Text>

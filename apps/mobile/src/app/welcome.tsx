@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,7 +17,10 @@ export default function Welcome() {
       </View>
 
       <View style={styles.actions}>
-        <Button title="Начать" onPress={() => {}} />
+        <Button
+          title="Начать"
+          onPress={() => router.push("/onboarding/work")}
+        />
         <Button
           title="У меня уже есть аккаунт"
           variant="ghost"
