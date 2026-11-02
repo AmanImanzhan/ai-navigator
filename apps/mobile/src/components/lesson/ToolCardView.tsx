@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 
 import { LessonLabel } from "@/components/lesson/LessonLabel";
+import { OpenToolButton } from "@/components/lesson/OpenToolButton";
 import type { ToolCard } from "@/data/lessons";
 import { theme } from "@/theme";
 
@@ -15,6 +16,9 @@ export function ToolCardView({ card }: ToolCardViewProps) {
       <LessonLabel text="Какой инструмент" />
       <Text style={styles.name}>{card.name}</Text>
       <Text style={styles.text}>{card.text}</Text>
+      <View style={styles.action}>
+        <OpenToolButton tool={card} />
+      </View>
     </View>
   );
 }
@@ -22,6 +26,9 @@ export function ToolCardView({ card }: ToolCardViewProps) {
 const styles = StyleSheet.create({
   container: {
     gap: theme.spacing.sm,
+  },
+  action: {
+    marginTop: theme.spacing.xs,
   },
   name: {
     ...theme.typography.display,

@@ -11,6 +11,8 @@ export const colors = {
   border: "#ECE5DC",
   success: "#2F7D4A",
   successBg: "#E7F3E9",
+  error: "#C0392B",
+  errorBg: "#FBEAEA",
   warning: "#9A6A12",
   warningBg: "#FDF2DD",
   track: "#EFE8E0",

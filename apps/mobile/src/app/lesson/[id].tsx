@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { LessonCardView } from "@/components/lesson/LessonCardView";
 import { ProgressHeader } from "@/components/ProgressHeader";
-import { getLesson } from "@/data/lessons";
+import { getLesson, getLessonTool } from "@/data/lessons";
 import { theme } from "@/theme";
 
 // Экран урока: по одной карточке за раз. Адрес /lesson/4 → id = "4".
@@ -15,6 +15,8 @@ export default function LessonScreen() {
   const lesson = getLesson(id);
   // Номер текущей карточки, начиная с 0.
   const [index, setIndex] = useState(0);
+  // Ответил ли пользователь на вопрос текущей карточки quiz.
+  const [quizAnswered, setQuizAnswered] = useState(false);
 
   if (!lesson) {
     return (
@@ -30,13 +32,17 @@ export default function LessonScreen() {
   }
 
   const total = lesson.cards.length;
+  const card = lesson.cards[index];
   const isLast = index === total - 1;
+  // На вопросе «Дальше» не нажать, пока нет ответа.
+  const nextDisabled = card.type === "quiz" && !quizAnswered;
 
   function handleNext() {
     if (isLast) {
       router.replace("/home");
     } else {
       setIndex(index + 1);
+      setQuizAnswered(false);
     }
   }
 
@@ -48,11 +54,19 @@ export default function LessonScreen() {
 
       {/* key={index}: при смене карточки прокрутка начинается сверху. */}
       <ScrollView key={index} contentContainerStyle={styles.content}>
-        <LessonCardView card={lesson.cards[index]} />
+        <LessonCardView
+          card={card}
+          tool={getLessonTool(lesson)}
+          onQuizAnswered={() => setQuizAnswered(true)}
+        />
       </ScrollView>
 
       <View style={styles.actions}>
-        <Button title={isLast ? "Завершить" : "Дальше"} onPress={handleNext} />
+        <Button
+          title={isLast ? "Завершить" : "Дальше"}
+          disabled={nextDisabled}
+          onPress={handleNext}
+        />
       </View>
     </SafeAreaView>
   );

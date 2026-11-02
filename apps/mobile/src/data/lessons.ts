@@ -10,6 +10,7 @@ export type ToolCard = {
   type: "tool";
   name: string;
   text: string;
+  url: string;
 };
 
 export type HowtoMethod = {
@@ -30,6 +31,7 @@ export type QuizOption = {
 
 export type QuizCard = {
   type: "quiz";
+  situation: string;
   question: string;
   options: QuizOption[];
   explanation: string;
@@ -80,6 +82,7 @@ export const LESSONS: Lesson[] = [
         type: "tool",
         name: "Ideogram",
         text: "Лучше всего справляется с надписями — около 10 бесплатных генераций в день. Если недоступен, подойдут Gemini или ChatGPT.",
+        url: "https://ideogram.ai",
       },
       {
         type: "howto",
@@ -97,7 +100,8 @@ export const LESSONS: Lesson[] = [
       },
       {
         type: "quiz",
-        question: "Надпись вышла «С ЮБЕЛЕМ, МАМА». Почему?",
+        situation: "Надпись вышла «С ЮБЕЛЕМ, МАМА».",
+        question: "Почему так вышло?",
         options: [
           { text: "AI плохо знает русский язык", correct: false },
           {
@@ -127,4 +131,9 @@ export const LESSONS: Lesson[] = [
 
 export function getLesson(id: string): Lesson | undefined {
   return LESSONS.find((lesson) => lesson.id === id);
+}
+
+// Инструмент урока — из его карточки tool. Нужен, например, практике для кнопки «Открыть …».
+export function getLessonTool(lesson: Lesson): ToolCard | undefined {
+  return lesson.cards.find((card) => card.type === "tool");
 }
