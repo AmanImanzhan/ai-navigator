@@ -45,7 +45,7 @@
     },
     "time": {
       "title": "How much time a day?",
-      "body": "One lesson takes 5–7 minutes. You can change this anytime",
+      "body": "One lesson takes 5–10 minutes. You can change this anytime",
       "options": {
         "5": "Easy start · 1 lesson a day",
         "10": "Steady pace · a lesson plus practice",

@@ -45,7 +45,7 @@
     },
     "time": {
       "title": "¿Cuánto tiempo al día?",
-      "body": "Una lección dura entre 5 y 7 minutos. Puedes cambiarlo cuando quieras",
+      "body": "Una lección dura entre 5 y 10 minutos. Puedes cambiarlo cuando quieras",
       "options": {
         "5": "Para empezar con calma · 1 lección al día",
         "10": "Ritmo normal · lección y práctica",

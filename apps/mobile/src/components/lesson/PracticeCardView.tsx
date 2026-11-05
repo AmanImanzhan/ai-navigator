@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { LessonHighlight } from "@/components/lesson/LessonHighlight";
 import { LessonLabel } from "@/components/lesson/LessonLabel";
 import { OpenToolButton } from "@/components/lesson/OpenToolButton";
+import { ShareButton } from "@/components/lesson/ShareButton";
 import type { PracticeCard, ToolLink } from "@/data/lessons";
 import { theme } from "@/theme";
 
@@ -22,7 +23,8 @@ const COPIED_DURATION_MS = 2000;
 export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
-  const { userPrompt, improvedPrompt, followUp, note } = card;
+  const { userPrompt, improvedLabel, improvedPrompt, share, followUp, note } =
+    card;
 
   // Через 2 секунды возвращаем кнопке обычный текст.
   useEffect(() => {
@@ -54,15 +56,16 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
 
       {improvedPrompt ? (
         <LessonHighlight
-          title={t("lesson.practice.better")}
+          title={improvedLabel ?? t("lesson.practice.better")}
           text={improvedPrompt}
         />
       ) : null}
 
       {note ? <Text style={styles.note}>{note}</Text> : null}
 
-      {improvedPrompt || tool ? (
+      {improvedPrompt || share || tool ? (
         <View style={styles.actions}>
+          {share ? <ShareButton action={share} /> : null}
           {improvedPrompt ? (
             <Button
               title={

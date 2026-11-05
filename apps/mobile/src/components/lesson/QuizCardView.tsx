@@ -16,10 +16,23 @@ type QuizCardViewProps = {
   onAnswered: () => void;
 };
 
+// Случайный порядок номеров 0…count-1 (перемешивание Фишера — Йетса).
+function shuffledIndexes(count: number): number[] {
+  const order = Array.from({ length: count }, (_, index) => index);
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  return order;
+}
+
 // Карточка «Проверка»: ситуация, вопрос и варианты ответа.
 export function QuizCardView({ card, onAnswered }: QuizCardViewProps) {
   const { t } = useTranslation();
-  // Номер выбранного варианта; null — ещё не ответили.
+  // Порядок вариантов перемешиваем один раз, когда карточка появляется,
+  // чтобы правильный ответ нельзя было угадать по месту. Дальше порядок не меняется.
+  const [order] = useState(() => shuffledIndexes(card.options.length));
+  // Номер выбранного варианта (как в данных); null — ещё не ответили.
   const [selected, setSelected] = useState<number | null>(null);
   const answered = selected !== null;
   const isCorrect = answered && card.options[selected].correct;
@@ -44,10 +57,10 @@ export function QuizCardView({ card, onAnswered }: QuizCardViewProps) {
       <Text style={styles.question}>{card.question}</Text>
 
       <View style={styles.options} accessibilityRole="radiogroup">
-        {card.options.map((option, index) => (
+        {order.map((index) => (
           <AnswerOption
-            key={option.text}
-            text={option.text}
+            key={index}
+            text={card.options[index].text}
             state={getState(index)}
             selected={index === selected}
             disabled={answered}

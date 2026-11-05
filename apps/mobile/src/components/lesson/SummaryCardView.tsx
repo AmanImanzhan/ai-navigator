@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { LessonHighlight } from "@/components/lesson/LessonHighlight";
 import { LessonLabel } from "@/components/lesson/LessonLabel";
+import { ShareButton } from "@/components/lesson/ShareButton";
 import type { SummaryCard } from "@/data/lessons";
 import { theme } from "@/theme";
 
@@ -19,6 +20,11 @@ export function SummaryCardView({ card }: SummaryCardViewProps) {
       <LessonLabel text={t("lesson.labels.summary")} />
       <LessonHighlight title={t("lesson.labels.formula")} text={card.formula} />
       {card.text ? <Text style={styles.text}>{card.text}</Text> : null}
+      {card.share ? (
+        <View style={styles.action}>
+          <ShareButton action={card.share} variant="secondary" />
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -30,5 +36,8 @@ const styles = StyleSheet.create({
   text: {
     ...theme.typography.body,
     color: theme.colors.text,
+  },
+  action: {
+    marginTop: theme.spacing.xs,
   },
 });
