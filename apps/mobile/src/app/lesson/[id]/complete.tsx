@@ -38,6 +38,7 @@ function enterStep(step: number) {
 export default function LessonComplete() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const lesson = getLesson(id);
+  const skill = lesson?.content?.skill;
   const reduceMotion = useReducedMotion();
 
   // При «Уменьшении движения» значок сразу в конечном виде.
@@ -86,7 +87,7 @@ export default function LessonComplete() {
     const title = lesson ? `«${lesson.title}»` : "";
     try {
       await Share.share({
-        message: `Урок ${title} в AI Navigator пройден! ${lesson?.skill ?? ""}`.trim(),
+        message: `Урок ${title} в AI Navigator пройден! ${skill ?? ""}`.trim(),
       });
     } catch {
       // Пользователь закрыл окно или поделиться не получилось — ничего не делаем.
@@ -115,9 +116,9 @@ export default function LessonComplete() {
           <Animated.Text entering={enterStep(0)} style={styles.title}>
             Урок пройден!
           </Animated.Text>
-          {lesson ? (
+          {skill ? (
             <Animated.Text entering={enterStep(1)} style={styles.skill}>
-              {lesson.skill}
+              {skill}
             </Animated.Text>
           ) : null}
         </View>

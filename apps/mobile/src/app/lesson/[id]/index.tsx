@@ -12,13 +12,14 @@ import { theme } from "@/theme";
 // Экран урока: по одной карточке за раз. Адрес /lesson/4 → id = "4".
 export default function LessonScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const lesson = getLesson(id);
+  // У урока «скоро» содержимого нет — для экрана это то же, что «не найден».
+  const content = getLesson(id)?.content;
   // Номер текущей карточки, начиная с 0.
   const [index, setIndex] = useState(0);
   // Ответил ли пользователь на вопрос текущей карточки quiz.
   const [quizAnswered, setQuizAnswered] = useState(false);
 
-  if (!lesson) {
+  if (!content) {
     return (
       <SafeAreaView style={styles.notFound} edges={["top", "bottom"]}>
         <Text style={styles.notFoundText}>Урок не найден</Text>
@@ -31,8 +32,8 @@ export default function LessonScreen() {
     );
   }
 
-  const total = lesson.cards.length;
-  const card = lesson.cards[index];
+  const total = content.cards.length;
+  const card = content.cards[index];
   const isLast = index === total - 1;
   // На вопросе «Дальше» не нажать, пока нет ответа.
   const nextDisabled = card.type === "quiz" && !quizAnswered;
@@ -59,7 +60,7 @@ export default function LessonScreen() {
       <ScrollView key={index} contentContainerStyle={styles.content}>
         <LessonCardView
           card={card}
-          tool={getLessonTool(lesson)}
+          tool={getLessonTool(content)}
           onQuizAnswered={() => setQuizAnswered(true)}
         />
       </ScrollView>
