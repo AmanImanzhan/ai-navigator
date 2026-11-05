@@ -14,21 +14,22 @@ const NUMBER_SIZE = 36;
 
 const STATUS_TEXT: Record<LessonStatus, string> = {
   available: "",
+  completed: "Пройден",
   soon: "Скоро",
   premium: "Подписка",
 };
 
-// Строка урока в списке. Нажать можно только доступный урок.
+// Строка урока в списке. Открыть можно доступный или уже пройденный урок.
 export function LessonRow({ lesson, status, onPress }: LessonRowProps) {
-  const available = status === "available";
+  const canOpen = status === "available" || status === "completed";
   const meta = `Уровень ${lesson.level} · ${lesson.minutes} мин`;
 
   return (
     <Pressable
       onPress={onPress}
-      disabled={!available}
+      disabled={!canOpen}
       accessibilityRole="button"
-      accessibilityState={{ disabled: !available }}
+      accessibilityState={{ disabled: !canOpen }}
       accessibilityLabel={[
         `Урок ${lesson.id}. ${lesson.title}`,
         `Уровень ${lesson.level}, ${lesson.minutes} минут`,
@@ -38,18 +39,29 @@ export function LessonRow({ lesson, status, onPress }: LessonRowProps) {
         .join(". ")}
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}
     >
-      <View style={[styles.number, !available && styles.numberMuted]}>
-        <Text style={[styles.numberText, !available && styles.numberTextMuted]}>
-          {lesson.id}
-        </Text>
-      </View>
+      {status === "completed" ? (
+        <View style={[styles.number, styles.numberCompleted]}>
+          <SymbolView
+            name={{ ios: "checkmark", android: "check", web: "check" }}
+            size={16}
+            weight="bold"
+            tintColor={theme.colors.onAccent}
+          />
+        </View>
+      ) : (
+        <View style={[styles.number, !canOpen && styles.numberMuted]}>
+          <Text style={[styles.numberText, !canOpen && styles.numberTextMuted]}>
+            {lesson.id}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.texts}>
         <Text style={styles.title}>{lesson.title}</Text>
         <Text style={styles.meta}>{meta}</Text>
       </View>
 
-      {available ? (
+      {status === "available" ? (
         <SymbolView
           name={{
             ios: "chevron.right",
@@ -96,6 +108,9 @@ const styles = StyleSheet.create({
   numberMuted: {
     backgroundColor: theme.colors.track,
   },
+  numberCompleted: {
+    backgroundColor: theme.colors.success,
+  },
   numberText: {
     ...theme.typography.label,
     color: theme.colors.accent,
@@ -125,15 +140,17 @@ const styles = StyleSheet.create({
   },
 });
 
-// Цвет метки: «Скоро» серая, «Подписка» жёлтая.
+// Цвет метки: «Пройден» зелёная, «Скоро» серая, «Подписка» жёлтая.
 const tagStyles = StyleSheet.create({
   available: {},
+  completed: { backgroundColor: theme.colors.successBg },
   soon: { backgroundColor: theme.colors.track },
   premium: { backgroundColor: theme.colors.warningBg },
 });
 
 const tagTextStyles = StyleSheet.create({
   available: {},
+  completed: { color: theme.colors.success },
   soon: { color: theme.colors.textSecondary },
   premium: { color: theme.colors.warning },
 });

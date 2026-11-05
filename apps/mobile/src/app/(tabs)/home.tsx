@@ -4,10 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LessonRow } from "@/components/LessonRow";
 import { getLessonStatus, TRACKS } from "@/data/lessons";
+import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
 // Вкладка «Уроки»: направления и их уроки.
 export default function Home() {
+  const completedLessons = useAppStore((state) => state.completedLessons);
+
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.content}>
@@ -21,7 +24,11 @@ export default function Home() {
                 <LessonRow
                   key={lesson.id}
                   lesson={lesson}
-                  status={getLessonStatus(lesson, track)}
+                  status={getLessonStatus(
+                    lesson,
+                    track,
+                    completedLessons.includes(lesson.id),
+                  )}
                   onPress={() =>
                     router.push({
                       pathname: "/lesson/[id]",

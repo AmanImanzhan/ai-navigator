@@ -83,7 +83,7 @@ export type Track = {
 };
 
 // available — можно открыть; soon — ещё нет содержимого; premium — по подписке.
-export type LessonStatus = "available" | "soon" | "premium";
+export type LessonStatus = "available" | "completed" | "soon" | "premium";
 
 const POSTCARD: LessonContent = {
   skill:
@@ -226,8 +226,14 @@ export function getLesson(id: string): Lesson | undefined {
   );
 }
 
+// Пройденный урок важнее всего: его можно открыть снова.
 // «Подписка» важнее «Скоро»: пусть человек сразу видит, что направление платное.
-export function getLessonStatus(lesson: Lesson, track: Track): LessonStatus {
+export function getLessonStatus(
+  lesson: Lesson,
+  track: Track,
+  completed: boolean,
+): LessonStatus {
+  if (completed) return "completed";
   if (track.premium) return "premium";
   if (!lesson.content) return "soon";
   return "available";

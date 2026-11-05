@@ -21,6 +21,7 @@ import { Button } from "@/components/Button";
 import { Confetti } from "@/components/Confetti";
 import { StatCard } from "@/components/StatCard";
 import { getLesson } from "@/data/lessons";
+import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
 const HALO_SIZE = 160;
@@ -40,6 +41,12 @@ export default function LessonComplete() {
   const lesson = getLesson(id);
   const skill = lesson?.content?.skill;
   const reduceMotion = useReducedMotion();
+  const markLessonCompleted = useAppStore((state) => state.markLessonCompleted);
+
+  // При открытии экрана отмечаем урок пройденным.
+  useEffect(() => {
+    if (lesson?.content) markLessonCompleted(lesson.id);
+  }, [lesson, markLessonCompleted]);
 
   // При «Уменьшении движения» значок сразу в конечном виде.
   const haloScale = useSharedValue(reduceMotion ? 1 : 0.3);

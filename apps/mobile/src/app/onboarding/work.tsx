@@ -1,5 +1,4 @@
 import { router } from "expo-router";
-import type { SFSymbol } from "expo-symbols";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,54 +6,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { ChoiceCard } from "@/components/ChoiceCard";
 import { ProgressHeader } from "@/components/ProgressHeader";
+import { OCCUPATIONS, type OccupationId } from "@/data/onboarding";
+import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
-
-type Occupation = {
-  id: "office" | "manager" | "business" | "student" | "retired";
-  icon: SFSymbol;
-  title: string;
-  subtitle: string;
-};
-
-type OccupationId = Occupation["id"];
-
-const OCCUPATIONS: Occupation[] = [
-  {
-    id: "office",
-    icon: "briefcase",
-    title: "Офис и администрирование",
-    subtitle: "Документы, письма, таблицы",
-  },
-  {
-    id: "manager",
-    icon: "person.3",
-    title: "Руковожу людьми",
-    subtitle: "Встречи, задачи, отчёты",
-  },
-  {
-    id: "business",
-    icon: "storefront",
-    title: "Своё дело",
-    subtitle: "Реклама, клиенты, соцсети",
-  },
-  {
-    id: "student",
-    icon: "graduationcap",
-    title: "Учусь",
-    subtitle: "Конспекты, задания, языки",
-  },
-  {
-    id: "retired",
-    icon: "cup.and.saucer",
-    title: "На пенсии",
-    subtitle: "Общение, фото, безопасность",
-  },
-];
 
 // Онбординг, шаг 2: чем занимается пользователь.
 export default function OnboardingWork() {
-  // null — пока ничего не выбрано.
-  const [selected, setSelected] = useState<OccupationId | null>(null);
+  const savedOccupation = useAppStore((state) => state.occupation);
+  const saveOccupation = useAppStore((state) => state.saveOccupation);
+  // null — пока ничего не выбрано. Если уже отвечали — показываем прошлый ответ.
+  const [selected, setSelected] = useState<OccupationId | null>(
+    savedOccupation,
+  );
+
+  function handleNext() {
+    if (selected === null) return;
+    saveOccupation(selected);
+    router.push("/onboarding/time");
+  }
 
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
@@ -88,7 +57,7 @@ export default function OnboardingWork() {
         <Button
           title="Дальше"
           disabled={selected === null}
-          onPress={() => router.push("/onboarding/time")}
+          onPress={handleNext}
         />
       </View>
     </SafeAreaView>

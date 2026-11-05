@@ -1,4 +1,3 @@
-import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,34 +5,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { ChoiceCard } from "@/components/ChoiceCard";
 import { ProgressHeader } from "@/components/ProgressHeader";
+import { DAILY_TIMES, type DailyMinutes } from "@/data/onboarding";
+import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
-
-type DailyTime = {
-  minutes: 5 | 10 | 15;
-  title: string;
-  subtitle: string;
-};
-
-type DailyMinutes = DailyTime["minutes"];
-
-const DAILY_TIMES: DailyTime[] = [
-  { minutes: 5, title: "5 минут", subtitle: "Лёгкий старт · 1 урок в день" },
-  {
-    minutes: 10,
-    title: "10 минут",
-    subtitle: "Обычный темп · урок и практика",
-  },
-  {
-    minutes: 15,
-    title: "15 минут",
-    subtitle: "Быстрый прогресс · 2 урока в день",
-  },
-];
 
 // Онбординг, шаг 3: сколько времени в день и напоминание.
 export default function OnboardingTime() {
-  const [minutes, setMinutes] = useState<DailyMinutes>(10);
-  const [remind, setRemind] = useState(true);
+  const savedMinutes = useAppStore((state) => state.minutesPerDay);
+  const savedReminder = useAppStore((state) => state.reminderEnabled);
+  const completeOnboarding = useAppStore((state) => state.completeOnboarding);
+  const [minutes, setMinutes] = useState<DailyMinutes>(savedMinutes);
+  const [remind, setRemind] = useState(savedReminder);
 
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
@@ -77,8 +59,11 @@ export default function OnboardingTime() {
       </ScrollView>
 
       <View style={styles.actions}>
-        {/* replace, а не push: назад в онбординг вернуться нельзя. */}
-        <Button title="Готово" onPress={() => router.replace("/home")} />
+        {/* Переход на /home делает _layout: после onboardingDone онбординг закрыт. */}
+        <Button
+          title="Готово"
+          onPress={() => completeOnboarding(minutes, remind)}
+        />
       </View>
     </SafeAreaView>
   );
