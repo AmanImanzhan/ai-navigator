@@ -80,7 +80,6 @@
       "result": "Here's what you'll make",
       "tool": "Which tool to use",
       "howto": "How to do it",
-      "tip": "Tip",
       "summary": "All done",
       "formula": "The formula",
       "quiz": "Quick check",
@@ -95,7 +94,7 @@
       "better": "Try this instead:",
       "copy": "Copy prompt",
       "copied": "Copied",
-      "fixHint": "If the letters come out wrong: “{{prompt}}”"
+      "followUp": "{{hint}}: “{{prompt}}”"
     }
   },
   "complete": {

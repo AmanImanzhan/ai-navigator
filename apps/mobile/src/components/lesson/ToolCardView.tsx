@@ -10,17 +10,26 @@ type ToolCardViewProps = {
   card: ToolCard;
 };
 
-// Карточка «Какой инструмент»: название крупно и пояснение.
+// Карточка «Какой инструмент»: названия крупно, пояснение и кнопка на каждый инструмент.
+// Первый инструмент — главный, его кнопка ярче.
 export function ToolCardView({ card }: ToolCardViewProps) {
   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
       <LessonLabel text={t("lesson.labels.tool")} />
-      <Text style={styles.name}>{card.name}</Text>
+      <Text style={styles.name}>
+        {card.tools.map((tool) => tool.name).join(" · ")}
+      </Text>
       <Text style={styles.text}>{card.text}</Text>
-      <View style={styles.action}>
-        <OpenToolButton tool={card} />
+      <View style={styles.actions}>
+        {card.tools.map((tool, index) => (
+          <OpenToolButton
+            key={tool.url}
+            tool={tool}
+            variant={index === 0 ? "primary" : "secondary"}
+          />
+        ))}
       </View>
     </View>
   );
@@ -30,7 +39,8 @@ const styles = StyleSheet.create({
   container: {
     gap: theme.spacing.sm,
   },
-  action: {
+  actions: {
+    gap: theme.spacing.xs,
     marginTop: theme.spacing.xs,
   },
   name: {

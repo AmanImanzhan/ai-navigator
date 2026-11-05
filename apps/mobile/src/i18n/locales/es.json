@@ -80,7 +80,6 @@
       "result": "Esto es lo que vas a crear",
       "tool": "Qué herramienta usar",
       "howto": "Cómo hacerlo",
-      "tip": "Consejo",
       "summary": "¡Listo!",
       "formula": "La fórmula",
       "quiz": "Pon a prueba lo aprendido",
@@ -95,7 +94,7 @@
       "better": "Mejor así:",
       "copy": "Copiar petición",
       "copied": "Copiado",
-      "fixHint": "Si las letras salen mal: «{{prompt}}»"
+      "followUp": "{{hint}}: «{{prompt}}»"
     }
   },
   "complete": {

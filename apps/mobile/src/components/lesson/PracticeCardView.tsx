@@ -7,20 +7,22 @@ import { Button } from "@/components/Button";
 import { LessonHighlight } from "@/components/lesson/LessonHighlight";
 import { LessonLabel } from "@/components/lesson/LessonLabel";
 import { OpenToolButton } from "@/components/lesson/OpenToolButton";
-import type { PracticeCard, ToolCard } from "@/data/lessons";
+import type { PracticeCard, ToolLink } from "@/data/lessons";
 import { theme } from "@/theme";
 
 type PracticeCardViewProps = {
   card: PracticeCard;
-  tool?: ToolCard;
+  tool?: ToolLink;
 };
 
 const COPIED_DURATION_MS = 2000;
 
 // Карточка «Попробуй сам»: свой запрос, улучшенный запрос и кнопки.
+// Каждая часть необязательна — показываем только то, что есть в уроке.
 export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const { userPrompt, improvedPrompt, followUp, note } = card;
 
   // Через 2 секунды возвращаем кнопке обычный текст.
   useEffect(() => {
@@ -30,7 +32,8 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
   }, [copied]);
 
   async function handleCopy() {
-    await Clipboard.setStringAsync(card.improvedPrompt);
+    if (!improvedPrompt) return;
+    await Clipboard.setStringAsync(improvedPrompt);
     setCopied(true);
   }
 
@@ -38,34 +41,49 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
     <View style={styles.container}>
       <LessonLabel text={t("lesson.labels.practice")} />
 
-      <View style={styles.block}>
-        <Text style={styles.blockTitle}>
-          {t("lesson.practice.youWrite")}
-        </Text>
-        <View style={styles.bubble}>
-          <Text style={styles.bubbleText}>{card.userPrompt}</Text>
+      {userPrompt ? (
+        <View style={styles.block}>
+          <Text style={styles.blockTitle}>
+            {t("lesson.practice.youWrite")}
+          </Text>
+          <View style={styles.bubble}>
+            <Text style={styles.bubbleText}>{userPrompt}</Text>
+          </View>
         </View>
-      </View>
+      ) : null}
 
-      <LessonHighlight
-        title={t("lesson.practice.better")}
-        text={card.improvedPrompt}
-      />
-
-      <View style={styles.actions}>
-        <Button
-          title={
-            copied ? t("lesson.practice.copied") : t("lesson.practice.copy")
-          }
-          variant="secondary"
-          onPress={handleCopy}
+      {improvedPrompt ? (
+        <LessonHighlight
+          title={t("lesson.practice.better")}
+          text={improvedPrompt}
         />
-        {tool ? <OpenToolButton tool={tool} /> : null}
-      </View>
+      ) : null}
 
-      <Text style={styles.tip}>
-        {t("lesson.practice.fixHint", { prompt: card.fixPrompt })}
-      </Text>
+      {note ? <Text style={styles.note}>{note}</Text> : null}
+
+      {improvedPrompt || tool ? (
+        <View style={styles.actions}>
+          {improvedPrompt ? (
+            <Button
+              title={
+                copied ? t("lesson.practice.copied") : t("lesson.practice.copy")
+              }
+              variant="secondary"
+              onPress={handleCopy}
+            />
+          ) : null}
+          {tool ? <OpenToolButton tool={tool} /> : null}
+        </View>
+      ) : null}
+
+      {followUp ? (
+        <Text style={styles.tip}>
+          {t("lesson.practice.followUp", {
+            hint: followUp.hint,
+            prompt: followUp.prompt,
+          })}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -89,6 +107,10 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.track,
   },
   bubbleText: {
+    ...theme.typography.body,
+    color: theme.colors.text,
+  },
+  note: {
     ...theme.typography.body,
     color: theme.colors.text,
   },

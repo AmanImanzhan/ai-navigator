@@ -20,8 +20,10 @@ export function ResultCardView({ card }: ResultCardViewProps) {
       <LessonLabel text={t("lesson.labels.result")} />
       {/* Место под картинку. Настоящую добавим позже. */}
       <View style={styles.image} />
-      <Text style={styles.title}>{card.title}</Text>
-      <Text style={styles.text}>{card.text}</Text>
+      {card.title ? <Text style={styles.title}>{card.title}</Text> : null}
+      <Text style={card.title ? styles.text : styles.textOnly}>
+        {card.text}
+      </Text>
     </View>
   );
 }
@@ -42,5 +44,10 @@ const styles = StyleSheet.create({
   text: {
     ...theme.typography.body,
     color: theme.colors.textSecondary,
+  },
+  // Без заголовка текст — главное на карточке, делаем его основным цветом.
+  textOnly: {
+    ...theme.typography.body,
+    color: theme.colors.text,
   },
 });

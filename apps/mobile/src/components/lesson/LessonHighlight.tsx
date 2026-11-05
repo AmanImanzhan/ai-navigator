@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { theme } from "@/theme";
 
 type LessonHighlightProps = {
-  title: string;
+  // Без заголовка — просто выделенный текст.
+  title?: string;
   text: string;
 };
 
@@ -11,7 +12,7 @@ type LessonHighlightProps = {
 export function LessonHighlight({ title, text }: LessonHighlightProps) {
   return (
     <View style={styles.box}>
-      <Text style={styles.title}>{title}</Text>
+      {title ? <Text style={styles.title}>{title}</Text> : null}
       <Text style={styles.text}>{text}</Text>
     </View>
   );
