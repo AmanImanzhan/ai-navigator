@@ -39,7 +39,10 @@ export default function LessonScreen() {
 
   function handleNext() {
     if (isLast) {
-      router.replace("/home");
+      router.replace({
+        pathname: "/lesson/[id]/complete",
+        params: { id },
+      });
     } else {
       setIndex(index + 1);
       setQuizAnswered(false);

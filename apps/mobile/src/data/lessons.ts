@@ -63,6 +63,8 @@ export type Lesson = {
   title: string;
   level: number;
   minutes: number;
+  // Что человек умеет после урока — показываем на экране победы.
+  skill: string;
   cards: LessonCard[];
 };
 
@@ -72,6 +74,8 @@ export const LESSONS: Lesson[] = [
     title: "Открытка на праздник",
     level: 1,
     minutes: 7,
+    skill:
+      "Теперь вы умеете делать открытку с точной надписью — без ошибок в буквах",
     cards: [
       {
         type: "result",
