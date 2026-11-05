@@ -4,13 +4,15 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { LessonRow } from "@/components/LessonRow";
-import { getLessonStatus, TRACKS } from "@/data/lessons";
+import { getLessonStatus } from "@/data/lessons";
+import { useTracks } from "@/hooks/useLessons";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
 // Вкладка «Уроки»: направления и их уроки.
 export default function Home() {
   const { t } = useTranslation();
+  const tracks = useTracks();
   const completedLessons = useAppStore((state) => state.completedLessons);
 
   return (
@@ -18,7 +20,7 @@ export default function Home() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>{t("lessons.title")}</Text>
 
-        {TRACKS.map((track) => (
+        {tracks.map((track) => (
           <View key={track.id} style={styles.section}>
             <Text style={styles.trackTitle}>{track.title}</Text>
             <View style={styles.lessons}>

@@ -21,7 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { Confetti } from "@/components/Confetti";
 import { StatCard } from "@/components/StatCard";
-import { getLesson } from "@/data/lessons";
+import { useLesson } from "@/hooks/useLessons";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -40,15 +40,17 @@ function enterStep(step: number) {
 export default function LessonComplete() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const lesson = getLesson(id);
+  const lesson = useLesson(id);
   const skill = lesson?.content?.skill;
   const reduceMotion = useReducedMotion();
   const markLessonCompleted = useAppStore((state) => state.markLessonCompleted);
 
   // При открытии экрана отмечаем урок пройденным.
+  // Зависим от id, а не от объекта урока: объект собирается заново при каждой отрисовке.
+  const hasContent = Boolean(lesson?.content);
   useEffect(() => {
-    if (lesson?.content) markLessonCompleted(lesson.id);
-  }, [lesson, markLessonCompleted]);
+    if (hasContent) markLessonCompleted(id);
+  }, [id, hasContent, markLessonCompleted]);
 
   // При «Уменьшении движения» значок сразу в конечном виде.
   const haloScale = useSharedValue(reduceMotion ? 1 : 0.3);

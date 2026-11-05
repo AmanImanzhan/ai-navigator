@@ -7,7 +7,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { LessonCardView } from "@/components/lesson/LessonCardView";
 import { ProgressHeader } from "@/components/ProgressHeader";
-import { getLesson, getLessonTool } from "@/data/lessons";
+import { getLessonTool } from "@/data/lessons";
+import { useLesson } from "@/hooks/useLessons";
 import { theme } from "@/theme";
 
 // Экран урока: по одной карточке за раз. Адрес /lesson/4 → id = "4".
@@ -15,7 +16,7 @@ export default function LessonScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   // У урока «скоро» содержимого нет — для экрана это то же, что «не найден».
-  const content = getLesson(id)?.content;
+  const content = useLesson(id)?.content;
   // Номер текущей карточки, начиная с 0.
   const [index, setIndex] = useState(0);
   // Ответил ли пользователь на вопрос текущей карточки quiz.
