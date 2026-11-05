@@ -2,6 +2,8 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 
+// Подключаем переводы до первого экрана.
+import "@/i18n";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
 
 // Не убираем заставку сами — уберём, когда загрузятся сохранённые данные.
@@ -36,6 +38,15 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lesson/[id]/index" />
         <Stack.Screen name="lesson/[id]/complete" />
+        {/* Выбор языка из Профиля — шторка снизу высотой по содержимому. */}
+        <Stack.Screen
+          name="language-picker"
+          options={{
+            presentation: "formSheet",
+            sheetAllowedDetents: "fitToContents",
+            sheetGrabberVisible: true,
+          }}
+        />
       </Stack.Protected>
     </Stack>
   );

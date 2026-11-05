@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -12,6 +13,7 @@ import { theme } from "@/theme";
 
 // Онбординг, шаг 2: чем занимается пользователь.
 export default function OnboardingWork() {
+  const { t } = useTranslation();
   const savedOccupation = useAppStore((state) => state.occupation);
   const saveOccupation = useAppStore((state) => state.saveOccupation);
   // null — пока ничего не выбрано. Если уже отвечали — показываем прошлый ответ.
@@ -33,10 +35,8 @@ export default function OnboardingWork() {
 
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>Чем вы занимаетесь?</Text>
-          <Text style={styles.body}>
-            Подберём уроки и примеры под вашу жизнь
-          </Text>
+          <Text style={styles.title}>{t("onboarding.work.title")}</Text>
+          <Text style={styles.body}>{t("onboarding.work.body")}</Text>
         </View>
 
         <View style={styles.list} accessibilityRole="radiogroup">
@@ -44,8 +44,8 @@ export default function OnboardingWork() {
             <ChoiceCard
               key={occupation.id}
               icon={occupation.icon}
-              title={occupation.title}
-              subtitle={occupation.subtitle}
+              title={t(`onboarding.work.options.${occupation.id}.title`)}
+              subtitle={t(`onboarding.work.options.${occupation.id}.subtitle`)}
               selected={selected === occupation.id}
               onPress={() => setSelected(occupation.id)}
             />
@@ -55,7 +55,7 @@ export default function OnboardingWork() {
 
       <View style={styles.actions}>
         <Button
-          title="Дальше"
+          title={t("common.next")}
           disabled={selected === null}
           onPress={handleNext}
         />

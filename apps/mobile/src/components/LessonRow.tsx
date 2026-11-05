@@ -1,4 +1,5 @@
 import { SymbolView } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { Lesson, LessonStatus } from "@/data/lessons";
@@ -12,17 +13,14 @@ type LessonRowProps = {
 
 const NUMBER_SIZE = 36;
 
-const STATUS_TEXT: Record<LessonStatus, string> = {
-  available: "",
-  completed: "Пройден",
-  soon: "Скоро",
-  premium: "Подписка",
-};
-
 // Строка урока в списке. Открыть можно доступный или уже пройденный урок.
 export function LessonRow({ lesson, status, onPress }: LessonRowProps) {
+  const { t } = useTranslation();
   const canOpen = status === "available" || status === "completed";
-  const meta = `Уровень ${lesson.level} · ${lesson.minutes} мин`;
+  const params = { level: lesson.level, minutes: lesson.minutes };
+  // У доступного урока метки нет — справа стрелка.
+  const statusText =
+    status === "available" ? "" : t(`lessons.status.${status}`);
 
   return (
     <Pressable
@@ -31,9 +29,9 @@ export function LessonRow({ lesson, status, onPress }: LessonRowProps) {
       accessibilityRole="button"
       accessibilityState={{ disabled: !canOpen }}
       accessibilityLabel={[
-        `Урок ${lesson.id}. ${lesson.title}`,
-        `Уровень ${lesson.level}, ${lesson.minutes} минут`,
-        STATUS_TEXT[status],
+        t("lessons.a11yTitle", { id: lesson.id, title: lesson.title }),
+        t("lessons.a11yMeta", params),
+        statusText,
       ]
         .filter(Boolean)
         .join(". ")}
@@ -58,7 +56,7 @@ export function LessonRow({ lesson, status, onPress }: LessonRowProps) {
 
       <View style={styles.texts}>
         <Text style={styles.title}>{lesson.title}</Text>
-        <Text style={styles.meta}>{meta}</Text>
+        <Text style={styles.meta}>{t("lessons.meta", params)}</Text>
       </View>
 
       {status === "available" ? (
@@ -75,7 +73,7 @@ export function LessonRow({ lesson, status, onPress }: LessonRowProps) {
       ) : (
         <View style={[styles.tag, tagStyles[status]]}>
           <Text style={[styles.tagText, tagTextStyles[status]]}>
-            {STATUS_TEXT[status]}
+            {statusText}
           </Text>
         </View>
       )}

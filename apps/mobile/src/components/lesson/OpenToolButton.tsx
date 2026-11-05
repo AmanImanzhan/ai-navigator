@@ -1,4 +1,5 @@
 import * as WebBrowser from "expo-web-browser";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/Button";
 import type { ToolCard } from "@/data/lessons";
@@ -9,9 +10,11 @@ type OpenToolButtonProps = {
 
 // Кнопка «Открыть …»: открывает сайт инструмента в браузере внутри приложения.
 export function OpenToolButton({ tool }: OpenToolButtonProps) {
+  const { t } = useTranslation();
+
   return (
     <Button
-      title={`Открыть ${tool.name}`}
+      title={t("lesson.openTool", { name: tool.name })}
       onPress={() => WebBrowser.openBrowserAsync(tool.url)}
     />
   );

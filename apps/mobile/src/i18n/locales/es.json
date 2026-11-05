@@ -1,0 +1,132 @@
+{
+  "common": {
+    "continue": "Continuar",
+    "next": "Siguiente",
+    "done": "Listo",
+    "back": "Atrás",
+    "close": "Cerrar",
+    "soon": "Muy pronto",
+    "stepOf": "{{step}} de {{total}}",
+    "minutes_one": "{{count}} minuto",
+    "minutes_other": "{{count}} minutos"
+  },
+  "welcome": {
+    "title": "La IA puede hacer más de lo que crees",
+    "body": "Te enseñamos a conseguir justo lo que necesitas, en el trabajo y en tu día a día.",
+    "start": "Empezar",
+    "haveAccount": "Ya tengo una cuenta"
+  },
+  "onboarding": {
+    "work": {
+      "title": "¿A qué te dedicas?",
+      "body": "Elegiremos lecciones y ejemplos pensados para tu vida",
+      "options": {
+        "office": {
+          "title": "Oficina y administración",
+          "subtitle": "Documentos, correos, hojas de cálculo"
+        },
+        "manager": {
+          "title": "Dirijo un equipo",
+          "subtitle": "Reuniones, tareas, informes"
+        },
+        "business": {
+          "title": "Tengo mi propio negocio",
+          "subtitle": "Publicidad, clientes, redes sociales"
+        },
+        "student": {
+          "title": "Estudio",
+          "subtitle": "Apuntes, tareas, idiomas"
+        },
+        "retired": {
+          "title": "Ya me jubilé",
+          "subtitle": "Familia y amigos, fotos, seguridad"
+        }
+      }
+    },
+    "time": {
+      "title": "¿Cuánto tiempo al día?",
+      "body": "Una lección dura entre 5 y 7 minutos. Puedes cambiarlo cuando quieras",
+      "options": {
+        "5": "Para empezar con calma · 1 lección al día",
+        "10": "Ritmo normal · lección y práctica",
+        "15": "Avance rápido · 2 lecciones al día"
+      },
+      "reminderTitle": "Recordármelo a las 19:00",
+      "reminderSubtitle": "Una notificación al día"
+    }
+  },
+  "tabs": {
+    "lessons": "Lecciones",
+    "library": "Guía",
+    "prompts": "Peticiones",
+    "profile": "Perfil"
+  },
+  "lessons": {
+    "title": "Lecciones",
+    "meta": "Nivel {{level}} · {{minutes}} min",
+    "a11yTitle": "Lección {{id}}. {{title}}",
+    "a11yMeta": "Nivel {{level}}, {{minutes}} minutos",
+    "status": {
+      "completed": "Hecha",
+      "soon": "Pronto",
+      "premium": "Premium"
+    }
+  },
+  "lesson": {
+    "notFound": "No encontramos esta lección",
+    "finish": "Terminar",
+    "openTool": "Abrir {{name}}",
+    "labels": {
+      "result": "Esto es lo que vas a crear",
+      "tool": "Qué herramienta usar",
+      "howto": "Cómo hacerlo",
+      "tip": "Consejo",
+      "summary": "¡Listo!",
+      "formula": "La fórmula",
+      "quiz": "Pon a prueba lo aprendido",
+      "practice": "Pruébalo tú"
+    },
+    "quiz": {
+      "correct": "¡Correcto!",
+      "wrong": "No del todo"
+    },
+    "practice": {
+      "youWrite": "Tú escribes:",
+      "better": "Mejor así:",
+      "copy": "Copiar petición",
+      "copied": "Copiado",
+      "fixHint": "Si las letras salen mal: «{{prompt}}»"
+    }
+  },
+  "complete": {
+    "title": "¡Lección completada!",
+    "lessons_one": "lección",
+    "lessons_other": "lecciones",
+    "streak_one": "día seguido",
+    "streak_other": "días seguidos",
+    "saved_one": "petición guardada",
+    "saved_other": "peticiones guardadas",
+    "templates_one": "{{count}} plantilla desbloqueada",
+    "templates_other": "{{count}} plantillas desbloqueadas",
+    "nextLesson": "Siguiente lección",
+    "share": "Compartir mi resultado",
+    "shareMessage": "¡Acabo de terminar «{{title}}» en AI Navigator! {{skill}}"
+  },
+  "profile": {
+    "title": "Perfil",
+    "language": "Idioma",
+    "languageHint": "Abre la elección de idioma",
+    "languagePickerTitle": "Idioma de la app",
+    "occupation": "A qué te dedicas",
+    "notSelected": "Sin elegir",
+    "timePerDay": "Tiempo al día",
+    "completed": "Completadas",
+    "lessonsCount_one": "{{count}} lección",
+    "lessonsCount_other": "{{count}} lecciones",
+    "reset": "Borrar datos",
+    "resetTitle": "¿Borrar todos los datos?",
+    "resetMessage": "Se borrarán tus respuestas y tu progreso, y la app volverá a empezar desde la elección de idioma.",
+    "resetCancel": "Cancelar",
+    "resetConfirm": "Borrar"
+  }
+}

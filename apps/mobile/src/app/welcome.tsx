@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -7,22 +8,22 @@ import { theme } from "@/theme";
 
 // Временный демо-экран приветствия для проверки темы и кнопок.
 export default function Welcome() {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
       <View style={styles.content}>
-        <Text style={styles.title}>AI умеет больше, чем вы думаете</Text>
-        <Text style={styles.body}>
-          Научим получать от него точный результат — в работе и в жизни.
-        </Text>
+        <Text style={styles.title}>{t("welcome.title")}</Text>
+        <Text style={styles.body}>{t("welcome.body")}</Text>
       </View>
 
       <View style={styles.actions}>
         <Button
-          title="Начать"
+          title={t("welcome.start")}
           onPress={() => router.push("/onboarding/work")}
         />
         <Button
-          title="У меня уже есть аккаунт"
+          title={t("welcome.haveAccount")}
           variant="ghost"
           onPress={() => {}}
         />

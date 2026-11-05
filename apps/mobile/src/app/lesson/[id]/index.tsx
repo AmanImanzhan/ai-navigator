@@ -1,5 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,6 +12,7 @@ import { theme } from "@/theme";
 
 // Экран урока: по одной карточке за раз. Адрес /lesson/4 → id = "4".
 export default function LessonScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   // У урока «скоро» содержимого нет — для экрана это то же, что «не найден».
   const content = getLesson(id)?.content;
@@ -22,9 +24,9 @@ export default function LessonScreen() {
   if (!content) {
     return (
       <SafeAreaView style={styles.notFound} edges={["top", "bottom"]}>
-        <Text style={styles.notFoundText}>Урок не найден</Text>
+        <Text style={styles.notFoundText}>{t("lesson.notFound")}</Text>
         <Button
-          title="Назад"
+          title={t("common.back")}
           variant="secondary"
           onPress={() => router.back()}
         />
@@ -67,7 +69,7 @@ export default function LessonScreen() {
 
       <View style={styles.actions}>
         <Button
-          title={isLast ? "Завершить" : "Дальше"}
+          title={isLast ? t("lesson.finish") : t("common.next")}
           disabled={nextDisabled}
           onPress={handleNext}
         />

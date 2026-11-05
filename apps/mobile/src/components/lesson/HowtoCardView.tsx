@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 import { LessonHighlight } from "@/components/lesson/LessonHighlight";
@@ -13,9 +14,11 @@ const NUMBER_SIZE = 28;
 
 // Карточка «Как сделать»: пронумерованные способы и совет.
 export function HowtoCardView({ card }: HowtoCardViewProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <LessonLabel text="Как сделать" />
+      <LessonLabel text={t("lesson.labels.howto")} />
 
       {card.methods.map((method, index) => (
         <View key={method.title} style={styles.method}>
@@ -29,7 +32,7 @@ export function HowtoCardView({ card }: HowtoCardViewProps) {
         </View>
       ))}
 
-      <LessonHighlight title="Совет" text={card.tip} />
+      <LessonHighlight title={t("lesson.labels.tip")} text={card.tip} />
     </View>
   );
 }

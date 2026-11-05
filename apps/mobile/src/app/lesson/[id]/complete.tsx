@@ -2,6 +2,7 @@ import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView, Share, StyleSheet, Text, View } from "react-native";
 import Animated, {
   Easing,
@@ -37,6 +38,7 @@ function enterStep(step: number) {
 
 // Экран победы после урока.
 export default function LessonComplete() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const lesson = getLesson(id);
   const skill = lesson?.content?.skill;
@@ -91,11 +93,11 @@ export default function LessonComplete() {
   }));
 
   async function handleShare() {
-    const title = lesson ? `«${lesson.title}»` : "";
+    const message = lesson
+      ? t("complete.shareMessage", { title: lesson.title, skill: skill ?? "" })
+      : t("complete.title");
     try {
-      await Share.share({
-        message: `Урок ${title} в AI Navigator пройден! ${skill ?? ""}`.trim(),
-      });
+      await Share.share({ message: message.trim() });
     } catch {
       // Пользователь закрыл окно или поделиться не получилось — ничего не делаем.
     }
@@ -121,7 +123,7 @@ export default function LessonComplete() {
 
         <View style={styles.texts}>
           <Animated.Text entering={enterStep(0)} style={styles.title}>
-            Урок пройден!
+            {t("complete.title")}
           </Animated.Text>
           {skill ? (
             <Animated.Text entering={enterStep(1)} style={styles.skill}>
@@ -136,7 +138,7 @@ export default function LessonComplete() {
               tone="success"
               icon={{ ios: "book.fill", android: "menu_book", web: "menu_book" }}
               value="+1"
-              label="урок"
+              label={t("complete.lessons", { count: 1 })}
             />
           </Animated.View>
           <Animated.View entering={enterStep(3)} style={styles.stat}>
@@ -148,7 +150,7 @@ export default function LessonComplete() {
                 web: "local_fire_department",
               }}
               value="1"
-              label="день подряд"
+              label={t("complete.streak", { count: 1 })}
             />
           </Animated.View>
           <Animated.View entering={enterStep(4)} style={styles.stat}>
@@ -156,14 +158,16 @@ export default function LessonComplete() {
               tone="warning"
               icon={{ ios: "bookmark.fill", android: "bookmark", web: "bookmark" }}
               value="1"
-              label="запрос сохранён"
+              label={t("complete.saved", { count: 1 })}
             />
           </Animated.View>
         </View>
 
         {/* Пока без перехода — экран шаблонов сделаем позже. */}
         <Animated.View entering={enterStep(5)} style={styles.templates}>
-          <Text style={styles.templatesText}>Открыто 6 шаблонов</Text>
+          <Text style={styles.templatesText}>
+            {t("complete.templates", { count: 6 })}
+          </Text>
           <SymbolView
             name={{
               ios: "chevron.right",
@@ -179,11 +183,11 @@ export default function LessonComplete() {
 
       <Animated.View entering={enterStep(6)} style={styles.actions}>
         <Button
-          title="Следующий урок"
+          title={t("complete.nextLesson")}
           onPress={() => router.replace("/home")}
         />
         <Button
-          title="Поделиться результатом"
+          title={t("complete.share")}
           variant="secondary"
           onPress={handleShare}
         />

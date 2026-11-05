@@ -1,5 +1,6 @@
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 import { Button } from "@/components/Button";
@@ -18,6 +19,7 @@ const COPIED_DURATION_MS = 2000;
 
 // Карточка «Попробуй сам»: свой запрос, улучшенный запрос и кнопки.
 export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   // Через 2 секунды возвращаем кнопке обычный текст.
@@ -34,20 +36,27 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
 
   return (
     <View style={styles.container}>
-      <LessonLabel text="Попробуй сам" />
+      <LessonLabel text={t("lesson.labels.practice")} />
 
       <View style={styles.block}>
-        <Text style={styles.blockTitle}>Вы пишете:</Text>
+        <Text style={styles.blockTitle}>
+          {t("lesson.practice.youWrite")}
+        </Text>
         <View style={styles.bubble}>
           <Text style={styles.bubbleText}>{card.userPrompt}</Text>
         </View>
       </View>
 
-      <LessonHighlight title="Лучше так:" text={card.improvedPrompt} />
+      <LessonHighlight
+        title={t("lesson.practice.better")}
+        text={card.improvedPrompt}
+      />
 
       <View style={styles.actions}>
         <Button
-          title={copied ? "Скопировано" : "Скопировать запрос"}
+          title={
+            copied ? t("lesson.practice.copied") : t("lesson.practice.copy")
+          }
           variant="secondary"
           onPress={handleCopy}
         />
@@ -55,7 +64,7 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
       </View>
 
       <Text style={styles.tip}>
-        Если буквы искажены: «{card.fixPrompt}»
+        {t("lesson.practice.fixHint", { prompt: card.fixPrompt })}
       </Text>
     </View>
   );

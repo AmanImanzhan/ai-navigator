@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,10 +10,12 @@ type ComingSoonProps = {
 
 // Заглушка для вкладок, которые ещё не готовы: заголовок и «Скоро».
 export function ComingSoon({ title }: ComingSoonProps) {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.text}>Скоро</Text>
+      <Text style={styles.text}>{t("common.soon")}</Text>
     </SafeAreaView>
   );
 }

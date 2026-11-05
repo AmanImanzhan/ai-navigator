@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,8 +10,10 @@ import { LANGUAGES, type LanguageCode } from "@/data/onboarding";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
-// Первый экран: выбор языка. Перевод приложения добавим позже через i18n.
+// Первый экран: выбор языка.
+// Заголовок и подпись не переводим — их видят ещё до выбора языка.
 export default function LanguageSelect() {
+  const { t } = useTranslation();
   const savedLanguage = useAppStore((state) => state.language);
   const setLanguage = useAppStore((state) => state.setLanguage);
   const [selected, setSelected] = useState<LanguageCode>(savedLanguage);
@@ -41,7 +44,11 @@ export default function LanguageSelect() {
       </View>
 
       <View style={styles.actions}>
-        <Button title="Continue" onPress={handleContinue} />
+        {/* Кнопка сразу на выбранном языке: Continue / Продолжить / Continuar. */}
+        <Button
+          title={t("common.continue", { lng: selected })}
+          onPress={handleContinue}
+        />
       </View>
     </SafeAreaView>
   );

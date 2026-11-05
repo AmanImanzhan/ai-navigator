@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 import { LessonLabel } from "@/components/lesson/LessonLabel";
@@ -12,9 +13,11 @@ const IMAGE_HEIGHT = 220;
 
 // Карточка «Вот что получится»: картинка результата, заголовок и описание.
 export function ResultCardView({ card }: ResultCardViewProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <LessonLabel text="Вот что получится" />
+      <LessonLabel text={t("lesson.labels.result")} />
       {/* Место под картинку. Настоящую добавим позже. */}
       <View style={styles.image} />
       <Text style={styles.title}>{card.title}</Text>

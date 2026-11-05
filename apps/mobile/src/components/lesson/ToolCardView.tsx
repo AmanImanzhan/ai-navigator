@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 import { LessonLabel } from "@/components/lesson/LessonLabel";
@@ -11,9 +12,11 @@ type ToolCardViewProps = {
 
 // Карточка «Какой инструмент»: название крупно и пояснение.
 export function ToolCardView({ card }: ToolCardViewProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <LessonLabel text="Какой инструмент" />
+      <LessonLabel text={t("lesson.labels.tool")} />
       <Text style={styles.name}>{card.name}</Text>
       <Text style={styles.text}>{card.text}</Text>
       <View style={styles.action}>

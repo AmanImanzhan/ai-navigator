@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
+import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ProgressBar } from "@/components/ProgressBar";
@@ -15,36 +16,27 @@ type ProgressHeaderProps = {
 
 const BUTTON_SIZE = 44;
 
-// Иконка и подпись для экранного диктора у каждого вида кнопки.
-const BUTTONS: Record<
-  HeaderButton,
-  { icon: SymbolViewProps["name"]; label: string }
-> = {
-  back: {
-    icon: { ios: "chevron.left", android: "arrow_back", web: "arrow_back" },
-    label: "Назад",
-  },
-  close: {
-    icon: { ios: "xmark", android: "close", web: "close" },
-    label: "Закрыть",
-  },
+// Иконка у каждого вида кнопки. Подпись для экранного диктора — в переводах (common.back / common.close).
+const ICONS: Record<HeaderButton, SymbolViewProps["name"]> = {
+  back: { ios: "chevron.left", android: "arrow_back", web: "arrow_back" },
+  close: { ios: "xmark", android: "close", web: "close" },
 };
 
 // Верх экрана с шагами: «назад» или крестик, полоска прогресса и «2 из 3».
 // Обе кнопки делают router.back().
 export function ProgressHeader({ button, step, total }: ProgressHeaderProps) {
-  const { icon, label } = BUTTONS[button];
+  const { t } = useTranslation();
 
   return (
     <View style={styles.row}>
       <Pressable
         onPress={() => router.back()}
         accessibilityRole="button"
-        accessibilityLabel={label}
+        accessibilityLabel={t(`common.${button}`)}
         style={({ pressed }) => [styles.button, pressed && styles.pressed]}
       >
         <SymbolView
-          name={icon}
+          name={ICONS[button]}
           size={20}
           weight="semibold"
           tintColor={theme.colors.text}
@@ -55,9 +47,7 @@ export function ProgressHeader({ button, step, total }: ProgressHeaderProps) {
         <ProgressBar progress={step / total} />
       </View>
 
-      <Text style={styles.label}>
-        {step} из {total}
-      </Text>
+      <Text style={styles.label}>{t("common.stepOf", { step, total })}</Text>
     </View>
   );
 }

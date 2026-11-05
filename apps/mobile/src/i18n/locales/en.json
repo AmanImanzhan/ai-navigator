@@ -1,0 +1,132 @@
+{
+  "common": {
+    "continue": "Continue",
+    "next": "Next",
+    "done": "Done",
+    "back": "Back",
+    "close": "Close",
+    "soon": "Coming soon",
+    "stepOf": "{{step}} of {{total}}",
+    "minutes_one": "{{count}} minute",
+    "minutes_other": "{{count}} minutes"
+  },
+  "welcome": {
+    "title": "AI can do more than you think",
+    "body": "We'll show you how to get exactly what you need — at work and in everyday life.",
+    "start": "Get started",
+    "haveAccount": "I already have an account"
+  },
+  "onboarding": {
+    "work": {
+      "title": "What do you do?",
+      "body": "We'll pick lessons and examples that fit your life",
+      "options": {
+        "office": {
+          "title": "Office and admin",
+          "subtitle": "Documents, emails, spreadsheets"
+        },
+        "manager": {
+          "title": "I manage people",
+          "subtitle": "Meetings, tasks, reports"
+        },
+        "business": {
+          "title": "I run my own business",
+          "subtitle": "Ads, customers, social media"
+        },
+        "student": {
+          "title": "I'm studying",
+          "subtitle": "Notes, assignments, languages"
+        },
+        "retired": {
+          "title": "I'm retired",
+          "subtitle": "Keeping in touch, photos, staying safe"
+        }
+      }
+    },
+    "time": {
+      "title": "How much time a day?",
+      "body": "One lesson takes 5–7 minutes. You can change this anytime",
+      "options": {
+        "5": "Easy start · 1 lesson a day",
+        "10": "Steady pace · a lesson plus practice",
+        "15": "Fast progress · 2 lessons a day"
+      },
+      "reminderTitle": "Remind me at 7 PM",
+      "reminderSubtitle": "One notification a day"
+    }
+  },
+  "tabs": {
+    "lessons": "Lessons",
+    "library": "Guide",
+    "prompts": "Prompts",
+    "profile": "Profile"
+  },
+  "lessons": {
+    "title": "Lessons",
+    "meta": "Level {{level}} · {{minutes}} min",
+    "a11yTitle": "Lesson {{id}}. {{title}}",
+    "a11yMeta": "Level {{level}}, {{minutes}} minutes",
+    "status": {
+      "completed": "Done",
+      "soon": "Soon",
+      "premium": "Premium"
+    }
+  },
+  "lesson": {
+    "notFound": "Lesson not found",
+    "finish": "Finish",
+    "openTool": "Open {{name}}",
+    "labels": {
+      "result": "Here's what you'll make",
+      "tool": "Which tool to use",
+      "howto": "How to do it",
+      "tip": "Tip",
+      "summary": "All done",
+      "formula": "The formula",
+      "quiz": "Quick check",
+      "practice": "Try it yourself"
+    },
+    "quiz": {
+      "correct": "That's right!",
+      "wrong": "Not quite"
+    },
+    "practice": {
+      "youWrite": "You write:",
+      "better": "Try this instead:",
+      "copy": "Copy prompt",
+      "copied": "Copied",
+      "fixHint": "If the letters come out wrong: “{{prompt}}”"
+    }
+  },
+  "complete": {
+    "title": "Lesson complete!",
+    "lessons_one": "lesson",
+    "lessons_other": "lessons",
+    "streak_one": "day in a row",
+    "streak_other": "days in a row",
+    "saved_one": "prompt saved",
+    "saved_other": "prompts saved",
+    "templates_one": "{{count}} template unlocked",
+    "templates_other": "{{count}} templates unlocked",
+    "nextLesson": "Next lesson",
+    "share": "Share my result",
+    "shareMessage": "I just finished “{{title}}” in AI Navigator! {{skill}}"
+  },
+  "profile": {
+    "title": "Profile",
+    "language": "Language",
+    "languageHint": "Opens language selection",
+    "languagePickerTitle": "App language",
+    "occupation": "What you do",
+    "notSelected": "Not selected",
+    "timePerDay": "Time per day",
+    "completed": "Completed",
+    "lessonsCount_one": "{{count}} lesson",
+    "lessonsCount_other": "{{count}} lessons",
+    "reset": "Reset data",
+    "resetTitle": "Reset all data?",
+    "resetMessage": "Your answers and lesson progress will be deleted, and the app will start again from language selection.",
+    "resetCancel": "Cancel",
+    "resetConfirm": "Reset"
+  }
+}

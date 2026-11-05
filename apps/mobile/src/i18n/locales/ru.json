@@ -1,0 +1,144 @@
+{
+  "common": {
+    "continue": "Продолжить",
+    "next": "Дальше",
+    "done": "Готово",
+    "back": "Назад",
+    "close": "Закрыть",
+    "soon": "Скоро",
+    "stepOf": "{{step}} из {{total}}",
+    "minutes_one": "{{count}} минута",
+    "minutes_few": "{{count}} минуты",
+    "minutes_many": "{{count}} минут",
+    "minutes_other": "{{count}} минуты"
+  },
+  "welcome": {
+    "title": "AI умеет больше, чем вы думаете",
+    "body": "Научим получать от него точный результат — в работе и в жизни.",
+    "start": "Начать",
+    "haveAccount": "У меня уже есть аккаунт"
+  },
+  "onboarding": {
+    "work": {
+      "title": "Чем вы занимаетесь?",
+      "body": "Подберём уроки и примеры под вашу жизнь",
+      "options": {
+        "office": {
+          "title": "Офис и администрирование",
+          "subtitle": "Документы, письма, таблицы"
+        },
+        "manager": {
+          "title": "Руковожу людьми",
+          "subtitle": "Встречи, задачи, отчёты"
+        },
+        "business": {
+          "title": "Своё дело",
+          "subtitle": "Реклама, клиенты, соцсети"
+        },
+        "student": {
+          "title": "Учусь",
+          "subtitle": "Конспекты, задания, языки"
+        },
+        "retired": {
+          "title": "На пенсии",
+          "subtitle": "Общение, фото, безопасность"
+        }
+      }
+    },
+    "time": {
+      "title": "Сколько времени в день?",
+      "body": "Один урок занимает 5–7 минут. Это можно поменять в любой момент",
+      "options": {
+        "5": "Лёгкий старт · 1 урок в день",
+        "10": "Обычный темп · урок и практика",
+        "15": "Быстрый прогресс · 2 урока в день"
+      },
+      "reminderTitle": "Напоминать в 19:00",
+      "reminderSubtitle": "Одно уведомление в день"
+    }
+  },
+  "tabs": {
+    "lessons": "Уроки",
+    "library": "Справочник",
+    "prompts": "Запросы",
+    "profile": "Профиль"
+  },
+  "lessons": {
+    "title": "Уроки",
+    "meta": "Уровень {{level}} · {{minutes}} мин",
+    "a11yTitle": "Урок {{id}}. {{title}}",
+    "a11yMeta": "Уровень {{level}}, {{minutes}} минут",
+    "status": {
+      "completed": "Пройден",
+      "soon": "Скоро",
+      "premium": "Подписка"
+    }
+  },
+  "lesson": {
+    "notFound": "Урок не найден",
+    "finish": "Завершить",
+    "openTool": "Открыть {{name}}",
+    "labels": {
+      "result": "Вот что получится",
+      "tool": "Какой инструмент",
+      "howto": "Как сделать",
+      "tip": "Совет",
+      "summary": "Готово",
+      "formula": "Формула",
+      "quiz": "Проверка",
+      "practice": "Попробуй сам"
+    },
+    "quiz": {
+      "correct": "Верно!",
+      "wrong": "Не совсем"
+    },
+    "practice": {
+      "youWrite": "Вы пишете:",
+      "better": "Лучше так:",
+      "copy": "Скопировать запрос",
+      "copied": "Скопировано",
+      "fixHint": "Если буквы искажены: «{{prompt}}»"
+    }
+  },
+  "complete": {
+    "title": "Урок пройден!",
+    "lessons_one": "урок",
+    "lessons_few": "урока",
+    "lessons_many": "уроков",
+    "lessons_other": "урока",
+    "streak_one": "день подряд",
+    "streak_few": "дня подряд",
+    "streak_many": "дней подряд",
+    "streak_other": "дня подряд",
+    "saved_one": "запрос сохранён",
+    "saved_few": "запроса сохранено",
+    "saved_many": "запросов сохранено",
+    "saved_other": "запроса сохранено",
+    "templates_one": "Открыт {{count}} шаблон",
+    "templates_few": "Открыто {{count}} шаблона",
+    "templates_many": "Открыто {{count}} шаблонов",
+    "templates_other": "Открыто {{count}} шаблона",
+    "nextLesson": "Следующий урок",
+    "share": "Поделиться результатом",
+    "shareMessage": "Урок «{{title}}» в AI Navigator пройден! {{skill}}"
+  },
+  "profile": {
+    "title": "Профиль",
+    "language": "Язык",
+    "languageHint": "Открывает выбор языка",
+    "languagePickerTitle": "Язык приложения",
+    "occupation": "Занятие",
+    "notSelected": "Не выбрано",
+    "timePerDay": "Время в день",
+    "completed": "Пройдено",
+    "lessonsCount_one": "{{count}} урок",
+    "lessonsCount_few": "{{count}} урока",
+    "lessonsCount_many": "{{count}} уроков",
+    "lessonsCount_other": "{{count}} урока",
+    "reset": "Сбросить данные",
+    "resetTitle": "Сбросить данные?",
+    "resetMessage": "Ответы и прогресс уроков удалятся, и приложение начнётся с выбора языка.",
+    "resetCancel": "Отмена",
+    "resetConfirm": "Сбросить"
+  }
+}

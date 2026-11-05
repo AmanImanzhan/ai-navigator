@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
 import {
@@ -17,6 +18,7 @@ type QuizCardViewProps = {
 
 // Карточка «Проверка»: ситуация, вопрос и варианты ответа.
 export function QuizCardView({ card, onAnswered }: QuizCardViewProps) {
+  const { t } = useTranslation();
   // Номер выбранного варианта; null — ещё не ответили.
   const [selected, setSelected] = useState<number | null>(null);
   const answered = selected !== null;
@@ -37,7 +39,7 @@ export function QuizCardView({ card, onAnswered }: QuizCardViewProps) {
 
   return (
     <View style={styles.container}>
-      <LessonLabel text="Проверка" />
+      <LessonLabel text={t("lesson.labels.quiz")} />
       <Text style={styles.situation}>{card.situation}</Text>
       <Text style={styles.question}>{card.question}</Text>
 
@@ -68,7 +70,7 @@ export function QuizCardView({ card, onAnswered }: QuizCardViewProps) {
               isCorrect ? styles.titleCorrect : styles.titleWrong,
             ]}
           >
-            {isCorrect ? "Верно!" : "Не совсем"}
+            {isCorrect ? t("lesson.quiz.correct") : t("lesson.quiz.wrong")}
           </Text>
           <Text style={styles.feedbackText}>{card.explanation}</Text>
         </View>

@@ -1,4 +1,5 @@
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,12 +10,13 @@ import { theme } from "@/theme";
 
 // Вкладка «Уроки»: направления и их уроки.
 export default function Home() {
+  const { t } = useTranslation();
   const completedLessons = useAppStore((state) => state.completedLessons);
 
   return (
     <SafeAreaView style={styles.screen} edges={["top"]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Уроки</Text>
+        <Text style={styles.title}>{t("lessons.title")}</Text>
 
         {TRACKS.map((track) => (
           <View key={track.id} style={styles.section}>
