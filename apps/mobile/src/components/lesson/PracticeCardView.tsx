@@ -1,9 +1,7 @@
-import * as Clipboard from "expo-clipboard";
-import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
-import { Button } from "@/components/Button";
+import { CopyButton } from "@/components/CopyButton";
 import { LessonHighlight } from "@/components/lesson/LessonHighlight";
 import { LessonLabel } from "@/components/lesson/LessonLabel";
 import { OpenToolButton } from "@/components/lesson/OpenToolButton";
@@ -16,28 +14,12 @@ type PracticeCardViewProps = {
   tool?: ToolLink;
 };
 
-const COPIED_DURATION_MS = 2000;
-
 // Карточка «Попробуй сам»: свой запрос, улучшенный запрос и кнопки.
 // Каждая часть необязательна — показываем только то, что есть в уроке.
 export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
   const { userPrompt, improvedLabel, improvedPrompt, share, followUp, note } =
     card;
-
-  // Через 2 секунды возвращаем кнопке обычный текст.
-  useEffect(() => {
-    if (!copied) return;
-    const timer = setTimeout(() => setCopied(false), COPIED_DURATION_MS);
-    return () => clearTimeout(timer);
-  }, [copied]);
-
-  async function handleCopy() {
-    if (!improvedPrompt) return;
-    await Clipboard.setStringAsync(improvedPrompt);
-    setCopied(true);
-  }
 
   return (
     <View style={styles.container}>
@@ -67,12 +49,9 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
         <View style={styles.actions}>
           {share ? <ShareButton action={share} /> : null}
           {improvedPrompt ? (
-            <Button
-              title={
-                copied ? t("lesson.practice.copied") : t("lesson.practice.copy")
-              }
-              variant="secondary"
-              onPress={handleCopy}
+            <CopyButton
+              text={improvedPrompt}
+              title={t("lesson.practice.copy")}
             />
           ) : null}
           {tool ? <OpenToolButton tool={tool} /> : null}

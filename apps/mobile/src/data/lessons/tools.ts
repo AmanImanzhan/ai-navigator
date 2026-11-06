@@ -1,7 +1,8 @@
-import type { ToolLink } from "@/data/lessons/types";
+import type { Locale, ToolLink } from "@/data/lessons/types";
 
-// Официальные сайты инструментов. Названия одинаковые на всех языках.
-// Инструменты с переводимым названием (Google Переводчик, Google Таблицы) — в файлах языков.
+// Официальные сайты инструментов. Используются и в уроках, и в шаблонах запросов.
+
+// ---------- Названия одинаковые на всех языках ----------
 
 export const CHATGPT: ToolLink = { name: "ChatGPT", url: "https://chatgpt.com" };
 export const GEMINI: ToolLink = {
@@ -29,4 +30,24 @@ export const ELEVENLABS: ToolLink = {
 export const EXCEL: ToolLink = {
   name: "Excel",
   url: "https://excel.cloud.microsoft",
+};
+
+// ---------- Название зависит от языка ----------
+
+export const GOOGLE_TRANSLATE: Record<Locale, ToolLink> = {
+  ru: { name: "Google Переводчик", url: "https://translate.google.com" },
+  en: { name: "Google Translate", url: "https://translate.google.com" },
+  es: { name: "Traductor de Google", url: "https://translate.google.com" },
+};
+
+export const GOOGLE_SHEETS: Record<Locale, ToolLink> = {
+  ru: { name: "Google Таблицы", url: "https://sheets.google.com" },
+  en: { name: "Google Sheets", url: "https://sheets.google.com" },
+  es: { name: "Hojas de cálculo de Google", url: "https://sheets.google.com" },
+};
+
+export const GOOGLE_LENS: Record<Locale, ToolLink> = {
+  ru: { name: "Google Объектив", url: "https://lens.google" },
+  en: { name: "Google Lens", url: "https://lens.google" },
+  es: { name: "Google Lens", url: "https://lens.google" },
 };

@@ -8,21 +8,13 @@ import {
   ELEVENLABS,
   EXCEL,
   GEMINI,
+  GOOGLE_SHEETS,
+  GOOGLE_TRANSLATE,
   HEYGEN,
   IDEOGRAM,
   KLING,
 } from "@/data/lessons/tools";
-import type { LocaleLessons, ToolLink } from "@/data/lessons/types";
-
-// Инструменты, у которых название зависит от языка.
-const GOOGLE_TRANSLATE: ToolLink = {
-  name: "Google Переводчик",
-  url: "https://translate.google.com",
-};
-const GOOGLE_SHEETS: ToolLink = {
-  name: "Google Таблицы",
-  url: "https://sheets.google.com",
-};
+import type { LocaleLessons } from "@/data/lessons/types";
 
 // Сообщение семье из урока 13: им делятся и из практики, и с карточки «Готово».
 const FAMILY_MESSAGE =
@@ -645,7 +637,7 @@ export const RU: LocaleLessons = {
           },
           {
             type: "tool",
-            tools: [GOOGLE_TRANSLATE, CHATGPT],
+            tools: [GOOGLE_TRANSLATE.ru, CHATGPT],
             text: "Режим «Разговор» в Google Переводчике — бесплатно. Или голосовой режим ChatGPT.",
           },
           {
@@ -1055,7 +1047,7 @@ export const RU: LocaleLessons = {
           },
           {
             type: "tool",
-            tools: [CHATGPT, GEMINI, GOOGLE_SHEETS, EXCEL],
+            tools: [CHATGPT, GEMINI, GOOGLE_SHEETS.ru, EXCEL],
             text: "ChatGPT или Gemini — для формул; Google Таблицы или Excel — для самой таблицы.",
           },
           {

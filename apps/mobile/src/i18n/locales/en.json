@@ -8,7 +8,9 @@
     "soon": "Coming soon",
     "stepOf": "{{step}} of {{total}}",
     "minutes_one": "{{count}} minute",
-    "minutes_other": "{{count}} minutes"
+    "minutes_other": "{{count}} minutes",
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "welcome": {
     "title": "AI can do more than you think",
@@ -93,7 +95,6 @@
       "youWrite": "You write:",
       "better": "Try this instead:",
       "copy": "Copy prompt",
-      "copied": "Copied",
       "followUp": "{{hint}}: “{{prompt}}”"
     }
   },
@@ -109,7 +110,44 @@
     "templates_other": "{{count}} templates unlocked",
     "nextLesson": "Next lesson",
     "share": "Share my result",
-    "shareMessage": "I just finished “{{title}}” in AI Navigator! {{skill}}"
+    "shareMessage": "I just finished “{{title}}” in AI Navigator! {{skill}}",
+    "templatesHint": "Opens this lesson's templates"
+  },
+  "prompts": {
+    "title": "Prompts",
+    "tabTemplates": "Templates",
+    "tabMine": "Mine",
+    "searchPlaceholder": "Search templates",
+    "clearSearch": "Clear search",
+    "lessonFilter": "Lesson {{lesson}} templates",
+    "showAll": "Show all",
+    "nothingFound": "Nothing found. Try another word.",
+    "lockedAfter": "Unlocks after lesson {{lesson}}",
+    "lockedTitle": "This template is locked",
+    "lockedMessage": "It unlocks after lesson {{lesson}}, “{{title}}”. Take the lesson now?",
+    "lockedGo": "Take the lesson",
+    "lockedLater": "Later",
+    "premiumMessage": "Lesson {{lesson}}, “{{title}}”, is part of the subscription. The template unlocks after it.",
+    "ok": "Got it",
+    "emptyTitle": "Your prompts will live here",
+    "emptyText": "Open a template, fill in the blanks and tap “Save to mine”.",
+    "emptyAction": "Go to templates",
+    "delete": "Delete",
+    "deleteTitle": "Delete this prompt?",
+    "deleteMessage": "You won't be able to get it back.",
+    "deleteCancel": "Cancel"
+  },
+  "template": {
+    "notFound": "Template not found",
+    "purpose": "What it's for",
+    "prompt": "Prompt",
+    "example": "Example result",
+    "fieldsHint": "Words in [brackets] are blanks to fill in with your own details",
+    "fill": "Fill in",
+    "fillTitle": "Fill in the blanks",
+    "preview": "Your prompt",
+    "save": "Save to mine",
+    "saved": "Saved"
   },
   "profile": {
     "title": "Profile",

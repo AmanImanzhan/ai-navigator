@@ -3,7 +3,14 @@ import { router, useLocalSearchParams } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, Share, StyleSheet, Text, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Animated, {
   Easing,
   FadeInDown,
@@ -21,6 +28,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { Confetti } from "@/components/Confetti";
 import { StatCard } from "@/components/StatCard";
+import { getLessonTemplates } from "@/data/templates";
 import { useLesson } from "@/hooks/useLessons";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
@@ -41,6 +49,8 @@ export default function LessonComplete() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const lesson = useLesson(id);
+  const language = useAppStore((state) => state.language);
+  const templateCount = getLessonTemplates(id, language).length;
   const skill = lesson?.content?.skill;
   const reduceMotion = useReducedMotion();
   const markLessonCompleted = useAppStore((state) => state.markLessonCompleted);
@@ -165,22 +175,36 @@ export default function LessonComplete() {
           </Animated.View>
         </View>
 
-        {/* Пока без перехода — экран шаблонов сделаем позже. */}
-        <Animated.View entering={enterStep(5)} style={styles.templates}>
-          <Text style={styles.templatesText}>
-            {t("complete.templates", { count: 6 })}
-          </Text>
-          <SymbolView
-            name={{
-              ios: "chevron.right",
-              android: "chevron_right",
-              web: "chevron_right",
-            }}
-            size={16}
-            weight="semibold"
-            tintColor={theme.colors.textSecondary}
-          />
-        </Animated.View>
+        {/* Ведёт во вкладку «Запросы», к шаблонам этого урока. */}
+        {templateCount > 0 ? (
+          <Animated.View entering={enterStep(5)} style={styles.templatesWrap}>
+            <Pressable
+              onPress={() =>
+                router.dismissTo({ pathname: "/prompts", params: { lesson: id } })
+              }
+              accessibilityRole="button"
+              accessibilityHint={t("complete.templatesHint")}
+              style={({ pressed }) => [
+                styles.templates,
+                pressed && styles.templatesPressed,
+              ]}
+            >
+              <Text style={styles.templatesText}>
+                {t("complete.templates", { count: templateCount })}
+              </Text>
+              <SymbolView
+                name={{
+                  ios: "chevron.right",
+                  android: "chevron_right",
+                  web: "chevron_right",
+                }}
+                size={16}
+                weight="semibold"
+                tintColor={theme.colors.textSecondary}
+              />
+            </Pressable>
+          </Animated.View>
+        ) : null}
       </ScrollView>
 
       <Animated.View entering={enterStep(6)} style={styles.actions}>
@@ -254,6 +278,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
   },
+  templatesWrap: {
+    alignSelf: "stretch",
+  },
   templates: {
     flexDirection: "row",
     alignItems: "center",
@@ -264,6 +291,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.card,
+  },
+  templatesPressed: {
+    backgroundColor: theme.colors.track,
   },
   templatesText: {
     ...theme.typography.headline,

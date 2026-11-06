@@ -8,7 +8,9 @@
     "soon": "Muy pronto",
     "stepOf": "{{step}} de {{total}}",
     "minutes_one": "{{count}} minuto",
-    "minutes_other": "{{count}} minutos"
+    "minutes_other": "{{count}} minutos",
+    "copy": "Copiar",
+    "copied": "Copiado"
   },
   "welcome": {
     "title": "La IA puede hacer más de lo que crees",
@@ -93,7 +95,6 @@
       "youWrite": "Tú escribes:",
       "better": "Mejor así:",
       "copy": "Copiar petición",
-      "copied": "Copiado",
       "followUp": "{{hint}}: «{{prompt}}»"
     }
   },
@@ -109,7 +110,44 @@
     "templates_other": "{{count}} plantillas desbloqueadas",
     "nextLesson": "Siguiente lección",
     "share": "Compartir mi resultado",
-    "shareMessage": "¡Acabo de terminar «{{title}}» en AI Navigator! {{skill}}"
+    "shareMessage": "¡Acabo de terminar «{{title}}» en AI Navigator! {{skill}}",
+    "templatesHint": "Abre las plantillas de esta lección"
+  },
+  "prompts": {
+    "title": "Peticiones",
+    "tabTemplates": "Plantillas",
+    "tabMine": "Mías",
+    "searchPlaceholder": "Buscar plantillas",
+    "clearSearch": "Borrar búsqueda",
+    "lessonFilter": "Plantillas de la lección {{lesson}}",
+    "showAll": "Ver todas",
+    "nothingFound": "No encontramos nada. Prueba con otra palabra.",
+    "lockedAfter": "Se desbloquea tras la lección {{lesson}}",
+    "lockedTitle": "Esta plantilla aún está bloqueada",
+    "lockedMessage": "Se desbloquea después de la lección {{lesson}}, «{{title}}». ¿Quieres hacer la lección ahora?",
+    "lockedGo": "Hacer la lección",
+    "lockedLater": "Más tarde",
+    "premiumMessage": "La lección {{lesson}}, «{{title}}», forma parte de la suscripción. La plantilla se desbloquea después de ella.",
+    "ok": "Entendido",
+    "emptyTitle": "Aquí aparecerán tus peticiones",
+    "emptyText": "Abre una plantilla, completa los campos y toca «Guardar en mías».",
+    "emptyAction": "Ir a plantillas",
+    "delete": "Eliminar",
+    "deleteTitle": "¿Eliminar esta petición?",
+    "deleteMessage": "No podrás recuperarla.",
+    "deleteCancel": "Cancelar"
+  },
+  "template": {
+    "notFound": "No encontramos esta plantilla",
+    "purpose": "Para qué sirve",
+    "prompt": "Petición",
+    "example": "Ejemplo de resultado",
+    "fieldsHint": "Lo que está entre [corchetes] lo completas con tus propios datos",
+    "fill": "Completar",
+    "fillTitle": "Completa los campos",
+    "preview": "Tu petición",
+    "save": "Guardar en mías",
+    "saved": "Guardada"
   },
   "profile": {
     "title": "Perfil",

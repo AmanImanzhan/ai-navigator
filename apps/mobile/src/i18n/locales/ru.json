@@ -10,7 +10,9 @@
     "minutes_one": "{{count}} минута",
     "minutes_few": "{{count}} минуты",
     "minutes_many": "{{count}} минут",
-    "minutes_other": "{{count}} минуты"
+    "minutes_other": "{{count}} минуты",
+    "copy": "Скопировать",
+    "copied": "Скопировано"
   },
   "welcome": {
     "title": "AI умеет больше, чем вы думаете",
@@ -95,7 +97,6 @@
       "youWrite": "Вы пишете:",
       "better": "Лучше так:",
       "copy": "Скопировать запрос",
-      "copied": "Скопировано",
       "followUp": "{{hint}}: «{{prompt}}»"
     }
   },
@@ -119,7 +120,44 @@
     "templates_other": "Открыто {{count}} шаблона",
     "nextLesson": "Следующий урок",
     "share": "Поделиться результатом",
-    "shareMessage": "Урок «{{title}}» в AI Navigator пройден! {{skill}}"
+    "shareMessage": "Урок «{{title}}» в AI Navigator пройден! {{skill}}",
+    "templatesHint": "Открывает шаблоны этого урока"
+  },
+  "prompts": {
+    "title": "Запросы",
+    "tabTemplates": "Шаблоны",
+    "tabMine": "Мои",
+    "searchPlaceholder": "Поиск по шаблонам",
+    "clearSearch": "Очистить поиск",
+    "lessonFilter": "Шаблоны урока {{lesson}}",
+    "showAll": "Показать все",
+    "nothingFound": "Ничего не нашлось. Попробуйте другое слово.",
+    "lockedAfter": "Откроется после урока {{lesson}}",
+    "lockedTitle": "Шаблон пока закрыт",
+    "lockedMessage": "Он откроется после урока {{lesson}} «{{title}}». Пройти урок сейчас?",
+    "lockedGo": "Пройти урок",
+    "lockedLater": "Позже",
+    "premiumMessage": "Урок {{lesson}} «{{title}}» доступен по подписке. Шаблон откроется после него.",
+    "ok": "Понятно",
+    "emptyTitle": "Здесь будут ваши запросы",
+    "emptyText": "Откройте шаблон, заполните поля и нажмите «Сохранить в мои».",
+    "emptyAction": "К шаблонам",
+    "delete": "Удалить",
+    "deleteTitle": "Удалить запрос?",
+    "deleteMessage": "Вернуть его не получится.",
+    "deleteCancel": "Отмена"
+  },
+  "template": {
+    "notFound": "Шаблон не найден",
+    "purpose": "Для чего",
+    "prompt": "Запрос",
+    "example": "Пример результата",
+    "fieldsHint": "В [скобках] — то, что нужно заполнить своими словами",
+    "fill": "Заполнить",
+    "fillTitle": "Заполните поля",
+    "preview": "Готовый запрос",
+    "save": "Сохранить в мои",
+    "saved": "Сохранено"
   },
   "profile": {
     "title": "Профиль",
