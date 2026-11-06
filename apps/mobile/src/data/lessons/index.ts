@@ -20,9 +20,8 @@ export type * from "@/data/lessons/types";
 // Тексты уроков по языкам.
 const LOCALES: Record<Locale, LocaleLessons> = { ru: RU, en: EN, es: ES };
 
-// ВРЕМЕННО: пока у уроков нет английского и испанского, показываем русский текст.
-// Когда переводы будут готовы — вернуть "en".
-const CONTENT_FALLBACK_LOCALE: Locale = "ru";
+// Если у урока нет перевода на язык пользователя — показываем английский.
+const CONTENT_FALLBACK_LOCALE: Locale = "en";
 
 // Короткая запись урока: id, уровень и время в минутах.
 function lesson(id: LessonId, level: LessonLevel, minutes: number): LessonData {

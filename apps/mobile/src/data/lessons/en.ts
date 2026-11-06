@@ -1,11 +1,12 @@
-// Уроки на английском. Переведены названия всех уроков и содержимое уроков 1–12;
-// у уроков 13–21 пока показываем русское содержимое (см. CONTENT_FALLBACK_LOCALE в index.ts).
+// Уроки на английском: названия направлений и уроков, содержимое уроков.
+// Один урок здесь = будущая строка lesson_translations (lesson_id, locale = "en", title, content).
 
 import {
   CHATGPT,
   CLAUDE,
   DREAMINA,
   ELEVENLABS,
+  EXCEL,
   GEMINI,
   HEYGEN,
   IDEOGRAM,
@@ -18,6 +19,14 @@ const GOOGLE_TRANSLATE: ToolLink = {
   name: "Google Translate",
   url: "https://translate.google.com",
 };
+const GOOGLE_SHEETS: ToolLink = {
+  name: "Google Sheets",
+  url: "https://sheets.google.com",
+};
+
+// Сообщение семье из урока 13: им делятся и из практики, и с карточки «Готово».
+const FAMILY_MESSAGE =
+  "Let's agree on a family code word, in case someone ever calls pretending to be one of us and asks for money. I suggest the word “…”. We don't share it with anyone outside the family";
 
 export const EN: LocaleLessons = {
   tracks: {
@@ -246,6 +255,7 @@ export const EN: LocaleLessons = {
       title: "A card for a special day",
       content: {
         skill: "Now you can make a card with exactly the words you want — and no typos",
+        helperCriteria: "occasion, style, colors, exact words in quotes, where the text goes",
         cards: [
           {
             type: "result",
@@ -820,30 +830,628 @@ export const EN: LocaleLessons = {
     },
     "13": {
       title: "A call from a “relative” in trouble",
+      content: {
+        skill: "Now you can spot a scam call and know how to protect your family with a code word",
+        cards: [
+          {
+            type: "result",
+            text: "You know exactly what to do if your “son” or “grandson” calls in tears and asks you to send money right away. And your family has a code word.",
+          },
+          {
+            type: "info",
+            label: "What you need to know",
+            text: "Scammers need just a few seconds of someone's voice from social media to fake it with AI. That's why the best protection isn't trying to recognize the voice by ear, but judging the situation itself. The number on the screen can be faked too.",
+          },
+          {
+            type: "howto",
+            label: "What to do",
+            layout: "steps",
+            items: [
+              {
+                title: "Stop",
+                text: "Urgency, being asked to keep it secret and an unusual way to pay — gift cards, a wire transfer, crypto — are the main signs of a scam.",
+              },
+              {
+                text: "Ask for the code word or something only your loved one would know.",
+              },
+              {
+                text: "Hang up and call back on the number you already have.",
+              },
+              {
+                text: "Get in touch with another family member.",
+              },
+              {
+                text: "Never send money during a call like this.",
+              },
+            ],
+          },
+          {
+            type: "quiz",
+            situation: "Your “grandson” calls in tears: he's been in a car accident, he needs money, and he asks you not to tell anyone.",
+            question: "What do you do next?",
+            options: [
+              {
+                text: "Hang up and call your grandson back on his own number",
+                correct: true,
+              },
+              {
+                text: "Send a little money to help him right away",
+                correct: false,
+              },
+              {
+                text: "Keep talking and ask follow-up questions",
+                correct: false,
+              },
+            ],
+            explanation: "Hang up and call back. A scammer will try to keep you on the line — don't let them.",
+          },
+          {
+            type: "practice",
+            improvedLabel: "Message for your family:",
+            improvedPrompt: FAMILY_MESSAGE,
+            share: {
+              label: "Send to family",
+              message: FAMILY_MESSAGE,
+            },
+          },
+          {
+            type: "summary",
+            formula: "Urgent + secret + money = stop",
+            text: "Hang up, call back on the number you have, ask for the code word.",
+            share: {
+              label: "Share this lesson with your parents",
+              message: FAMILY_MESSAGE,
+            },
+          },
+        ],
+      },
     },
     "14": {
       title: "Fake photos and videos",
+      content: {
+        skill: "Now you can check in a minute whether a photo or video is fake",
+        cards: [
+          {
+            type: "result",
+            text: "You see a “video of a celebrity” telling people to invest — and within a minute you realize it's most likely a fake, and you know how to check.",
+          },
+          {
+            type: "info",
+            label: "What you need to know",
+            text: "AI fakes are getting more and more realistic, and it's harder and harder to spot them just by looking. So the key isn't to inspect the pixels, but to check the message and the source. Even AI can't reliably spot a fake, so an AI telling you “this is real” isn't proof.",
+          },
+          {
+            type: "howto",
+            label: "How to check",
+            intro: "Three ways:",
+            layout: "options",
+            items: [
+              {
+                title: "The message",
+                text: "Promises of easy money, pressure to act fast, asking you to click a link or send money — these are the strongest signs of a scam.",
+              },
+              {
+                title: "The source",
+                text: "Is this video or story on the person's official pages or in major news outlets?",
+              },
+              {
+                title: "Reverse image search",
+                text: "With Google Lens, you can find where else a photo appears and where it really came from.",
+              },
+            ],
+            note: "There can be visual clues too — strange hands and fingers, a “melting” background, garbled text, lips out of sync with the words — but not seeing them doesn't mean the video is real.",
+          },
+          {
+            type: "quiz",
+            situation: "A famous businessman in a video invites you to invest in a “new platform” with guaranteed returns.",
+            question: "What's the main sign of a scam?",
+            options: [
+              {
+                text: "The celebrity promises easy money and asks you to click a link",
+                correct: true,
+              },
+              {
+                text: "The video is high quality",
+                correct: false,
+              },
+              {
+                text: "The person is speaking your language",
+                correct: false,
+              },
+            ],
+            explanation: "The promise of easy money and the link — the message matters more than the picture quality.",
+          },
+          {
+            type: "practice",
+            note: "See a suspicious post or video? Answer three questions: what are they promising, where does the link go, and is this on the person's official pages? Still not sure? Check the source.",
+          },
+          {
+            type: "summary",
+            formula: "Message + source + reverse image search",
+            text: "Money, urgency and a link = stop, even if the video looks perfect.",
+          },
+        ],
+      },
     },
     "15": {
       title: "What not to tell AI",
+      content: {
+        skill: "Now you can use AI without sharing your personal data with it",
+        cards: [
+          {
+            type: "result",
+            text: "You use AI for personal and work tasks without giving it anything that could harm you or anyone else.",
+          },
+          {
+            type: "info",
+            label: "What you need to know",
+            text: "Whatever you write to AI is saved in your chat history and processed by the service. In the settings of many services, you can stop your chats from being used for training and delete your history — it's worth doing.",
+          },
+          {
+            type: "howto",
+            label: "What never to share",
+            layout: "list",
+            items: [
+              {
+                text: "Passwords and codes from text messages.",
+              },
+              {
+                text: "Card numbers and CVV codes, bank account details.",
+              },
+              {
+                text: "Social Security, passport and other ID numbers.",
+              },
+              {
+                text: "Other people's personal details without their consent.",
+              },
+              {
+                text: "Confidential company documents without permission.",
+              },
+            ],
+            note: "How to get around it: replace names and numbers with placeholders — “Client A”, “[ID number]” — and describe the task without extra details.",
+          },
+          {
+            type: "quiz",
+            situation: "Someone pasted a whole bank statement into AI, with the account number and their ID details.",
+            question: "What will happen?",
+            options: [
+              {
+                text: "The data will be saved in the chat history and stay with the service",
+                correct: true,
+              },
+              {
+                text: "AI will delete everything right away",
+                correct: false,
+              },
+              {
+                text: "Nothing — it's safe",
+                correct: false,
+              },
+            ],
+            explanation: "The data will be saved in the history. It would have been better to remove the numbers first.",
+          },
+          {
+            type: "practice",
+            userPrompt: "My Social Security number is 123-45-6789 and I live at 42 Oak Street",
+            improvedPrompt: "My Social Security number is [number] and I live at [address]",
+            note: "Same task, no risk.",
+          },
+          {
+            type: "summary",
+            formula: "No passwords, cards or documents + other people's data only with consent + use placeholders + check your privacy settings",
+          },
+        ],
+      },
     },
     "16": {
       title: "A spreadsheet with formulas, no Excel skills needed",
+      content: {
+        skill: "Now you can get spreadsheet formulas from AI — even if you don't know Excel",
+        helperCriteria: "the app and its settings, where the data is, the row range, what to calculate",
+        cards: [
+          {
+            type: "result",
+            text: "A sales spreadsheet where each employee's monthly total adds up by itself — with a formula AI wrote for you.",
+          },
+          {
+            type: "tool",
+            tools: [CHATGPT, GEMINI, GOOGLE_SHEETS, EXCEL],
+            text: "ChatGPT or Gemini for the formulas; Google Sheets or Excel for the spreadsheet itself.",
+          },
+          {
+            type: "howto",
+            intro: "Three ways:",
+            layout: "options",
+            items: [
+              {
+                title: "Ask for a formula",
+                text: "Describe what's in each column, which row the data starts on and what you need to calculate.",
+              },
+              {
+                title: "Ask for a table layout",
+                text: "AI will suggest columns and sample rows you can paste into your spreadsheet.",
+              },
+              {
+                title: "Upload your spreadsheet and ask for an analysis",
+                text: "Only if it has no confidential data.",
+              },
+            ],
+            note: "Important: formulas depend on your spreadsheet's language and region settings — in some countries you use a semicolon instead of a comma. Tell AI which app and settings you have, and if a formula doesn't work, let it know.",
+          },
+          {
+            type: "quiz",
+            situation: "AI gave you a formula, but the spreadsheet shows an error.",
+            question: "Why did that happen?",
+            options: [
+              {
+                text: "You didn't say which columns the data is in and which row it starts on",
+                correct: true,
+              },
+              {
+                text: "Google Sheets doesn't accept formulas from AI",
+                correct: false,
+              },
+              {
+                text: "You need a paid version of AI",
+                correct: false,
+              },
+            ],
+            explanation: "You didn't name the columns and rows — AI guessed where the data was and got it wrong.",
+          },
+          {
+            type: "practice",
+            improvedPrompt: "Google Sheets, English (US) settings. Column A has dates, column B has employee names, column C has the sale amount. The data is in rows 2 to 200. Write a formula that adds up each employee's sales for October 2026, and explain which cell to put it in",
+          },
+          {
+            type: "summary",
+            formula: "Which app and settings + what's in which column + which row the data starts on + what to calculate + where to put it",
+          },
+        ],
+      },
     },
     "17": {
       title: "Meeting notes from a recording",
+      content: {
+        skill: "Now you can turn a meeting recording into clear minutes with tasks and deadlines",
+        helperCriteria: "structure, task format, flagging gaps, no making things up",
+        cards: [
+          {
+            type: "result",
+            text: "An hour-long meeting recording → one page of meeting minutes: who attended, decisions, tasks with owners and deadlines, open questions.",
+          },
+          {
+            type: "tool",
+            tools: [CHATGPT, CLAUDE],
+            text: "ChatGPT or Claude. Make the transcript as shown in lesson 12.",
+          },
+          {
+            type: "howto",
+            intro: "Three ways:",
+            layout: "options",
+            items: [
+              {
+                title: "From a transcript",
+                text: "Paste in the text of the recording.",
+              },
+              {
+                title: "From your notes",
+                text: "Paste in your quick notes from the meeting — AI will turn them into minutes.",
+              },
+              {
+                title: "From audio",
+                text: "Upload the recording to an AI assistant that accepts audio.",
+              },
+            ],
+            note: "Record meetings only with everyone's consent; confidential meetings only if your company allows these services.",
+          },
+          {
+            type: "quiz",
+            situation: "The tasks in the minutes have no deadlines.",
+            question: "What do you say to AI next?",
+            options: [
+              {
+                text: "Ask it to add the deadlines and mark any that weren't set as “no deadline set”",
+                correct: true,
+              },
+              {
+                text: "Make up the deadlines yourself and add them",
+                correct: false,
+              },
+              {
+                text: "Transcribe the recording again",
+                correct: false,
+              },
+            ],
+            explanation: "Ask it to add deadlines and flag the missing ones — that way you can see right away what still needs to be agreed on.",
+          },
+          {
+            type: "practice",
+            improvedPrompt: "Write meeting minutes from this transcript. Structure: date, attendees, decisions made, action items in the format “who — what — by when”, open questions. If a deadline or owner wasn't mentioned, say so. Don't add anything of your own",
+          },
+          {
+            type: "summary",
+            formula: "Source (transcript, notes or audio) + clear structure + “who — what — by when” + flagged gaps + nothing made up",
+          },
+        ],
+      },
     },
     "18": {
       title: "A work email in one minute",
+      content: {
+        skill: "Now you can write a business email in a minute — polite, precise and with the facts",
+        helperCriteria: "recipient, facts, request, tone, length, subject line",
+        cards: [
+          {
+            type: "result",
+            text: "A clear email to a supplier about a late order: polite but firm, with the order number, dates and what you need — plus a subject line.",
+          },
+          {
+            type: "tool",
+            tools: [CHATGPT, CLAUDE, GEMINI],
+            text: "ChatGPT, Claude or Gemini.",
+          },
+          {
+            type: "howto",
+            intro: "Three ways:",
+            layout: "options",
+            items: [
+              {
+                title: "From scratch",
+                text: "Who it's to, what it's about, the facts (numbers, dates), what you want, the tone and the length.",
+              },
+              {
+                title: "Replying to an email",
+                text: "Paste in the email you got — without confidential details — and say what you want to reply.",
+              },
+              {
+                title: "Improving a draft",
+                text: "Paste in your text and ask it to make it shorter, more polite or firmer.",
+              },
+            ],
+          },
+          {
+            type: "quiz",
+            situation: "Prompt: “write an email to a supplier about a delay”.",
+            question: "What will you get?",
+            options: [
+              {
+                text: "A polite but generic email without your dates or order number",
+                correct: true,
+              },
+              {
+                text: "A precise email with your dates and requests",
+                correct: false,
+              },
+              {
+                text: "A harsh complaint full of threats",
+                correct: false,
+              },
+            ],
+            explanation: "Polite but generic — AI doesn't know the facts, so you'll have to rewrite the email.",
+          },
+          {
+            type: "practice",
+            improvedPrompt: "Write an email to our supplier, Fresh Foods Co. Order #[number], placed on October 20, was due on October 27 but hasn't arrived. What we need: the exact delivery date by the end of today, and a replacement if they can't deliver by Friday. Tone: polite but firm. Under 120 words. Write the subject line separately",
+            followUp: {
+              hint: "To fine-tune it",
+              prompt: "Make it a little more formal and add a thank-you for working with us so far",
+            },
+          },
+          {
+            type: "summary",
+            formula: "Recipient + facts (numbers, dates) + what you want + tone + length + subject line",
+          },
+        ],
+      },
     },
     "19": {
       title: "The key points of a long report",
+      content: {
+        skill: "Now you can boil a long report down to the key points and check the numbers in it",
+        helperCriteria: "role, goal, structure, source references, no making things up, a fact-check step",
+        cards: [
+          {
+            type: "result",
+            text: "A 15-page report → a half-page summary: three key takeaways, key figures with page numbers, risks and decisions to make. An hour of reading becomes 5 minutes — but there's a catch, and we'll cover it in this lesson.",
+          },
+          {
+            type: "tool",
+            tools: [CLAUDE, CHATGPT],
+            text: "Claude or ChatGPT — you can upload a PDF or Word file to either one. Before uploading a work document, check whether your company allows it; don't upload anything confidential without permission.",
+          },
+          {
+            type: "howto",
+            layout: "steps",
+            items: [
+              {
+                text: "Upload the file.",
+              },
+              {
+                title: "Say who you are and why",
+                text: "“I'm a department head, and tomorrow I'm going over this report with our CEO.”",
+              },
+              {
+                title: "Set the structure",
+                text: "Key takeaways, figures, risks, decisions.",
+              },
+              {
+                text: "Ask for a page number for every figure.",
+              },
+              {
+                title: "Tell it not to make things up",
+                text: "“Don't add anything that isn't in the report. If there's not enough data, say so.”",
+              },
+            ],
+          },
+          {
+            type: "quiz",
+            situation: "The summary says “sales grew 18%”, but the report says 12%.",
+            question: "Why did that happen?",
+            options: [
+              {
+                text: "There was a typo in the report",
+                correct: false,
+              },
+              {
+                text: "AI can mix up or make up numbers",
+                correct: true,
+              },
+              {
+                text: "You should have used the paid version",
+                correct: false,
+              },
+            ],
+            explanation: "AI can mix up or make up numbers — it's called a “hallucination”, and it happens in paid versions too. Always double-check key figures.",
+          },
+          {
+            type: "practice",
+            improvedPrompt: "I'm the head of the sales department. Tomorrow I'm going over this report with our CEO. Write a summary no longer than half a page: 1) three key takeaways; 2) key figures with page numbers; 3) risks; 4) decisions that need to be made. Don't add anything that isn't in the report. If there's not enough data, say so",
+            followUp: {
+              hint: "Step two",
+              prompt: "Check every figure in the summary against the report and give an exact quote for each one",
+            },
+          },
+          {
+            type: "summary",
+            formula: "Role and goal + structure + page references + no making things up + checking the numbers",
+            text: "AI saves you an hour of reading, but you're the one responsible for the numbers.",
+          },
+        ],
+      },
     },
     "20": {
       title: "Get ready for a team meeting",
+      content: {
+        skill: "Now you can prepare for a team meeting: an agenda, answers to pushback and a follow-up",
+        helperCriteria: "role, topic, length, team context, result format",
+        cards: [
+          {
+            type: "result",
+            text: "A plan for a 30-minute meeting with time for each item, ready answers to your team's objections and a short follow-up message afterwards.",
+          },
+          {
+            type: "tool",
+            tools: [CHATGPT, CLAUDE],
+            text: "ChatGPT or Claude.",
+          },
+          {
+            type: "howto",
+            intro: "Three ways:",
+            layout: "options",
+            items: [
+              {
+                title: "Agenda",
+                text: "Topic, length, attendees, goal — AI will split the time between the items.",
+              },
+              {
+                title: "Rehearsal",
+                text: "Ask AI to play an employee who's against the changes, and practice your answers.",
+              },
+              {
+                title: "Follow-up",
+                text: "After the meeting, paste in your notes — AI will write a message for the team with the decisions and tasks.",
+              },
+            ],
+          },
+          {
+            type: "quiz",
+            situation: "AI wrote a 2-hour agenda, but you only have 30 minutes.",
+            question: "What do you say to AI next?",
+            options: [
+              {
+                text: "Ask it to fit it into 30 minutes and keep the 3 main items",
+                correct: true,
+              },
+              {
+                text: "Delete items yourself at random",
+                correct: false,
+              },
+              {
+                text: "Make the meeting 2 hours long",
+                correct: false,
+              },
+            ],
+            explanation: "Ask it to fit it into 30 minutes — AI will pick what matters most and rebalance the time.",
+          },
+          {
+            type: "practice",
+            improvedPrompt: "I manage a team of 6. On Friday we have a 30-minute meeting about switching to a new shift schedule, and the team may not be happy about it. Write an agenda with time for each item. Then list 5 objections that might come up and how to answer them calmly",
+            followUp: {
+              hint: "Bonus",
+              prompt: "Now play an employee who's against the new schedule — I'll practice my answers",
+            },
+          },
+          {
+            type: "summary",
+            formula: "Who you are + topic and length + team mood + agenda with timing + objections and answers + rehearsal",
+          },
+        ],
+      },
     },
     "21": {
       title: "Give a clear task to someone on your team",
+      content: {
+        skill: "Now you can give tasks that people understand the first time",
+        helperCriteria: "result, goal, deadline, definition of done, resources, who to ask",
+        cards: [
+          {
+            type: "result",
+            text: "A task your team member gets the first time: what the result is, why it matters, when it's due, how to know it's done and who to go to with questions.",
+          },
+          {
+            type: "tool",
+            tools: [CHATGPT, CLAUDE],
+            text: "ChatGPT or Claude.",
+          },
+          {
+            type: "howto",
+            intro: "Three ways:",
+            layout: "options",
+            items: [
+              {
+                title: "From quick notes",
+                text: "Jot down what you need — AI will turn it into a clear task.",
+              },
+              {
+                title: "From a request from above",
+                text: "Paste in a message from your manager or a client — AI will turn it into a task for your team member.",
+              },
+              {
+                title: "A check",
+                text: "Paste in a task you've already written and ask what might be unclear.",
+              },
+            ],
+          },
+          {
+            type: "quiz",
+            situation: "The task: “Get the sales report ready by Friday.”",
+            question: "What will you get?",
+            options: [
+              {
+                text: "They'll make a report, but not the one you expected",
+                correct: true,
+              },
+              {
+                text: "They'll do exactly what you need",
+                correct: false,
+              },
+              {
+                text: "They'll refuse",
+                correct: false,
+              },
+            ],
+            explanation: "You'll get a report, but not the right one — it's unclear what period it covers, who it's for and what should be in it.",
+          },
+          {
+            type: "practice",
+            improvedPrompt: "Help me give a task to someone on my team. Notes: a sales report for October, needed for a meeting with our CEO on Monday. Spell out: the result, why it's needed, the deadline, what the report should include, where to get the data and who to ask with questions. Friendly tone. Then list the questions they might ask — I'll answer them in advance",
+          },
+          {
+            type: "summary",
+            formula: "Result + why + deadline + definition of done + where to get the data + who to ask",
+          },
+        ],
+      },
     },
   },
 };
