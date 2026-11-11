@@ -40,6 +40,8 @@ export default function RootLayout() {
         <Stack.Screen name="lesson/[id]/complete" />
         <Stack.Screen name="template/[id]/index" />
         <Stack.Screen name="template/[id]/fill" />
+        <Stack.Screen name="library/tool/[id]" />
+        <Stack.Screen name="library/concept/[id]" />
         {/* Выбор языка из Профиля — шторка снизу высотой по содержимому. */}
         <Stack.Screen
           name="language-picker"

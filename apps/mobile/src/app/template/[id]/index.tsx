@@ -25,7 +25,7 @@ export default function TemplateScreen() {
     return (
       <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
         <View style={styles.content}>
-          <BackHeader />
+          <BackHeader fallback="/prompts" />
           <Text style={styles.notFound}>
             {template
               ? t("prompts.lockedAfter", { lesson: template.lessonId })
@@ -39,7 +39,7 @@ export default function TemplateScreen() {
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <BackHeader />
+        <BackHeader fallback="/prompts" />
         <Text style={styles.title}>{template.title}</Text>
 
         <View style={styles.block}>

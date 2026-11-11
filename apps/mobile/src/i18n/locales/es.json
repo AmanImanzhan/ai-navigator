@@ -96,7 +96,8 @@
       "better": "Mejor así:",
       "copy": "Copiar petición",
       "followUp": "{{hint}}: «{{prompt}}»"
-    }
+    },
+    "moreAbout": "Más en la Guía:"
   },
   "complete": {
     "title": "¡Lección completada!",
@@ -148,6 +149,39 @@
     "preview": "Tu petición",
     "save": "Guardar en mías",
     "saved": "Guardada"
+  },
+  "library": {
+    "tabTools": "Herramientas",
+    "tabConcepts": "Conceptos",
+    "searchPlaceholder": "Buscar en la guía",
+    "about": "Qué es",
+    "strengths": "En qué destaca",
+    "free": "Gratis",
+    "notes": "Conviene saber",
+    "openSite": "Abrir sitio web",
+    "inLessons": "En las lecciones",
+    "noLessons": "Todavía no aparece en ninguna lección",
+    "lessonChip": "Lección {{lesson}}",
+    "lessonChipA11y": "Abrir la lección {{lesson}}, «{{title}}»",
+    "example": "Ejemplo",
+    "checkedAt": "Datos de {{month}} de {{year}}",
+    "notFound": "No encontramos esta página",
+    "premiumTitle": "Lección con suscripción",
+    "premiumMessage": "La lección {{lesson}}, «{{title}}», forma parte de la suscripción.",
+    "months": {
+      "1": "enero",
+      "2": "febrero",
+      "3": "marzo",
+      "4": "abril",
+      "5": "mayo",
+      "6": "junio",
+      "7": "julio",
+      "8": "agosto",
+      "9": "septiembre",
+      "10": "octubre",
+      "11": "noviembre",
+      "12": "diciembre"
+    }
   },
   "profile": {
     "title": "Perfil",

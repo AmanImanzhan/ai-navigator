@@ -31,6 +31,15 @@ export const EXCEL: ToolLink = {
   name: "Excel",
   url: "https://excel.cloud.microsoft",
 };
+export const COPILOT: ToolLink = {
+  name: "Microsoft Copilot",
+  url: "https://copilot.microsoft.com",
+};
+export const PERPLEXITY: ToolLink = {
+  name: "Perplexity",
+  url: "https://www.perplexity.ai",
+};
+export const CAPCUT: ToolLink = { name: "CapCut", url: "https://www.capcut.com" };
 
 // ---------- Название зависит от языка ----------
 

@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, type Href } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, View } from "react-native";
@@ -7,15 +7,20 @@ import { theme } from "@/theme";
 
 const BUTTON_SIZE = 44;
 
-// Верх экрана с кнопкой «назад». Если возвращаться некуда (открыли по ссылке) — ведёт во вкладку «Запросы».
-export function BackHeader() {
+type BackHeaderProps = {
+  // Куда вести, если возвращаться некуда (экран открыли по ссылке).
+  fallback: Href;
+};
+
+// Верх экрана с кнопкой «назад».
+export function BackHeader({ fallback }: BackHeaderProps) {
   const { t } = useTranslation();
 
   function handleBack() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.replace("/prompts");
+      router.replace(fallback);
     }
   }
 

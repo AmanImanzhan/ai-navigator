@@ -47,7 +47,7 @@ export default function FillTemplateScreen() {
     return (
       <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
         <View style={styles.content}>
-          <BackHeader />
+          <BackHeader fallback="/prompts" />
           <Text style={styles.title}>{t("template.notFound")}</Text>
         </View>
       </SafeAreaView>
@@ -74,7 +74,7 @@ export default function FillTemplateScreen() {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive"
         >
-          <BackHeader />
+          <BackHeader fallback="/prompts" />
           <View style={styles.header}>
             <Text style={styles.title}>{t("template.fillTitle")}</Text>
             <Text style={styles.subtitle}>{template.title}</Text>

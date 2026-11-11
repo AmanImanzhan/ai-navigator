@@ -96,7 +96,8 @@
       "better": "Try this instead:",
       "copy": "Copy prompt",
       "followUp": "{{hint}}: “{{prompt}}”"
-    }
+    },
+    "moreAbout": "More in the Guide:"
   },
   "complete": {
     "title": "Lesson complete!",
@@ -148,6 +149,39 @@
     "preview": "Your prompt",
     "save": "Save to mine",
     "saved": "Saved"
+  },
+  "library": {
+    "tabTools": "Tools",
+    "tabConcepts": "Concepts",
+    "searchPlaceholder": "Search the guide",
+    "about": "What it is",
+    "strengths": "What it's good at",
+    "free": "Free",
+    "notes": "Good to know",
+    "openSite": "Open website",
+    "inLessons": "In lessons",
+    "noLessons": "Not in any lessons yet",
+    "lessonChip": "Lesson {{lesson}}",
+    "lessonChipA11y": "Open lesson {{lesson}}, “{{title}}”",
+    "example": "Example",
+    "checkedAt": "Information as of {{month}} {{year}}",
+    "notFound": "Page not found",
+    "premiumTitle": "Subscription lesson",
+    "premiumMessage": "Lesson {{lesson}}, “{{title}}”, is part of the subscription.",
+    "months": {
+      "1": "January",
+      "2": "February",
+      "3": "March",
+      "4": "April",
+      "5": "May",
+      "6": "June",
+      "7": "July",
+      "8": "August",
+      "9": "September",
+      "10": "October",
+      "11": "November",
+      "12": "December"
+    }
   },
   "profile": {
     "title": "Profile",
