@@ -14,9 +14,8 @@ export type * from "@/data/templates/types";
 
 const LOCALES: Record<Locale, LocaleTemplates> = { ru: RU, en: EN, es: ES };
 
-// ВРЕМЕННО: пока шаблоны не переведены, показываем русский текст.
-// Когда переводы будут готовы — вернуть "en".
-const FALLBACK_LOCALE: Locale = "ru";
+// Если у шаблона нет перевода на язык пользователя — показываем английский.
+const FALLBACK_LOCALE: Locale = "en";
 
 const NUMBERS: TemplateNumber[] = [1, 2, 3, 4, 5];
 

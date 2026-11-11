@@ -1,11 +1,15 @@
-// Шаблоны на испанском. Переведены шаблоны 1.1–10.5; остальные пока показываем на русском (см. FALLBACK_LOCALE в index.ts).
+// Шаблоны на испанском: все 105 шаблонов и предупреждения уроков.
 // Один шаблон = будущая строка template_translations (template_id, locale = "es", …).
 
 import {
   CHATGPT,
   CLAUDE,
   DREAMINA,
+  ELEVENLABS,
+  EXCEL,
   GEMINI,
+  GOOGLE_LENS,
+  GOOGLE_SHEETS,
   GOOGLE_TRANSLATE,
   HEYGEN,
   IDEOGRAM,
@@ -25,6 +29,20 @@ export const ES: LocaleTemplates = {
       "Da vida a fotos de tus seres queridos solo si tu familia está de acuerdo.",
     "10":
       "Descarga los idiomas en el Traductor de Google antes de viajar: así funciona sin internet.",
+    "11":
+      "En el plan gratuito de ElevenLabs, las locuciones son solo para uso personal.",
+    "12":
+      "Si grabas una conversación con otras personas, avísales.",
+    "13":
+      "Estas plantillas son comprobaciones y recordatorios. No escribas en las peticiones nombres, teléfonos ni números de tarjetas o documentos.",
+    "14":
+      "La IA no puede distinguir con seguridad una falsificación, así que en estas plantillas te ayuda a comprobar, no da un veredicto.",
+    "15":
+      "Estas plantillas son comprobaciones y recordatorios. No escribas en las peticiones nombres, teléfonos ni números de tarjetas o documentos.",
+    "17":
+      "Graba las reuniones solo con el permiso de los participantes.",
+    "19":
+      "Antes de subir un documento de trabajo, averigua si tu empresa lo permite.",
   },
   templates: {
     "1.1": {
@@ -446,7 +464,7 @@ export const ES: LocaleTemplates = {
       purpose: "Una frase importante que no puede salir mal traducida.",
       tools: [CHATGPT],
       prompt:
-        "Estoy en un restaurante en [país]. Traduce al [idioma], con educación y naturalidad: «[lo que quiero decir]». Dame la frase, cómo se pronuncia y qué podría responder el camarero. Si algo de mi frase no está claro, pregúntame",
+        "Estoy en un restaurante en [país]. Traduce al [idioma], con educación y naturalidad: «[lo que quiero decir]». Dame la frase, cómo se pronuncia y qué podría responder quien te atienda. Si algo de mi frase no está claro, pregúntame",
       example:
         "«Tengo alergia a los frutos secos, ¿este plato lleva?» en italiano, con la pronunciación y las posibles respuestas.",
     },
@@ -476,6 +494,501 @@ export const ES: LocaleTemplates = {
         "Voy a [país], la situación es [situación]. Dame 10 frases útiles en [idioma] con su traducción y cómo se pronuncian. Educadas, como las dice la gente de allí",
       example:
         "10 frases para registrarte en un hotel, desde «Tengo una reserva a nombre de…» hasta «¿Puedo dejar la habitación más tarde?».",
+    },
+    "11.1": {
+      title: "Preparar una felicitación para la locución",
+      purpose: "Para que la voz no se trabe con fechas y nombres.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Prepara este texto para la locución: escribe con letras los números y las abreviaturas, añade pausas con comas y puntos suspensivos e indica cómo se pronuncian los nombres [nombres]. Texto: [texto]",
+      example:
+        "Un texto en el que «25 años» pasa a ser «veinticinco años» y los nombres llevan pistas de pronunciación.",
+    },
+    "11.2": {
+      title: "Un cuento en audio para dormir",
+      purpose: "Un cuento antes de dormir con voz de narrador.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Reescribe este cuento para leérselo en voz alta a un niño o niña de [edad] años: frases cortas, pausas y ayuda con las palabras difíciles. Ambiente: [ambiente]. Cuento: [texto]",
+      example:
+        "Un cuento tranquilo listo para la locución y una sugerencia de qué voz elegir en ElevenLabs.",
+    },
+    "11.3": {
+      title: "Una carta para alguien que ve poco",
+      purpose: "Para que tu abuela o tu abuelo pueda escuchar una carta en vez de leerla.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Prepara esta carta para la locución para [quién]: ve poco y la va a escuchar. Números y fechas con letras, pausas entre ideas y un tono cariñoso. Texto: [texto]",
+      example:
+        "Una carta agradable de escuchar: sin abreviaturas, con pausas, de unos 2 minutos.",
+    },
+    "11.4": {
+      title: "Tu historia familiar, en voz alta",
+      purpose: "Grabar la historia de tu familia para que la escuchen los nietos.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Prepara para la locución esta historia familiar sobre [quién]: fechas con letras, cómo se pronuncian los nombres ([nombres]) y pausas antes de los momentos importantes. Recomiéndame una voz: [qué tipo]. Texto: [texto]",
+      example:
+        "La historia de tu bisabuelo con las fechas en palabras y pausas, lista para grabar.",
+    },
+    "11.5": {
+      title: "Escuchar tu discurso antes de darlo",
+      purpose: "Comprobar cómo suena un discurso antes del gran día.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Prepara mi discurso para la locución, para escuchar cómo suena. Dura [cuántos] minutos; números con letras, pausas y ayuda con las palabras difíciles. Texto: [texto]",
+      example:
+        "Un texto de 3 minutos con pausas: al escucharlo, ves dónde las frases son demasiado largas.",
+    },
+    "12.1": {
+      title: "Un mensaje de voz largo",
+      purpose: "Saber de qué trata un audio de cinco minutos sin escucharlo.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe este mensaje de voz de [quién]. Después, resúmelo en 3 puntos: qué quiere esta persona y qué tengo que hacer yo",
+      example:
+        "El mensaje en texto y 3 puntos como «Te pide recoger un paquete antes del viernes».",
+    },
+    "12.2": {
+      title: "Apuntes de una clase o un webinar",
+      purpose: "Para estudiar o hacer cursos cuando no hay tiempo de volver a ver la grabación.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe la grabación de esta clase sobre [tema]. Términos: [términos]. Después, haz un resumen en 7 puntos y 3 preguntas para repasar",
+      example:
+        "Una página de apuntes con los términos bien escritos y preguntas para repasar.",
+    },
+    "12.3": {
+      title: "Lo importante de la reunión del colegio",
+      purpose: "Cuando en la reunión se habló mucho y solo necesitas lo esencial.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe la grabación de la reunión del colegio. El docente se llama [nombre]. Después, di qué se decidió, qué tienen que hacer las familias y para cuándo, y si hay que pagar algo y cuándo",
+      example:
+        "5 puntos: qué comprar, cuándo es la excursión y hasta qué fecha hay que pagar.",
+    },
+    "12.4": {
+      title: "Notas de voz → lista de tareas",
+      purpose: "Si dictas tus ideas sobre la marcha.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe mis notas de voz de [día]. Después, haz una lista de tareas por orden de importancia y, aparte, una lista de compras",
+      example:
+        "8 tareas en orden y una lista de compras de 6 cosas.",
+    },
+    "12.5": {
+      title: "Una conversación con un cliente",
+      purpose: "No perderte nada después de una llamada o reunión con un cliente.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe esta grabación de una conversación con el cliente [nombre o empresa]. Términos: [términos]. Después, di qué quiere el cliente, los plazos, el presupuesto y mi lista de tareas",
+      example:
+        "Un resumen breve de la conversación y 4 tareas con plazos.",
+    },
+    "13.1": {
+      title: "Un mensaje a tus padres sobre la palabra clave",
+      purpose: "Acordar una palabra clave sin preocupar a nadie de más.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Ayúdame a escribir un mensaje para [quién] sobre una palabra clave por si llaman estafadores. Explícalo de forma sencilla y tranquila, sin asustar, en 4–5 frases. No pongas la palabra: se la diré en persona",
+      example:
+        "Un mensaje cariñoso para mamá y papá que explica para qué sirve la palabra y qué hacer ante una llamada extraña.",
+    },
+    "13.2": {
+      title: "Comprobar una llamada sospechosa",
+      purpose: "Cuando acabas de recibir una llamada rara y tienes dudas.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Acabo de recibir una llamada. Lo que me dijeron: [en pocas palabras, sin nombres ni números]. Repasa conmigo las señales de estafa: prisa, que te pidan guardar el secreto y una forma de pago rara. Dime qué hacer ahora",
+      example:
+        "Un análisis: «Hay prisa y te piden silencio: son señales de estafa. Cuelga y llama a tu familiar a su número de siempre».",
+    },
+    "13.3": {
+      title: "Una guía para padres mayores",
+      purpose: "Para imprimirla y tenerla junto al teléfono.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Haz una guía para [quién] sobre las llamadas de estafadores: 5 reglas con palabras sencillas y qué hacer paso a paso. Sin palabras difíciles, en una página, para imprimir",
+      example:
+        "Una página: «¿Te llaman y te piden dinero? 1. Cuelga…».",
+    },
+    "13.4": {
+      title: "Comprobar un mensaje sospechoso",
+      purpose: "«Hola, mamá, cambié de número, ¿me haces una transferencia?» y mensajes parecidos.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Me escribieron: “[texto del mensaje sin enlaces, números ni nombres]”. ¿Tiene señales de estafa: prisa, secreto, dinero? ¿Cómo puedo comprobarlo sin responder?",
+      example:
+        "Las señales de estafa del mensaje y cómo comprobarlo: llamar al número de siempre, preguntar a otro familiar.",
+    },
+    "13.5": {
+      title: "Qué hacer si llaman «del banco» o «de la policía»",
+      purpose: "Saber de antemano cómo actuar.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Haz un plan breve de qué hacer si alguien llama diciendo que es de [organización] y me pide [qué piden]. 4–5 pasos, breves, para tener junto al teléfono",
+      example:
+        "Un plan: «1. No des ningún código. 2. Cuelga. 3. Llama al banco al número que aparece en tu tarjeta…».",
+    },
+    "14.1": {
+      title: "Comprobar una publicación con una «oferta increíble»",
+      purpose: "Un famoso recomienda invertir y prometen ganancias sin riesgo.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Vi una publicación: [en pocas palabras, qué promete]. Repasa conmigo una lista: qué prometen, si hay prisa o piden hacer clic en un enlace, dónde buscar la fuente oficial. No me digas «real» o «falso»: dime qué comprobar",
+      example:
+        "3 señales de engaño en la publicación y dónde comprobarlo: la página oficial de esa persona y los medios importantes.",
+    },
+    "14.2": {
+      title: "Comprobar una noticia antes de reenviarla",
+      purpose: "Para no mandarle un bulo a toda la familia.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Ayúdame a comprobar esta noticia antes de reenviarla: [de qué trata]. ¿Qué fuentes lo publicarían si fuera verdad? ¿Qué señales indican que es falsa? ¿Qué debería buscar?",
+      example:
+        "Una lista de fuentes para comprobar y las señales de que esta noticia puede ser falsa.",
+    },
+    "14.3": {
+      title: "Averiguar de dónde viene una foto",
+      purpose: "Saber si una foto se sacó de otro lugar o de otra época.",
+      tools: [GOOGLE_LENS.es, CHATGPT],
+      prompt:
+        "Explícame paso a paso cómo usar Google Lens en [teléfono] para ver dónde más aparece esta foto y de dónde viene. Breve, para principiantes",
+      example:
+        "4 pasos con botones claros: al terminar ves dónde se publicó la foto antes.",
+    },
+    "14.4": {
+      title: "Una guía familiar sobre videos falsos",
+      purpose: "Avisar a tus padres o a los adolescentes de la casa.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Haz una guía para [quién] sobre videos falsos de famosos: 5 señales de engaño por el mensaje, no por la imagen, y qué hacer. Con palabras sencillas, en una página",
+      example:
+        "Una guía que dice «Si un famoso en un video te pide dinero, casi siempre es un engaño», con cinco señales.",
+    },
+    "14.5": {
+      title: "Comprobar una tienda online antes de pagar",
+      purpose: "Una web con precios demasiado buenos para ser verdad.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Ayúdame a comprobar la tienda «[nombre]» antes de pagar: qué buscar en las opiniones, cómo comprobar los datos de contacto y de la empresa, qué señales tiene una tienda falsa. Paso a paso",
+      example:
+        "Una lista de 6 pasos: desde buscar opiniones en webs independientes hasta revisar la forma de pago.",
+    },
+    "15.1": {
+      title: "Configurar tu privacidad",
+      purpose: "Impedir que usen tus chats para entrenar la IA y borrar el historial.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Explícame paso a paso cómo impedir que usen mis chats para entrenar la IA y cómo borrar el historial en [servicio] desde mi [teléfono o computadora]. Breve, para principiantes",
+      example:
+        "4–5 pasos con los nombres de los botones de los ajustes. Los menús cambian a veces: guíate por lo que ves en pantalla.",
+    },
+    "15.2": {
+      title: "Preguntar por un contrato sin datos personales",
+      purpose: "Que te lo expliquen sin mostrar nombres, direcciones ni números.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Cliente A le alquila un apartamento a Cliente B. En el contrato hay esta cláusula: “[texto de la cláusula con nombres y números cambiados por marcas]”. Explica con palabras sencillas qué significa y qué riesgos tiene Cliente A",
+      example:
+        "Una explicación clara de la cláusula, sin ni un solo dato personal tuyo en el chat.",
+    },
+    "15.3": {
+      title: "Lista rápida antes de pegar un texto en la IA",
+      purpose: "Revisar rápido antes de enviar.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Haz una lista breve de 5 preguntas que revisaré antes de pegar un texto en la IA [dónde la uso: en casa o en el trabajo]: que no haya contraseñas, números de tarjeta o documentos, datos de otras personas ni secretos de la empresa",
+      example:
+        "5 preguntas como «¿Hay un número de tarjeta o un código de SMS en el texto?» que caben en una pantalla.",
+    },
+    "15.4": {
+      title: "Describir una tarea de trabajo sin secretos",
+      purpose: "Pedir ayuda con el trabajo sin revelar datos de la empresa.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Ayúdame a describir una tarea de trabajo sin detalles confidenciales. La tarea en términos generales: [qué hay que hacer]. Sector: [sector]. En lugar de nombres, usa las marcas «Empresa» y «Cliente»",
+      example:
+        "Una petición anónima que puedes hacerle a la IA sin riesgo, con pistas de qué más quitar.",
+    },
+    "15.5": {
+      title: "Explicar a tu familia qué no contarle a la IA",
+      purpose: "Si tus padres o tus hijos también empezaron a usar la IA.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Haz una guía para [quién] sobre lo que no se debe escribir en los chats de IA: 5 puntos con ejemplos y qué poner en su lugar. Con palabras sencillas, sin asustar",
+      example:
+        "Una guía como «En lugar de tu número de documento, escribe [número]» con cinco ejemplos claros.",
+    },
+    "16.1": {
+      title: "Presupuesto familiar por categorías",
+      purpose: "Ver cuánto se va en comida, transporte y salidas.",
+      tools: [CHATGPT, GOOGLE_SHEETS.es],
+      prompt:
+        "Uso [Hojas de cálculo de Google o Excel] en español. En la columna A hay fechas, en la B categorías de gastos y en la C cantidades. Los datos van de la fila 2 a la [número de fila]. Escribe una fórmula que sume cada categoría en [mes], con los nombres de las funciones en español. Dime si separo los argumentos con coma o con punto y coma y en qué celda ponerla",
+      example:
+        "Una fórmula y una explicación: «Ponla en la celda F2 y arrástrala hacia abajo».",
+    },
+    "16.2": {
+      title: "Encontrar duplicados en una lista",
+      purpose: "Cuando en tu lista de clientes o invitados hay repetidos.",
+      tools: [CHATGPT, GOOGLE_SHEETS.es],
+      prompt:
+        "Uso [Hojas de cálculo de Google o Excel] en español. En la columna [letra] hay [qué contiene], de la fila 2 a la [número de fila]. ¿Cómo resalto los valores repetidos? Explícame paso a paso dónde tocar",
+      example:
+        "5 pasos con formato condicional: los repetidos se resaltan en color.",
+    },
+    "16.3": {
+      title: "Diseñar una hoja de control",
+      purpose: "Empezar a llevar el control de pedidos, gastos o clientes.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Propón la estructura de una hoja para llevar el control de [qué] en [Hojas de cálculo de Google o Excel]. Necesito ver: [qué es importante]. Dame los nombres de las columnas y 3 filas de ejemplo que pueda copiar en la hoja",
+      example:
+        "Una tabla de pedidos: fecha, cliente, producto, cantidad, pagado, estado, con filas de ejemplo.",
+    },
+    "16.4": {
+      title: "Traer precios de otra hoja",
+      purpose: "Juntar datos de dos listas en una.",
+      tools: [CHATGPT, GOOGLE_SHEETS.es],
+      prompt:
+        "Uso [Hojas de cálculo de Google o Excel] en español. En la hoja «[hoja 1]» la columna A tiene códigos de producto; en la hoja «[hoja 2]» la A tiene códigos y la B, precios. Escribe una fórmula, con los nombres de las funciones en español, que traiga el precio a la columna B de la primera hoja desde la fila 2, dime qué separador usar y explica qué pasa si un código no aparece",
+      example:
+        "Una fórmula de búsqueda con su explicación y una versión que muestra «sin precio» en lugar de un error.",
+    },
+    "16.5": {
+      title: "Porcentaje de cumplimiento del objetivo",
+      purpose: "Ver de un vistazo quién cumplió su objetivo y quién no.",
+      tools: [CHATGPT, EXCEL],
+      prompt:
+        "Uso [Hojas de cálculo de Google o Excel] en español. En la columna B está el objetivo y en la C el resultado real, de la fila 2 a la [número de fila]. Escribe una fórmula para la columna D, con los nombres de las funciones en español: el porcentaje de cumplimiento. Explica cómo poner el formato de porcentaje, qué separador usar y dónde poner la fórmula",
+      example:
+        "Una fórmula para D2, instrucciones para el formato y una idea para resaltar a quien esté por debajo del 100 %.",
+    },
+    "17.1": {
+      title: "Acta de una reunión a partir de tus notas",
+      purpose: "Cuando en la reunión tomaste notas rápidas y desordenadas.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Haz el acta de una reunión de equipo a partir de mis notas. Estructura: asistentes, decisiones, tareas con el formato «quién — qué — para cuándo». Si no se dijo un plazo o un responsable, indícalo. No añadas nada por tu cuenta. Notas: [notas]",
+      example:
+        "Un acta de media página con 5 tareas, dos de ellas marcadas «sin plazo definido».",
+    },
+    "17.2": {
+      title: "Resumen de la reunión de vecinos",
+      purpose: "Mandar a los vecinos un resumen claro en el grupo de chat.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Haz un resumen de la reunión de [quiénes] a partir de esta transcripción para el grupo de chat. Estructura: qué se decidió, quién se encarga de qué, cuánto hay que pagar y hasta cuándo. Marca lo que no quedó claro como «sin decidir». Nada por tu cuenta. Transcripción: [texto]",
+      example:
+        "Un mensaje breve: 3 decisiones, responsables y la cantidad a pagar con su fecha límite.",
+    },
+    "17.3": {
+      title: "Un correo a los participantes después de la reunión",
+      purpose: "Para que todos entiendan lo mismo sobre lo que se acordó.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "A partir de esta acta, escribe un correo breve a los participantes de la reunión sobre [tema]: decisiones y tareas con el formato «quién — qué — para cuándo», en lista. Tono: profesional y cercano. No añadas nada por tu cuenta. Acta: [texto]",
+      example:
+        "Un correo de 100 palabras con las decisiones y las tareas en lista.",
+    },
+    "17.4": {
+      title: "Temas pendientes para la próxima reunión",
+      purpose: "No perder de vista lo que quedó sin acordar.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "A partir de la transcripción de la reunión sobre [tema], enumera solo los temas pendientes y las tareas sin plazo o sin responsable. No supongas quién debería encargarse si no se dijo. Transcripción: [texto]",
+      example:
+        "Una lista de 4 temas pendientes: la agenda de la próxima reunión, ya lista.",
+    },
+    "17.5": {
+      title: "Acta de una reunión con un cliente",
+      purpose: "Dejar los acuerdos por escrito para evitar discusiones después.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Haz el acta de la reunión con el cliente [empresa] a partir de esta transcripción. Estructura: qué quiere el cliente, qué se acordó, tareas con el formato «quién — qué — para cuándo» y temas pendientes. Cifras y fechas, solo las de la grabación. Transcripción: [texto]",
+      example:
+        "Un acta que puedes mandarle al cliente para que la confirme.",
+    },
+    "18.1": {
+      title: "Recordatorio de pago",
+      purpose: "Un cliente no pagó una factura a tiempo.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Escribe un correo al cliente [empresa] sobre la factura n.º [número] de [cantidad], que vencía el [fecha]. Lo que necesitamos: el pago antes del [nueva fecha]. Tono: educado pero firme. Máximo 100 palabras, escribe el asunto aparte",
+      example:
+        "Un correo breve con el número de factura, la cantidad y la nueva fecha; asunto: «Recordatorio de pago: factura n.º 125».",
+    },
+    "18.2": {
+      title: "Cambiar la fecha de una reunión",
+      purpose: "Mover una reunión sin dar mala impresión.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Escribe un correo a [quién] para mover nuestra reunión del [fecha] al [nueva fecha]. Motivo: [motivo]. Tono: educado, con una disculpa. Máximo 70 palabras, escribe el asunto aparte",
+      example:
+        "4 frases con una disculpa y la nueva fecha; asunto: «Cambio de fecha de la reunión al 14 de noviembre».",
+    },
+    "18.3": {
+      title: "Responder a la queja de un cliente",
+      purpose: "Contestar con calma a un cliente molesto.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Ayúdame a responder a la queja de un cliente. Lo que podemos ofrecer: [solución]. Tono: tranquilo, con una disculpa y sin excusas. Máximo 120 palabras, escribe el asunto aparte. Queja (sin datos personales): [texto]",
+      example:
+        "Una respuesta que reconoce el problema y ofrece una solución y un plazo.",
+    },
+    "18.4": {
+      title: "Pedir precios a un proveedor",
+      purpose: "Reunir presupuestos de varios proveedores.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Escribe un correo al proveedor [empresa] para pedir precios de [qué], cantidad: [cuánto], para el [fecha]. Tono: profesional. Máximo 100 palabras, escribe el asunto aparte",
+      example:
+        "Una solicitud que puedes mandar a tres proveedores cambiando solo el nombre.",
+    },
+    "18.5": {
+      title: "Un «no» educado",
+      purpose: "Rechazar a un socio o a un candidato sin estropear la relación.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Escribe un correo educado a [quién] para rechazar su propuesta sobre [qué]. Motivo: [motivo]. Quiero mantener una buena relación. Máximo 80 palabras, escribe el asunto aparte",
+      example:
+        "Un rechazo breve y con tacto, con un agradecimiento y la puerta abierta a colaborar en el futuro.",
+    },
+    "19.1": {
+      title: "Resumir un contrato antes de decidir",
+      purpose: "Entender rápido un contrato largo con un proveedor.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "Soy [cargo] y mañana decidimos si firmamos este contrato. Haz un resumen: obligaciones de cada parte, plazos, importes y penalizaciones, y los riesgos para nosotros, con el número de cláusula. No añadas nada por tu cuenta. Después, comprueba cada cifra con el texto y cítala",
+      example:
+        "Un resumen de media página con números de cláusula y una cita para cada importe.",
+    },
+    "19.2": {
+      title: "Comparar dos propuestas",
+      purpose: "Elegir proveedor por los datos, no por una presentación bonita.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "Soy [rol] y estoy eligiendo un proveedor para [qué]. Compara las dos propuestas en una tabla: precio, plazos, garantías y qué no incluye, con el número de página. Si falta algún dato, indícalo. Después, comprueba las cifras con citas",
+      example:
+        "Una tabla comparativa en la que los huecos aparecen marcados como «no está en la propuesta».",
+    },
+    "19.3": {
+      title: "Lo esencial de un estudio",
+      purpose: "Entender qué significa un informe del sector para tu trabajo.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "Soy [rol] en [sector]. Resume este estudio en media página: 3 conclusiones principales, cifras clave con número de página y qué significa para nosotros. No añadas nada que no esté en el texto. Después, comprueba cada cifra con una cita",
+      example:
+        "3 conclusiones, 5 cifras con su página y 2 líneas de «qué significa para nosotros».",
+    },
+    "19.4": {
+      title: "Preguntas para los autores del informe",
+      purpose: "Prepararte para la reunión sin pasar por alto los puntos débiles.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "Soy [rol] y mañana voy a revisar este informe con [quién]. Enumera 5 preguntas que valga la pena hacer: dónde se contradicen las cifras y qué datos faltan. Para cada una, indica la página y una cita. No inventes nada",
+      example:
+        "5 preguntas como «En la pág. 4 el crecimiento es del 12 % y en la pág. 9, del 18 %: ¿cuál es el correcto?».",
+    },
+    "19.5": {
+      title: "Resumir un hilo largo de correos",
+      purpose: "Ponerte al día en un proyecto que ya tiene 50 correos.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "Me sumo al proyecto [nombre]. A partir de estos correos, resume qué se decidió ya, quién se encarga de qué y qué temas quedan pendientes, con las fechas de los correos. No inventes nada; si algo no está claro, indícalo",
+      example:
+        "Media página con decisiones, responsables y fechas, en lugar de una hora de lectura.",
+    },
+    "20.1": {
+      title: "La agenda de la reunión semanal",
+      purpose: "Para que la reunión dure lo previsto y sirva de algo.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Dirijo [a quién]. La reunión dura [cuántos minutos] y los temas son: [temas]. Ahora mismo el equipo está [ánimo]. Prepara una agenda con el tiempo de cada punto y una pregunta para cerrar la reunión",
+      example:
+        "Una agenda de 20 minutos con 4 puntos y una pregunta final: «¿Qué te está frenando esta semana?».",
+    },
+    "20.2": {
+      title: "Dar una mala noticia al equipo",
+      purpose: "Recorte de presupuesto, un bono cancelado, una mudanza de oficina.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Dirijo [equipo]. Tengo que comunicar: [noticia]. Lo más probable es que el equipo reaccione así: [reacción]. Prepara un plan para una conversación de [cuántos minutos], 5 preguntas probables y respuestas tranquilas",
+      example:
+        "Un plan de conversación con un comienzo honesto y 5 respuestas a preguntas difíciles.",
+    },
+    "20.3": {
+      title: "Ensayar una conversación difícil a solas",
+      purpose: "Practicar antes de una conversación complicada con alguien del equipo.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Haz de alguien del equipo que [situación]. Yo dirijo el equipo y quiero que acordemos [objetivo]. Responde de forma realista y a veces lleva la contraria. Después de 5 intervenciones, detente y dame tu opinión",
+      example:
+        "Un diálogo de práctica realista y un análisis de qué frases funcionaron y cuáles conviene decir de otra forma.",
+    },
+    "20.4": {
+      title: "Resumen de la reunión para el equipo",
+      purpose: "Mandar el resumen al grupo de chat justo después de la reunión.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Estas son mis notas de la reunión de equipo: [notas]. Escribe un mensaje breve para el grupo de chat: qué decidimos, tareas con el formato «quién — qué — para cuándo» y cuándo es la próxima reunión. Tono: cercano",
+      example:
+        "Un mensaje de 8 líneas que puedes enviar al momento.",
+    },
+    "20.5": {
+      title: "Una lluvia de ideas con el equipo",
+      purpose: "Reunir ideas para que hable todo el mundo, no solo las dos personas de siempre.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Voy a dirigir una lluvia de ideas para [equipo], de [cuántos minutos], sobre [tema]. El equipo está [ánimo]. Prepara un plan con tiempos, 3 preguntas para debatir y cómo hacer participar a quienes suelen quedarse callados",
+      example:
+        "Un plan de 40 minutos: calentamiento, trabajo en parejas y votación de las mejores ideas.",
+    },
+    "21.1": {
+      title: "Tareas para la primera semana de alguien nuevo",
+      purpose: "Para que quien llega no se quede sin hacer nada ni se sienta perdido.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Ayúdame a asignar tareas para la primera semana de una persona nueva en el puesto de [cargo]. Objetivo: [qué debe aprender]. Para cada tarea: resultado, para qué sirve, plazo, cómo saber que está terminada, dónde encontrar los materiales y a quién preguntar. Tono: cercano",
+      example:
+        "5 tareas para la semana con criterios claros de «terminado» y contactos.",
+    },
+    "21.2": {
+      title: "Un encargo para un freelance",
+      purpose: "Encargar un diseño, un texto o una web y recibir lo que necesitas.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Ayúdame a escribir un encargo para [quién] para [qué hacer]. Presupuesto: [cantidad], plazo: [fecha]. Describe qué resultado se necesita, para qué es, cómo saber que está terminado, qué voy a aportar yo y cómo nos vamos a comunicar",
+      example:
+        "Un encargo de una página después del cual a quien lo hace le quedan muy pocas dudas.",
+    },
+    "21.3": {
+      title: "Convertir una petición de arriba en una tarea",
+      purpose: "Cuando llega un mensaje poco claro de la dirección y el trabajo lo hará alguien del equipo.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Esta es una petición de [de quién]: [texto]. Conviértela en una tarea para [para quién]: resultado, para qué sirve, plazo, cómo saber que está terminada, de dónde sacar los datos y a quién preguntar",
+      example:
+        "De «necesitamos algo sobre ventas» a una tarea clara con periodo, formato y plazo.",
+    },
+    "21.4": {
+      title: "Comprobar si tu tarea se entiende",
+      purpose: "Antes de enviarla, asegurarte de que se entenderá a la primera.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Esta es la tarea que quiero asignar: [texto de la tarea]. Busca qué le falta: resultado, objetivo, plazo, cómo saber que está terminada, dónde están los datos y a quién preguntar. Enumera las preguntas que haría la persona que la recibe y propón una versión mejorada",
+      example:
+        "4 preguntas que tendría la persona del equipo y una versión mejor de la tarea.",
+    },
+    "21.5": {
+      title: "Lista para dar por terminado un trabajo",
+      purpose: "Saber que el trabajo está bien hecho y no solo «más o menos listo».",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Para la tarea «[tarea]», haz una lista de revisión: cómo saber que el resultado está listo y bien hecho. 5–7 puntos que se puedan comprobar. Fecha de entrega: [fecha]. Aparte, de dónde sacar los datos para comprobarlo y a quién acudir si algo no cuadra",
+      example:
+        "Una lista como «El informe cubre todo octubre, las cifras coinciden con el CRM y hay una conclusión de 3 líneas».",
     },
   },
 };

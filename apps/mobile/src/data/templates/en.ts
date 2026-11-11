@@ -1,11 +1,15 @@
-// Шаблоны на английском. Переведены шаблоны 1.1–10.5; остальные пока показываем на русском (см. FALLBACK_LOCALE в index.ts).
+// Шаблоны на английском: все 105 шаблонов и предупреждения уроков.
 // Один шаблон = будущая строка template_translations (template_id, locale = "en", …).
 
 import {
   CHATGPT,
   CLAUDE,
   DREAMINA,
+  ELEVENLABS,
+  EXCEL,
   GEMINI,
+  GOOGLE_LENS,
+  GOOGLE_SHEETS,
   GOOGLE_TRANSLATE,
   HEYGEN,
   IDEOGRAM,
@@ -25,6 +29,20 @@ export const EN: LocaleTemplates = {
       "Bring photos of loved ones to life only with your family's agreement.",
     "10":
       "Download the languages in Google Translate ahead of time — then it works offline.",
+    "11":
+      "On the free ElevenLabs plan, voice-overs are for personal use only.",
+    "12":
+      "If you record a conversation with other people, let them know.",
+    "13":
+      "These templates are checks and reminders. Don't put names, phone numbers, card numbers or ID numbers in your prompts.",
+    "14":
+      "AI can't reliably tell a fake from the real thing — so in these templates it helps you check, rather than giving a verdict.",
+    "15":
+      "These templates are checks and reminders. Don't put names, phone numbers, card numbers or ID numbers in your prompts.",
+    "17":
+      "Record meetings only with everyone's consent.",
+    "19":
+      "Before uploading a work document, check whether your company allows it.",
   },
   templates: {
     "1.1": {
@@ -476,6 +494,501 @@ export const EN: LocaleTemplates = {
         "I'm going to [country], the situation is [situation]. Give me 10 useful phrases in [language] with translations and how to pronounce them. Polite, the way locals say them",
       example:
         "10 phrases for checking into a hotel — from “I have a reservation under…” to “Can I get a late checkout?”.",
+    },
+    "11.1": {
+      title: "Get a greeting ready for a voice-over",
+      purpose: "So the voice doesn't stumble over dates and names.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Get this text ready for a voice-over: write numbers and abbreviations out as words, add pauses with commas and ellipses, and show how to pronounce the names [names]. Text: [text]",
+      example:
+        "A text where “25th” becomes “twenty-fifth” and the names come with pronunciation hints.",
+    },
+    "11.2": {
+      title: "An audio bedtime story",
+      purpose: "A bedtime story read by a narrator's voice.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Rewrite this story to be read aloud to a [age]-year-old: short sentences, pauses, help with tricky words. Mood: [mood]. Story: [text]",
+      example:
+        "A calm story ready for a voice-over and a tip on which voice to pick in ElevenLabs.",
+    },
+    "11.3": {
+      title: "A letter for someone with poor eyesight",
+      purpose: "So Grandma or Grandpa can listen to a letter instead of reading it.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Get this letter ready for a voice-over for [who] — they have poor eyesight and will listen to it. Numbers and dates as words, pauses between thoughts, a warm tone. Text: [text]",
+      example:
+        "A letter that's pleasant to listen to: no abbreviations, with pauses, about 2 minutes long.",
+    },
+    "11.4": {
+      title: "Your family story, read aloud",
+      purpose: "Record your family's story so the grandkids can listen to it.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Get this family story about [who] ready for a voice-over: dates as words, how to pronounce the names ([names]), pauses before the important moments. Suggest a voice — [what kind]. Text: [text]",
+      example:
+        "A story about your great-grandfather with dates in words and pauses, ready to record.",
+    },
+    "11.5": {
+      title: "Hear your speech before you give it",
+      purpose: "Check how a speech sounds before the big day.",
+      tools: [CHATGPT, ELEVENLABS],
+      prompt:
+        "Get my speech ready for a voice-over so I can hear how it sounds. The speech is [how many] minutes long; numbers as words, pauses, help with hard words. Text: [text]",
+      example:
+        "A 3-minute text with pauses — after listening, you can tell where the sentences are too long.",
+    },
+    "12.1": {
+      title: "A long voice message",
+      purpose: "Find out what a five-minute voice message is about without listening to it.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe this voice message from [who]. Then sum it up in 3 points: what this person wants and what I need to do",
+      example:
+        "The message as text and 3 points like “Asks you to pick up a package by Friday”.",
+    },
+    "12.2": {
+      title: "Notes from a lecture or webinar",
+      purpose: "For classes or courses when there's no time to rewatch the recording.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe this recording of a lecture on [topic]. Terms: [terms]. Then write notes in 7 points and 3 questions to test myself",
+      example:
+        "One page of notes with the terms spelled correctly and questions for review.",
+    },
+    "12.3": {
+      title: "Takeaways from a parent-teacher meeting",
+      purpose: "When a lot was said at the meeting and you only need the key points.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe this recording of a parent-teacher meeting. The teacher's name is [name]. Then list what was decided, what parents need to do and by when, and any money to pay and when",
+      example:
+        "5 points: what to buy, when the field trip is and the deadline for the payment.",
+    },
+    "12.4": {
+      title: "Voice notes → to-do list",
+      purpose: "If you dictate your thoughts on the go.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe my voice notes from [day]. Then make a to-do list in order of importance and a separate shopping list",
+      example:
+        "8 tasks in order and a shopping list of 6 items.",
+    },
+    "12.5": {
+      title: "A call with a client",
+      purpose: "Don't miss anything after a call or meeting with a client.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Transcribe this recording of a conversation with the client [name or company]. Terms: [terms]. Then list what the client wants, deadlines, budget and my to-do list",
+      example:
+        "A short summary of the conversation and 4 tasks with deadlines.",
+    },
+    "13.1": {
+      title: "A message to your parents about a code word",
+      purpose: "Agree on a code word without causing unnecessary worry.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Help me write a message to [who] about a family code word in case scammers call. Explain it simply and calmly, without scaring anyone, in 4–5 sentences. Don't include the word itself — I'll tell them in person",
+      example:
+        "A warm message for Mom and Dad explaining why you need a code word and what to do if a call seems strange.",
+    },
+    "13.2": {
+      title: "Check a suspicious call",
+      purpose: "When you just had a strange call and you're not sure about it.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "I just got a phone call. What they said: [briefly, no names or numbers]. Go through the signs of a scam with me: urgency, a request to keep it secret, an unusual way to pay. Tell me what to do right now",
+      example:
+        "A breakdown: “There's urgency and a request to keep quiet — those are signs of a scam. Hang up and call your relative back on their own number.”",
+    },
+    "13.3": {
+      title: "A cheat sheet for older parents",
+      purpose: "Print it out and keep it by the phone.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Make a cheat sheet for [who] about scam calls: 5 rules in big, simple words and what to do step by step. No complicated words, one page, for printing",
+      example:
+        "One page: “Someone calling and asking for money? 1. Hang up…”.",
+    },
+    "13.4": {
+      title: "Check a suspicious message",
+      purpose: "“Hi Mom, I got a new number, can you send me some money?” — and messages like that.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "I got this message: “[message text without links, numbers or names]”. Does it have signs of a scam — urgency, secrecy, money? How can I check without replying to it?",
+      example:
+        "The signs of a scam in the message and how to check: call the old number, ask another relative.",
+    },
+    "13.5": {
+      title: "What to do if “your bank” or “the police” calls",
+      purpose: "Know ahead of time how to handle it.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Make a short plan for what to do if someone calls claiming to be from [organization] and asks me to [what they ask]. 4–5 steps, short, to keep by the phone",
+      example:
+        "A plan: “1. Never share codes. 2. Hang up. 3. Call your bank on the number on the back of your card…”.",
+    },
+    "14.1": {
+      title: "Check a post with a “great offer”",
+      purpose: "A celebrity telling you to invest, a promise of risk-free income.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "I came across a post: [briefly, what it promises]. Go through a checklist with me: what are they promising, is there urgency or a request to click a link, where can I find an official source? Don't tell me “real” or “fake” — tell me what to check",
+      example:
+        "3 signs of a scam in the post and where to check: the person's official page and major news outlets.",
+    },
+    "14.2": {
+      title: "Check a news story before you share it",
+      purpose: "So you don't forward a fake to the whole family.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Help me check this news story before I share it: [what the story is about]. Which sources would be reporting it if it were true? What are the signs it's fake? What should I search for?",
+      example:
+        "A list of sources to check and the signs of a fake in this particular story.",
+    },
+    "14.3": {
+      title: "Find out where a photo came from",
+      purpose: "Check whether a photo was taken from another place or time.",
+      tools: [GOOGLE_LENS.en, CHATGPT],
+      prompt:
+        "Explain step by step how to use Google Lens on [phone] to find where else this photo appears and where it came from. Short, for a beginner",
+      example:
+        "4 steps with clear buttons — after them, you'll see where the photo was posted before.",
+    },
+    "14.4": {
+      title: "A family cheat sheet on fake videos",
+      purpose: "Warn your parents or teenagers.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Make a cheat sheet for [who] about fake celebrity videos: 5 signs of a scam based on the message, not the picture, and what to do. Simple words, one page",
+      example:
+        "A cheat sheet that says “If a celebrity in a video asks for money, it's almost always a scam” with five signs.",
+    },
+    "14.5": {
+      title: "Check an online store before you pay",
+      purpose: "A site with prices that seem too good to be true.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Help me check the online store “[name]” before I pay: what to look for in reviews, how to check the contact details and company info, what the signs of a fake store are. Step by step",
+      example:
+        "A 6-step checklist: from looking up reviews on independent sites to checking the payment method.",
+    },
+    "15.1": {
+      title: "Set up your privacy",
+      purpose: "Stop your chats from being used for training and delete your history.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Explain step by step how to stop my chats from being used for training and delete my history in [service] on my [phone or computer]. Short, for a beginner",
+      example:
+        "4–5 steps with the names of the buttons in the settings. Menus sometimes change — check against your screen.",
+    },
+    "15.2": {
+      title: "Ask about a contract without personal data",
+      purpose: "Get an explanation without sharing names, addresses or numbers.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Client A rents an apartment from Client B. The lease has this clause: “[clause text with names and numbers replaced by placeholders]”. Explain in plain words what it means and what risks Client A faces",
+      example:
+        "A clear explanation of the clause — and not a single piece of your personal data in the chat.",
+    },
+    "15.3": {
+      title: "A checklist before you paste text into AI",
+      purpose: "Quickly check yourself before you hit send.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Make a short checklist of 5 questions I'll go through before pasting text into AI [where I use it — at home or at work]: no passwords, card or ID numbers, other people's data or company secrets",
+      example:
+        "5 questions like “Is there a card number or a code from a text message in here?” that fit on one screen.",
+    },
+    "15.4": {
+      title: "Describe a work task without secrets",
+      purpose: "Get help with work without giving away company data.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Help me describe a work task without confidential details. The task in general terms: [what needs to be done]. Field: [field]. Use the placeholders “Company” and “Client” instead of names",
+      example:
+        "An anonymized prompt you can safely ask AI, plus tips on what else to remove.",
+    },
+    "15.5": {
+      title: "Explain to your family what not to tell AI",
+      purpose: "If your parents or kids have started using AI too.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Make a cheat sheet for [who] on what not to type into AI chats: 5 points with examples and what to use instead. Simple words, without scaring anyone",
+      example:
+        "A cheat sheet like “Instead of your ID number, write [number]” with five clear examples.",
+    },
+    "16.1": {
+      title: "Family budget by category",
+      purpose: "See how much goes on groceries, transportation and eating out.",
+      tools: [CHATGPT, GOOGLE_SHEETS.en],
+      prompt:
+        "[Google Sheets or Excel], English (US) settings. Column A has dates, column B has spending categories, column C has amounts. The data is in rows 2 to [row number]. Write a formula that adds up each category for [month], and explain which cell to put it in",
+      example:
+        "A formula and an explanation: “Put it in cell F2 and drag it down.”",
+    },
+    "16.2": {
+      title: "Find duplicates in a list",
+      purpose: "When your list of clients or guests has repeats.",
+      tools: [CHATGPT, GOOGLE_SHEETS.en],
+      prompt:
+        "[Google Sheets or Excel], English (US) settings. Column [letter] has [what's in it], in rows 2 to [row number]. How do I highlight duplicate values? Explain step by step what to click",
+      example:
+        "5 steps using conditional formatting — duplicates get highlighted in color.",
+    },
+    "16.3": {
+      title: "Design a tracking spreadsheet",
+      purpose: "Start tracking orders, expenses or clients.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Suggest a layout for a spreadsheet to track [what] in [Google Sheets or Excel]. I need to see: [what matters]. Give me the column names and 3 sample rows I can copy into the spreadsheet",
+      example:
+        "An orders table: date, customer, item, amount, paid, status — with sample rows.",
+    },
+    "16.4": {
+      title: "Pull prices from another sheet",
+      purpose: "Combine data from two lists into one.",
+      tools: [CHATGPT, GOOGLE_SHEETS.en],
+      prompt:
+        "[Google Sheets or Excel], English (US) settings. On the sheet “[sheet 1]”, column A has item codes; on the sheet “[sheet 2]”, column A has item codes and column B has prices. Write a formula that brings the price into column B of the first sheet, starting at row 2, and explain what happens if a code isn't found",
+      example:
+        "A lookup formula with an explanation and a version that shows “no price” instead of an error.",
+    },
+    "16.5": {
+      title: "Percent of target reached",
+      purpose: "See at a glance who hit their target and who didn't.",
+      tools: [CHATGPT, EXCEL],
+      prompt:
+        "[Google Sheets or Excel], English (US) settings. Column B has the target, column C has the actual result, in rows 2 to [row number]. Write a formula for column D: the percent of target reached, and explain how to turn on percent format and where to put the formula",
+      example:
+        "A formula for D2, instructions for the format and a tip on highlighting anyone below 100%.",
+    },
+    "17.1": {
+      title: "Meeting minutes from your notes",
+      purpose: "When you jotted things down quickly and all over the place.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Write minutes for a team check-in based on my notes. Structure: attendees, decisions, tasks as “who — what — by when”. If a deadline or owner wasn't mentioned, say so. Don't add anything of your own. Notes: [notes]",
+      example:
+        "Half-page minutes with 5 tasks, two of them marked “no deadline set”.",
+    },
+    "17.2": {
+      title: "Takeaways from a residents' meeting",
+      purpose: "Send your neighbors clear takeaways in the group chat.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Write a summary of the [who] meeting from this transcript for a group chat. Structure: what was decided, who's responsible for what, how much to pay and by when. Mark anything unclear as “not decided”. Nothing of your own. Transcript: [text]",
+      example:
+        "A short message: 3 decisions, who's responsible and the amount to pay with a deadline.",
+    },
+    "17.3": {
+      title: "An email to attendees after the meeting",
+      purpose: "So everyone has the same understanding of what was agreed.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Based on these minutes, write a short email to the people at the meeting about [topic]: decisions and tasks as “who — what — by when”, as a list. Tone: professional and friendly. Don't add anything of your own. Minutes: [text]",
+      example:
+        "A 100-word email with the decisions and tasks as a list.",
+    },
+    "17.4": {
+      title: "Open questions for the next meeting",
+      purpose: "Don't lose track of what wasn't agreed on.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "From this transcript of the meeting about [topic], list only the open questions and the tasks without a deadline or owner. Don't guess who should handle them if it wasn't said. Transcript: [text]",
+      example:
+        "A list of 4 open questions — a ready-made agenda for the next meeting.",
+    },
+    "17.5": {
+      title: "Minutes of a client meeting",
+      purpose: "Put agreements on record so there's nothing to argue about later.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Write minutes of the meeting with the client [company] from this transcript. Structure: what the client wants, what was agreed, tasks as “who — what — by when”, open questions. Numbers and dates only from the recording. Transcript: [text]",
+      example:
+        "Minutes you can send to the client for confirmation.",
+    },
+    "18.1": {
+      title: "A payment reminder",
+      purpose: "A client didn't pay an invoice on time.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Write an email to the client [company] about unpaid invoice #[number] for [amount], which was due on [date]. What we need: payment by [new date]. Tone: polite but firm. Under 100 words, write the subject line separately",
+      example:
+        "A short email with the invoice number, the amount and the new deadline, subject: “Payment reminder: invoice #125”.",
+    },
+    "18.2": {
+      title: "Rescheduling a meeting",
+      purpose: "Move a meeting without leaving a bad impression.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Write an email to [who] moving our meeting from [date] to [new date]. Reason: [reason]. Tone: polite, with an apology. Under 70 words, write the subject line separately",
+      example:
+        "4 sentences with an apology and the new date, subject: “Meeting moved to November 14”.",
+    },
+    "18.3": {
+      title: "Replying to a customer complaint",
+      purpose: "Reply calmly to an unhappy customer.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Help me reply to a customer complaint. What we can offer: [solution]. Tone: calm, apologetic, no excuses. Under 120 words, write the subject line separately. Complaint (no personal details): [text]",
+      example:
+        "A reply that acknowledges the problem and offers a solution and a timeline.",
+    },
+    "18.4": {
+      title: "Asking a supplier for prices",
+      purpose: "Get quotes from several suppliers.",
+      tools: [CHATGPT, GEMINI],
+      prompt:
+        "Write an email to the supplier [company] asking for prices on [what], quantity: [how many], needed by [date]. Tone: professional. Under 100 words, write the subject line separately",
+      example:
+        "A request you can send to three suppliers, changing only the name.",
+    },
+    "18.5": {
+      title: "A polite no",
+      purpose: "Turn down a partner or a candidate and keep a good relationship.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Write a polite email to [who] declining their offer about [what]. Reason: [reason]. I want to keep a good relationship. Under 80 words, write the subject line separately",
+      example:
+        "A short, tactful no with a thank-you and a hint at working together in the future.",
+    },
+    "19.1": {
+      title: "Summarize a contract before deciding",
+      purpose: "Quickly understand a long contract with a contractor.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "I'm [job title], and tomorrow we decide whether to sign this contract. Summarize it: each side's obligations, deadlines, amounts and penalties, and the risks for us — with clause numbers. Don't add anything of your own. Then check every number against the text and give a quote",
+      example:
+        "A half-page summary with clause numbers and a quote for each amount.",
+    },
+    "19.2": {
+      title: "Compare two proposals",
+      purpose: "Choose a contractor based on facts, not a slick presentation.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "I'm [role], choosing a contractor for [what]. Compare the two proposals in a table: price, deadlines, guarantees, what's not included — with page numbers. If something is missing, say so. Then check the numbers with quotes",
+      example:
+        "A comparison table where gaps are honestly marked “not in the proposal”.",
+    },
+    "19.3": {
+      title: "The key points of a research report",
+      purpose: "Understand what an industry report means for your work.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "I'm [role] in [industry]. Summarize this research in half a page: 3 key takeaways, key figures with page numbers, what it means for us. Don't add anything that isn't in the text. Then check every figure with a quote",
+      example:
+        "3 takeaways, 5 figures with page numbers and 2 lines on “what it means for us”.",
+    },
+    "19.4": {
+      title: "Questions for the report's authors",
+      purpose: "Prepare for a discussion and don't miss the weak spots.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "I'm [role], and tomorrow I'm going over this report with [who]. List 5 questions worth asking: where the numbers contradict each other and what data is missing. For each one, give the page number and a quote. Don't make anything up",
+      example:
+        "5 questions like “Page 4 says 12% growth, page 9 says 18% — which is right?”.",
+    },
+    "19.5": {
+      title: "Summarize a long email thread",
+      purpose: "Get up to speed on a project that already has 50 emails.",
+      tools: [CLAUDE, CHATGPT],
+      prompt:
+        "I'm joining the [name] project. From this email thread, summarize what's already been decided, who's responsible for what and the open questions — with the dates of the emails. Don't make anything up; if something's unclear, say so",
+      example:
+        "Half a page with decisions, owners and dates — instead of an hour of reading.",
+    },
+    "20.1": {
+      title: "A weekly team meeting agenda",
+      purpose: "So the meeting stays on time and is actually useful.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "I manage [who]. The meeting is [how many minutes] long, topics: [topics]. The team's mood right now: [mood]. Write an agenda with time for each item and a question to close the meeting with",
+      example:
+        "A 20-minute agenda with 4 items and a closing question: “What's getting in your way this week?”.",
+    },
+    "20.2": {
+      title: "Sharing bad news with your team",
+      purpose: "Budget cuts, a canceled bonus, an office move.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "I lead [team]. I need to tell them: [news]. The team will probably react like this: [reaction]. Write a plan for a conversation of [how many minutes], 5 likely questions and calm answers",
+      example:
+        "A conversation plan with an honest opening and 5 answers to tough questions.",
+    },
+    "20.3": {
+      title: "Rehearse a difficult one-on-one",
+      purpose: "Practice before a hard conversation with an employee.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Play an employee who [situation]. I'm the manager and I want us to agree on [goal]. Answer realistically and push back sometimes. After 5 lines, stop and give me feedback",
+      example:
+        "A realistic practice conversation and a breakdown of which phrases worked and which to say differently.",
+    },
+    "20.4": {
+      title: "Meeting takeaways for the team",
+      purpose: "Send the takeaways to the group chat right after the meeting.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Here are my notes from the team meeting: [notes]. Write a short message for the group chat: what we decided, tasks as “who — what — by when”, and when the next meeting is. Tone: friendly",
+      example:
+        "An 8-line message you can send right away.",
+    },
+    "20.5": {
+      title: "A brainstorming session",
+      purpose: "Gather ideas so everyone speaks up, not just the two loudest people.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "I'm running a brainstorming session for [team], [how many minutes] long, on [topic]. The team is [mood]. Write a plan with timing, 3 discussion questions and how to involve the people who usually stay quiet",
+      example:
+        "A 40-minute plan: warm-up, pair work, voting on the best ideas.",
+    },
+    "21.1": {
+      title: "First-week tasks for a new hire",
+      purpose: "So a newcomer isn't left idle or lost.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Help me set first-week tasks for a new [job title]. Goal: [what they should learn]. For each task: the result, why it matters, the deadline, how to know it's done, where to find materials, who to ask. Tone: friendly",
+      example:
+        "5 tasks for the week with clear “done” criteria and contacts.",
+    },
+    "21.2": {
+      title: "A brief for a freelancer",
+      purpose: "Order a design, text or website and get what you need.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Help me write a brief for [who] to [what to do]. Budget: [amount], deadline: [date]. Describe what result is needed, what it's for, how to know it's done, what I'll provide and how we'll stay in touch",
+      example:
+        "A one-page brief that leaves the freelancer with very few questions.",
+    },
+    "21.3": {
+      title: "Turn a request from above into a task",
+      purpose: "When a vague message comes from above and someone on your team will do the work.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Here's a request from [from whom]: [text]. Turn it into a task for [for whom]: the result, why it matters, the deadline, how to know it's done, where to get the data, who to ask",
+      example:
+        "From “we need something on sales” to a clear task with a period, a format and a deadline.",
+    },
+    "21.4": {
+      title: "Check your own task for clarity",
+      purpose: "Before you send it, make sure it'll be understood the first time.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "Here's a task I want to give: [task text]. Find what's missing: the result, the goal, the deadline, how to know it's done, where the data is, who to ask. List the questions my team member would ask and suggest an improved version",
+      example:
+        "4 questions your team member would have, and a better version of the task.",
+    },
+    "21.5": {
+      title: "A checklist for signing off on work",
+      purpose: "Know the work is done well, not just “sort of done”.",
+      tools: [CHATGPT, CLAUDE],
+      prompt:
+        "For the task “[task]”, make a sign-off checklist: how to know the result is ready and done well. 5–7 points that can be checked. Due date: [date]. Separately — where to get data for checking and who to go to if something doesn't add up",
+      example:
+        "A checklist like “The report covers all of October, numbers match the CRM, there's a 3-line conclusion”.",
     },
   },
 };
