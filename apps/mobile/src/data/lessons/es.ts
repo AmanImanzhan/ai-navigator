@@ -257,7 +257,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [IDEOGRAM],
-            text: "Es la que mejor pone textos en las imágenes: unas 10 imágenes gratis al día. Si no te funciona, prueba con Gemini o ChatGPT.",
+            text: "Es la que mejor pone textos en las imágenes. Tiene un plan gratuito con límites: las generaciones gratis se dan al entrar con Google, Apple o Microsoft. En el plan gratuito, las imágenes las ve todo el mundo: no subas fotos personales ni escribas datos personales. Si Ideogram no te funciona, prueba con Gemini o ChatGPT.",
           },
           {
             type: "howto",
@@ -323,7 +323,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [GEMINI, CHATGPT],
-            text: "Gemini: unas 20 imágenes gratis al día, y funciona bien con fotos. La alternativa es ChatGPT, pero gratis solo da 2–3 imágenes al día.",
+            text: "Gemini funciona bien con fotos y tiene un plan gratuito con límites. La alternativa es ChatGPT, pero gratis da pocas imágenes: más información en la Guía.",
           },
           {
             type: "howto",
@@ -386,7 +386,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [IDEOGRAM, CHATGPT],
-            text: "Ideogram es la que mejor escribe el nombre dentro del logo. La alternativa es ChatGPT. Importante: si el logo es para un negocio real, revisa las condiciones de uso: en los planes gratuitos el uso comercial puede estar limitado, y en Ideogram las imágenes gratuitas se ven en una galería pública.",
+            text: "Ideogram es la que mejor escribe el nombre dentro del logo; las generaciones gratis se dan al entrar con Google, Apple o Microsoft. La alternativa es ChatGPT. Importante: si el logo es para un negocio real, revisa las condiciones de uso: en los planes gratuitos el uso comercial puede estar limitado, y en Ideogram las imágenes gratuitas se ven en una galería pública, así que no pongas datos personales.",
           },
           {
             type: "howto",
@@ -450,7 +450,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [KLING, DREAMINA],
-            text: "Kling o Dreamina: las dos convierten una foto en un video corto. Hay pocos intentos gratis (unos 2 videos al día en Kling), así que piensa bien la petición antes.",
+            text: "Kling o Dreamina: las dos convierten una foto en un video corto. Hay pocos intentos gratis, así que piensa bien la petición antes. Más sobre los límites en la Guía.",
           },
           {
             type: "howto",
@@ -513,7 +513,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [HEYGEN],
-            text: "HeyGen crea avatares que hablan a partir de un texto. Gratis: 3 videos al mes, con marca de agua.",
+            text: "HeyGen crea avatares que hablan a partir de un texto. Tiene un plan gratuito con límites, y los videos llevan marca de agua.",
           },
           {
             type: "howto",
@@ -704,7 +704,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [ELEVENLABS],
-            text: "ElevenLabs: unos 10 000 caracteres al mes gratis. En el plan gratuito, solo para uso personal y mencionando que la voz es de ElevenLabs. Para locuciones en anuncios o en un canal monetizado hace falta un plan de pago.",
+            text: "ElevenLabs: se puede usar a partir de los 18 años. Tiene un plan gratuito con límites: solo para uso personal y mencionando que la voz es de ElevenLabs. Para locuciones en anuncios o en un canal monetizado hace falta un plan de pago.",
           },
           {
             type: "howto",
@@ -766,7 +766,7 @@ export const ES: LocaleLessons = {
           {
             type: "tool",
             tools: [CHATGPT, GEMINI, ELEVENLABS],
-            text: "La transcripción integrada del teléfono, ChatGPT o Gemini subiendo el audio, o la transcripción de ElevenLabs.",
+            text: "La transcripción integrada del teléfono, ChatGPT o Gemini subiendo el audio, o la transcripción de ElevenLabs. ElevenLabs se puede usar a partir de los 18 años, y en el plan gratuito solo para uso personal y mencionando a ElevenLabs.",
           },
           {
             type: "howto",

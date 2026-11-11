@@ -30,7 +30,7 @@ export const ES: LocaleTemplates = {
     "10":
       "Descarga los idiomas en el Traductor de Google antes de viajar: así funciona sin internet.",
     "11":
-      "En el plan gratuito de ElevenLabs, las locuciones son solo para uso personal.",
+      "ElevenLabs se puede usar a partir de los 18 años. En el plan gratuito, las locuciones son solo para uso personal.",
     "12":
       "Si grabas una conversación con otras personas, avísales.",
     "13":

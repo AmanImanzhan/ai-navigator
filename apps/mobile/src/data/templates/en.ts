@@ -30,7 +30,7 @@ export const EN: LocaleTemplates = {
     "10":
       "Download the languages in Google Translate ahead of time — then it works offline.",
     "11":
-      "On the free ElevenLabs plan, voice-overs are for personal use only.",
+      "ElevenLabs is for ages 18 and up. On the free plan, voice-overs are for personal use only.",
     "12":
       "If you record a conversation with other people, let them know.",
     "13":

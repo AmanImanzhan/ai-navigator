@@ -257,7 +257,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [IDEOGRAM],
-            text: "It's the best at putting text on images — about 10 free pictures a day. If it doesn't work for you, try Gemini or ChatGPT.",
+            text: "It's the best at putting text on images. There's a free plan with limits: you get free generations when you sign in with Google, Apple or Microsoft. On the free plan, your images are visible to everyone — don't upload personal photos or include personal details. If Ideogram doesn't work for you, try Gemini or ChatGPT.",
           },
           {
             type: "howto",
@@ -323,7 +323,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [GEMINI, CHATGPT],
-            text: "Gemini gives you about 20 free images a day and works well with photos. The alternative is ChatGPT, but it only gives you 2–3 free images a day.",
+            text: "Gemini works well with photos and has a free plan with limits. The alternative is ChatGPT, but it only gives you a few free images — more in the Guide.",
           },
           {
             type: "howto",
@@ -386,7 +386,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [IDEOGRAM, CHATGPT],
-            text: "Ideogram is the best at putting a name into a logo. The alternative is ChatGPT. Important: if the logo is for a real business, check the terms of use — free plans may limit commercial use, and on Ideogram free images are visible to everyone in a public gallery.",
+            text: "Ideogram is the best at putting a name into a logo; you get free generations when you sign in with Google, Apple or Microsoft. The alternative is ChatGPT. Important: if the logo is for a real business, check the terms of use — free plans may limit commercial use, and on Ideogram free images are visible to everyone in a public gallery, so don't include personal details.",
           },
           {
             type: "howto",
@@ -450,7 +450,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [KLING, DREAMINA],
-            text: "Kling or Dreamina — both turn a photo into a short video. There aren't many free tries — about 2 videos a day in Kling — so think your prompt through first.",
+            text: "Kling or Dreamina — both turn a photo into a short video. There aren't many free tries, so think your prompt through first. More about limits in the Guide.",
           },
           {
             type: "howto",
@@ -513,7 +513,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [HEYGEN],
-            text: "HeyGen turns text into a talking avatar. Free: 3 videos a month, with a watermark.",
+            text: "HeyGen turns text into a talking avatar. There's a free plan with limits, and videos have a watermark.",
           },
           {
             type: "howto",
@@ -704,7 +704,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [ELEVENLABS],
-            text: "ElevenLabs — about 10,000 characters a month for free. On the free plan it's for personal use only, and you have to say the voice was made with ElevenLabs. For voice-overs in ads or on a monetized channel, you need a paid plan.",
+            text: "ElevenLabs — you can use it from age 18. There's a free plan with limits: personal use only, and you have to say the voice was made with ElevenLabs. For voice-overs in ads or on a monetized channel, you need a paid plan.",
           },
           {
             type: "howto",
@@ -766,7 +766,7 @@ export const EN: LocaleLessons = {
           {
             type: "tool",
             tools: [CHATGPT, GEMINI, ELEVENLABS],
-            text: "Your phone's built-in transcription, ChatGPT or Gemini with an audio upload, or transcription in ElevenLabs.",
+            text: "Your phone's built-in transcription, ChatGPT or Gemini with an audio upload, or transcription in ElevenLabs. ElevenLabs is for ages 18 and up, and on the free plan it's for personal use only, with credit to ElevenLabs.",
           },
           {
             type: "howto",
