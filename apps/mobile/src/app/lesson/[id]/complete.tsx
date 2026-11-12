@@ -28,8 +28,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { Confetti } from "@/components/Confetti";
 import { StatCard } from "@/components/StatCard";
-import { getLessonTemplates } from "@/data/templates";
 import { useLesson } from "@/hooks/useLessons";
+import { useLessonTemplates } from "@/hooks/useTemplates";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -49,8 +49,7 @@ export default function LessonComplete() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const lesson = useLesson(id);
-  const language = useAppStore((state) => state.language);
-  const templateCount = getLessonTemplates(id, language).length;
+  const templateCount = useLessonTemplates(id).length;
   const skill = lesson?.content?.skill;
   const reduceMotion = useReducedMotion();
   const markLessonCompleted = useAppStore((state) => state.markLessonCompleted);

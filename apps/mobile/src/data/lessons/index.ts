@@ -13,6 +13,7 @@ import type {
   ToolLink,
   Track,
   TrackData,
+  TrackId,
 } from "@/data/lessons/types";
 
 export type * from "@/data/lessons/types";
@@ -21,7 +22,7 @@ export type * from "@/data/lessons/types";
 const LOCALES: Record<Locale, LocaleLessons> = { ru: RU, en: EN, es: ES };
 
 // Если у урока нет перевода на язык пользователя — показываем английский.
-const CONTENT_FALLBACK_LOCALE: Locale = "en";
+export const CONTENT_FALLBACK_LOCALE: Locale = "en";
 
 // Короткая запись урока: id, уровень и время в минутах.
 function lesson(id: LessonId, level: LessonLevel, minutes: number): LessonData {
@@ -67,6 +68,21 @@ export const TRACKS: TrackData[] = [
     lessons: [lesson("19", 3, 10), lesson("20", 3, 10), lesson("21", 3, 10)],
   },
 ];
+
+const TRACK_IDS: string[] = TRACKS.map((track) => track.id);
+const LESSON_IDS: string[] = TRACKS.flatMap((track) =>
+  track.lessons.map((item) => item.id),
+);
+
+// id из базы — обычные строки. Приложение знает только свои направления и уроки:
+// новый урок в базе появится в приложении после его обновления.
+export function isTrackId(id: string): id is TrackId {
+  return TRACK_IDS.includes(id);
+}
+
+export function isLessonId(id: string): id is LessonId {
+  return LESSON_IDS.includes(id);
+}
 
 // ---------- Урок и направление на нужном языке ----------
 

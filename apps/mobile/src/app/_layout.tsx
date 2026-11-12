@@ -4,14 +4,21 @@ import { useEffect } from "react";
 
 // Подключаем переводы до первого экрана.
 import "@/i18n";
+import { useContentSync } from "@/hooks/useContentSync";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
+import { useContentStore } from "@/store/useContentStore";
 
 // Не убираем заставку сами — уберём, когда загрузятся сохранённые данные.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const hydrated = useHasHydrated();
+  const appHydrated = useHasHydrated();
+  const contentHydrated = useContentStore((state) => state.hydrated);
+  const hydrated = appHydrated && contentHydrated;
   const onboardingDone = useAppStore((state) => state.onboardingDone);
+
+  // Уроки и шаблоны из Supabase: сначала кэш, свежие данные — в фоне.
+  useContentSync(hydrated);
 
   useEffect(() => {
     if (hydrated) SplashScreen.hide();
