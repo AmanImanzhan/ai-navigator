@@ -1,0 +1,18 @@
+{
+  // Настройки для скриптов в scripts/. "@/..." указывает на код приложения — так скрипт берёт те же данные.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "types": ["node"],
+    "paths": {
+      "@/*": ["../apps/mobile/src/*"]
+    }
+  },
+  "include": ["*.ts"]
+}
