@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import "@/i18n";
 import { useContentSync } from "@/hooks/useContentSync";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
+import { listenToAuthChanges } from "@/store/useAuthStore";
 import { useContentStore } from "@/store/useContentStore";
 
 // Не убираем заставку сами — уберём, когда загрузятся сохранённые данные.
@@ -19,6 +20,9 @@ export default function RootLayout() {
 
   // Уроки и шаблоны из Supabase: сначала кэш, свежие данные — в фоне.
   useContentSync(hydrated);
+
+  // Вход: следим за сессией, пока приложение открыто.
+  useEffect(() => listenToAuthChanges(), []);
 
   useEffect(() => {
     if (hydrated) SplashScreen.hide();
@@ -49,6 +53,15 @@ export default function RootLayout() {
         <Stack.Screen name="template/[id]/fill" />
         <Stack.Screen name="library/tool/[id]" />
         <Stack.Screen name="library/concept/[id]" />
+        {/* «Сохраните прогресс»: после первого урока и из Профиля. */}
+        <Stack.Screen
+          name="save-progress"
+          options={{
+            presentation: "formSheet",
+            sheetAllowedDetents: "fitToContents",
+            sheetGrabberVisible: true,
+          }}
+        />
         {/* Выбор языка из Профиля — шторка снизу высотой по содержимому. */}
         <Stack.Screen
           name="language-picker"

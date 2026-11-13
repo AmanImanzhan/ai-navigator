@@ -10,7 +10,8 @@
     "minutes_one": "{{count}} minuto",
     "minutes_other": "{{count}} minutos",
     "copy": "Copiar",
-    "copied": "Copiado"
+    "copied": "Copiado",
+    "cancel": "Cancelar"
   },
   "welcome": {
     "title": "La IA puede hacer más de lo que crees",
@@ -198,6 +199,24 @@
     "resetTitle": "¿Borrar todos los datos?",
     "resetMessage": "Se borrarán tus respuestas y tu progreso, y la app volverá a empezar desde la elección de idioma.",
     "resetCancel": "Cancelar",
-    "resetConfirm": "Borrar"
+    "resetConfirm": "Borrar",
+    "account": "Cuenta",
+    "signInPrompt": "Inicia sesión para guardar tu progreso",
+    "signInHint": "Abre el inicio de sesión",
+    "signedIn": "Has iniciado sesión",
+    "email": "Correo",
+    "signOut": "Cerrar sesión",
+    "signOutTitle": "¿Cerrar sesión?",
+    "signOutMessage": "Tu progreso en este teléfono se mantendrá."
+  },
+  "auth": {
+    "saveTitle": "Guarda tu progreso",
+    "saveText": "Inicia sesión para que tus lecciones completadas y tus peticiones guardadas sigan contigo, incluso en un teléfono nuevo.",
+    "saveNote": "Sin cuenta también funciona todo.",
+    "notNow": "Ahora no",
+    "unavailable": "Por ahora, solo puedes iniciar sesión en iPhone.",
+    "errorTitle": "No se pudo iniciar sesión",
+    "errorNetwork": "Revisa tu conexión a internet e inténtalo de nuevo.",
+    "errorGeneric": "Algo salió mal. Inténtalo de nuevo un poco más tarde."
   }
 }

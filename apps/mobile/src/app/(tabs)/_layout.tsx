@@ -3,6 +3,7 @@ import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import { useTranslation } from "react-i18next";
 import type { ColorValue } from "react-native";
 
+import { useSaveProgressPrompt } from "@/hooks/useSaveProgressPrompt";
 import { theme } from "@/theme";
 
 type TabIconProps = {
@@ -18,6 +19,8 @@ function TabIcon({ name, color, size }: TabIconProps) {
 // Нижние вкладки. Скобки в имени папки (tabs) не попадают в адрес: этот экран — /home.
 export default function TabsLayout() {
   const { t } = useTranslation();
+  // После первого пройденного урока один раз предлагаем войти.
+  useSaveProgressPrompt();
 
   return (
     <Tabs

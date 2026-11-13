@@ -30,6 +30,8 @@ type AppData = {
   // id пройденных уроков.
   completedLessons: string[];
   savedPrompts: SavedPrompt[];
+  // Окно «Сохраните прогресс» уже предлагали — сами больше не показываем.
+  saveProgressPromptShown: boolean;
 };
 
 type AppActions = {
@@ -42,6 +44,7 @@ type AppActions = {
   markLessonCompleted: (id: string) => void;
   savePrompt: (templateId: string, title: string, text: string) => void;
   deletePrompt: (id: string) => void;
+  markSaveProgressPromptShown: () => void;
   resetAll: () => void;
 };
 
@@ -53,6 +56,7 @@ const INITIAL_DATA: AppData = {
   onboardingDone: false,
   completedLessons: [],
   savedPrompts: [],
+  saveProgressPromptShown: false,
 };
 
 // persist сам сохраняет данные в AsyncStorage и загружает их при запуске.
@@ -87,6 +91,7 @@ export const useAppStore = create<AppData & AppActions>()(
         set((state) => ({
           savedPrompts: state.savedPrompts.filter((prompt) => prompt.id !== id),
         })),
+      markSaveProgressPromptShown: () => set({ saveProgressPromptShown: true }),
       resetAll: () => set(INITIAL_DATA),
     }),
     {

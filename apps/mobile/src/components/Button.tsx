@@ -2,6 +2,9 @@ import { Pressable, StyleSheet, Text } from "react-native";
 
 import { theme } from "@/theme";
 
+// Высота кнопки. Нужна и другим кнопкам (например, Apple), чтобы они стояли вровень.
+export const BUTTON_HEIGHT = 54;
+
 type ButtonVariant = "primary" | "secondary" | "ghost";
 
 type ButtonProps = {
@@ -37,7 +40,7 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    height: 54,
+    height: BUTTON_HEIGHT,
     borderRadius: theme.radius.md,
     paddingHorizontal: theme.spacing.lg,
     alignItems: "center",

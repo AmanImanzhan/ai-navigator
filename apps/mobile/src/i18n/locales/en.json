@@ -10,7 +10,8 @@
     "minutes_one": "{{count}} minute",
     "minutes_other": "{{count}} minutes",
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "cancel": "Cancel"
   },
   "welcome": {
     "title": "AI can do more than you think",
@@ -198,6 +199,24 @@
     "resetTitle": "Reset all data?",
     "resetMessage": "Your answers and lesson progress will be deleted, and the app will start again from language selection.",
     "resetCancel": "Cancel",
-    "resetConfirm": "Reset"
+    "resetConfirm": "Reset",
+    "account": "Account",
+    "signInPrompt": "Sign in to save your progress",
+    "signInHint": "Opens sign-in",
+    "signedIn": "You're signed in",
+    "email": "Email",
+    "signOut": "Sign out",
+    "signOutTitle": "Sign out?",
+    "signOutMessage": "Your progress on this phone will stay."
+  },
+  "auth": {
+    "saveTitle": "Save your progress",
+    "saveText": "Sign in so your completed lessons and saved prompts stay with you — even on a new phone.",
+    "saveNote": "Everything works without an account, too.",
+    "notNow": "Not now",
+    "unavailable": "For now, you can only sign in on iPhone.",
+    "errorTitle": "Couldn't sign in",
+    "errorNetwork": "Check your internet connection and try again.",
+    "errorGeneric": "Something went wrong. Please try again a little later."
   }
 }
