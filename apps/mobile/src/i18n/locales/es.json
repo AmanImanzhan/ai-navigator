@@ -202,7 +202,6 @@
     "resetConfirm": "Borrar",
     "account": "Cuenta",
     "signInPrompt": "Inicia sesión para guardar tu progreso",
-    "signInHint": "Abre el inicio de sesión",
     "signedIn": "Has iniciado sesión",
     "email": "Correo",
     "signOut": "Cerrar sesión",
@@ -214,9 +213,10 @@
     "saveText": "Inicia sesión para que tus lecciones completadas y tus peticiones guardadas sigan contigo, incluso en un teléfono nuevo.",
     "saveNote": "Sin cuenta también funciona todo.",
     "notNow": "Ahora no",
-    "unavailable": "Por ahora, solo puedes iniciar sesión en iPhone.",
+    "unavailable": "Por ahora, no puedes iniciar sesión en este dispositivo.",
     "errorTitle": "No se pudo iniciar sesión",
     "errorNetwork": "Revisa tu conexión a internet e inténtalo de nuevo.",
-    "errorGeneric": "Algo salió mal. Inténtalo de nuevo un poco más tarde."
+    "errorGeneric": "Algo salió mal. Inténtalo de nuevo un poco más tarde.",
+    "continueWithGoogle": "Continuar con Google"
   }
 }

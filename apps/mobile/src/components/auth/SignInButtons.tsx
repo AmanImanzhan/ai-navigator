@@ -3,13 +3,15 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { BUTTON_HEIGHT } from "@/components/Button";
 import { useAvailableProviders } from "@/hooks/useAuth";
 import { isNetworkError, signIn, type AuthProviderId } from "@/lib/auth";
 import { theme } from "@/theme";
 
 type SignInButtonsProps = {
-  onSignedIn: () => void;
+  // Что сделать после входа (например, закрыть шторку). Необязательно.
+  onSignedIn?: () => void;
 };
 
 // Кнопки входа — по одной на каждый способ, доступный на этом телефоне.
@@ -26,7 +28,7 @@ export function SignInButtons({ onSignedIn }: SignInButtonsProps) {
     setBusy(false);
 
     if (result.status === "signedIn") {
-      onSignedIn();
+      onSignedIn?.();
     } else if (result.status === "error") {
       if (__DEV__) console.log("Вход не удался:", result.error);
       Alert.alert(
@@ -71,12 +73,19 @@ export function SignInButtons({ onSignedIn }: SignInButtonsProps) {
                 onPress={() => handleSignIn(provider)}
               />
             );
+          case "google":
+            return (
+              <GoogleSignInButton
+                key={provider}
+                onPress={() => handleSignIn(provider)}
+              />
+            );
         }
       })}
       {busy ? (
         <ActivityIndicator
           style={StyleSheet.absoluteFill}
-          color={theme.colors.onAccent}
+          color={theme.colors.accent}
         />
       ) : null}
     </View>

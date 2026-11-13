@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { SignInCard } from "@/components/auth/SignInCard";
 import { Button } from "@/components/Button";
 import { InfoCard } from "@/components/InfoCard";
 import { LANGUAGES } from "@/data/onboarding";
@@ -66,12 +67,7 @@ export default function Profile() {
             ) : null}
           </View>
         ) : providers && providers.length > 0 ? (
-          <InfoCard
-            label={t("profile.account")}
-            value={t("profile.signInPrompt")}
-            accessibilityHint={t("profile.signInHint")}
-            onPress={() => router.push("/save-progress")}
-          />
+          <SignInCard />
         ) : null}
 
         <View style={styles.cards}>

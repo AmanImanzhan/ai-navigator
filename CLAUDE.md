@@ -23,6 +23,7 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   on-accent #FFFFFF (text on accent),
   text #2A1E18, text-secondary #6E625B, border #ECE5DC, success #2F7D4A / #E7F3E9,
   warning #9A6A12 / #FDF2DD, error #C0392B / #FBEAEA, track #EFE8E0
+- Brand colors (fixed by Google branding guidelines, don't change): Google button bg #FFFFFF, border #747775, text #1F1F1F
 - Font: system font (SF Pro). Sizes: Display 28 bold, Title 22 semibold, Headline 17 semibold,
   Body 17, Callout 15, Label 13 medium, Caption 13
 - Spacing: 4 / 8 / 12 / 16 / 20 / 24 / 32. Radius: 12 / 14 / 16 / full

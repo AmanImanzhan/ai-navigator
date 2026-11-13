@@ -16,6 +16,10 @@ export const colors = {
   warning: "#9A6A12",
   warningBg: "#FDF2DD",
   track: "#EFE8E0",
+  // Кнопка Google (светлая тема). Цвета задаёт брендбук Google — не менять.
+  googleButtonBg: "#FFFFFF",
+  googleButtonBorder: "#747775",
+  googleButtonText: "#1F1F1F",
 } as const;
 
 export type ColorName = keyof typeof colors;

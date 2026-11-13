@@ -202,7 +202,6 @@
     "resetConfirm": "Reset",
     "account": "Account",
     "signInPrompt": "Sign in to save your progress",
-    "signInHint": "Opens sign-in",
     "signedIn": "You're signed in",
     "email": "Email",
     "signOut": "Sign out",
@@ -214,9 +213,10 @@
     "saveText": "Sign in so your completed lessons and saved prompts stay with you — even on a new phone.",
     "saveNote": "Everything works without an account, too.",
     "notNow": "Not now",
-    "unavailable": "For now, you can only sign in on iPhone.",
+    "unavailable": "Sign-in isn't available on this device yet.",
     "errorTitle": "Couldn't sign in",
     "errorNetwork": "Check your internet connection and try again.",
-    "errorGeneric": "Something went wrong. Please try again a little later."
+    "errorGeneric": "Something went wrong. Please try again a little later.",
+    "continueWithGoogle": "Continue with Google"
   }
 }
