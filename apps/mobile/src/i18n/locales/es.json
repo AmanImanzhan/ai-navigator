@@ -206,7 +206,9 @@
     "email": "Correo",
     "signOut": "Cerrar sesión",
     "signOutTitle": "¿Cerrar sesión?",
-    "signOutMessage": "Tu progreso en este teléfono se mantendrá."
+    "signOutMessage": "Tu progreso en este teléfono se mantendrá.",
+    "resetMessageSignedIn": "Se borrarán tus respuestas, tu progreso y tus peticiones guardadas en este teléfono y en tu cuenta. La app volverá a empezar desde la elección de idioma.",
+    "resetErrorTitle": "No se pudieron borrar los datos"
   },
   "auth": {
     "saveTitle": "Guarda tu progreso",
@@ -217,6 +219,14 @@
     "errorTitle": "No se pudo iniciar sesión",
     "errorNetwork": "Revisa tu conexión a internet e inténtalo de nuevo.",
     "errorGeneric": "Algo salió mal. Inténtalo de nuevo un poco más tarde.",
-    "continueWithGoogle": "Continuar con Google"
+    "continueWithGoogle": "Continuar con Google",
+    "signInTitle": "Inicia sesión en tu cuenta",
+    "signInText": "Tus lecciones completadas, tus peticiones guardadas y tus ajustes se cargarán desde tu cuenta."
+  },
+  "sync": {
+    "otherAccountTitle": "Otra cuenta",
+    "otherAccountMessage": "El progreso de este teléfono pertenece a otra cuenta. ¿Quieres ver el progreso de la cuenta con la que acabas de iniciar sesión o añadirle el progreso de este teléfono?",
+    "otherAccountReplace": "Ver el progreso de esta cuenta",
+    "otherAccountMerge": "Añadir el progreso del teléfono"
   }
 }

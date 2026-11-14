@@ -8,7 +8,8 @@ import { Button } from "@/components/Button";
 import { InfoCard } from "@/components/InfoCard";
 import { LANGUAGES } from "@/data/onboarding";
 import { useAuth, useAvailableProviders } from "@/hooks/useAuth";
-import { getDisplayName } from "@/lib/auth";
+import { getDisplayName, isNetworkError } from "@/lib/auth";
+import { resetAllData } from "@/lib/sync";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -21,7 +22,6 @@ export default function Profile() {
   const occupation = useAppStore((state) => state.occupation);
   const minutesPerDay = useAppStore((state) => state.minutesPerDay);
   const completedCount = useAppStore((state) => state.completedLessons.length);
-  const resetAll = useAppStore((state) => state.resetAll);
 
   // Превращаем сохранённые коды («ru», «office», 10) в понятный текст.
   const languageTitle =
@@ -43,12 +43,35 @@ export default function Profile() {
   }
 
   // Сначала спрашиваем — чтобы не стереть всё случайным нажатием.
+  // Вошедшего предупреждаем, что очистится и аккаунт.
   // После сброса _layout сам откроет выбор языка: онбординг снова доступен.
   function handleReset() {
-    Alert.alert(t("profile.resetTitle"), t("profile.resetMessage"), [
-      { text: t("profile.resetCancel"), style: "cancel" },
-      { text: t("profile.resetConfirm"), style: "destructive", onPress: resetAll },
-    ]);
+    Alert.alert(
+      t("profile.resetTitle"),
+      user ? t("profile.resetMessageSignedIn") : t("profile.resetMessage"),
+      [
+        { text: t("profile.resetCancel"), style: "cancel" },
+        {
+          text: t("profile.resetConfirm"),
+          style: "destructive",
+          onPress: () => {
+            resetData();
+          },
+        },
+      ],
+    );
+  }
+
+  // Аккаунт очистить не вышло (например, нет сети) — телефон не трогаем и говорим почему.
+  async function resetData() {
+    try {
+      await resetAllData();
+    } catch (error) {
+      Alert.alert(
+        t("profile.resetErrorTitle"),
+        isNetworkError(error) ? t("auth.errorNetwork") : t("auth.errorGeneric"),
+      );
+    }
   }
 
   return (

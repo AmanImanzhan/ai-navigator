@@ -177,6 +177,7 @@ export type Database = {
           language: Database["public"]["Enums"]["app_locale"]
           minutes_per_day: number
           occupation: string | null
+          onboarding_completed_at: string | null
           reminder_enabled: boolean
         }
         Insert: {
@@ -186,6 +187,7 @@ export type Database = {
           language?: Database["public"]["Enums"]["app_locale"]
           minutes_per_day?: number
           occupation?: string | null
+          onboarding_completed_at?: string | null
           reminder_enabled?: boolean
         }
         Update: {
@@ -195,6 +197,7 @@ export type Database = {
           language?: Database["public"]["Enums"]["app_locale"]
           minutes_per_day?: number
           occupation?: string | null
+          onboarding_completed_at?: string | null
           reminder_enabled?: boolean
         }
         Relationships: []
@@ -202,23 +205,29 @@ export type Database = {
       saved_prompts: {
         Row: {
           created_at: string
+          deleted_at: string | null
           id: string
           template_id: string | null
           text: string
+          title: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           id?: string
           template_id?: string | null
           text: string
+          title?: string | null
           user_id?: string
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           id?: string
           template_id?: string | null
           text?: string
+          title?: string | null
           user_id?: string
         }
         Relationships: [
@@ -397,7 +406,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reset_my_data: { Args: never; Returns: undefined }
     }
     Enums: {
       app_locale: "en" | "ru" | "es"

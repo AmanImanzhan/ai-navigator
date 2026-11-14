@@ -206,7 +206,9 @@
     "email": "Email",
     "signOut": "Sign out",
     "signOutTitle": "Sign out?",
-    "signOutMessage": "Your progress on this phone will stay."
+    "signOutMessage": "Your progress on this phone will stay.",
+    "resetMessageSignedIn": "Your answers, lesson progress and saved prompts will be deleted on this phone and in your account. The app will start again from language selection.",
+    "resetErrorTitle": "Couldn't reset your data"
   },
   "auth": {
     "saveTitle": "Save your progress",
@@ -217,6 +219,14 @@
     "errorTitle": "Couldn't sign in",
     "errorNetwork": "Check your internet connection and try again.",
     "errorGeneric": "Something went wrong. Please try again a little later.",
-    "continueWithGoogle": "Continue with Google"
+    "continueWithGoogle": "Continue with Google",
+    "signInTitle": "Sign in to your account",
+    "signInText": "Your completed lessons, saved prompts and settings will be loaded from your account."
+  },
+  "sync": {
+    "otherAccountTitle": "Different account",
+    "otherAccountMessage": "The progress on this phone belongs to another account. Show the progress of the account you just signed in to, or add the progress from this phone to it?",
+    "otherAccountReplace": "Show this account's progress",
+    "otherAccountMerge": "Add progress from this phone"
   }
 }

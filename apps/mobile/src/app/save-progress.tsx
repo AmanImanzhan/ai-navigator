@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
@@ -10,19 +10,23 @@ import { theme } from "@/theme";
 // Размер круга со значком облака.
 const ICON_CIRCLE_SIZE = 56;
 
-// Шторка «Сохраните прогресс»: зачем входить, кнопки входа и «Не сейчас».
+// Шторка входа. Два режима:
+// - обычный: «Сохраните прогресс» — после первого урока;
+// - mode=signIn: «Войдите в аккаунт» — с приветствия, по кнопке «У меня уже есть аккаунт».
 // Без аккаунта приложение работает как раньше — шторку можно просто закрыть.
 export default function SaveProgress() {
   const { t } = useTranslation();
+  const { mode } = useLocalSearchParams<{ mode?: string }>();
+  const isSignIn = mode === "signIn";
 
   return (
     <View style={styles.sheet}>
       <View style={styles.iconCircle}>
         <SymbolView
           name={{
-            ios: "icloud.and.arrow.up",
-            android: "cloud_upload",
-            web: "cloud_upload",
+            ios: isSignIn ? "person.crop.circle" : "icloud.and.arrow.up",
+            android: isSignIn ? "account_circle" : "cloud_upload",
+            web: isSignIn ? "account_circle" : "cloud_upload",
           }}
           size={28}
           tintColor={theme.colors.accent}
@@ -30,10 +34,16 @@ export default function SaveProgress() {
       </View>
 
       <View style={styles.texts}>
-        <Text style={styles.title}>{t("auth.saveTitle")}</Text>
-        <Text style={styles.body}>{t("auth.saveText")}</Text>
+        <Text style={styles.title}>
+          {isSignIn ? t("auth.signInTitle") : t("auth.saveTitle")}
+        </Text>
+        <Text style={styles.body}>
+          {isSignIn ? t("auth.signInText") : t("auth.saveText")}
+        </Text>
       </View>
 
+      {/* После входа данные подтянутся сами (lib/sync). Если в аккаунте пройден онбординг —
+          приложение само откроет уроки. */}
       <View style={styles.actions}>
         <SignInButtons onSignedIn={() => router.back()} />
         <Button
@@ -43,7 +53,7 @@ export default function SaveProgress() {
         />
       </View>
 
-      <Text style={styles.note}>{t("auth.saveNote")}</Text>
+      {isSignIn ? null : <Text style={styles.note}>{t("auth.saveNote")}</Text>}
     </View>
   );
 }

@@ -8,6 +8,7 @@ import type {
   SignInResult,
 } from "@/lib/auth/types";
 import { supabase } from "@/lib/supabase";
+import { syncBeforeSignOut } from "@/lib/sync";
 
 export type * from "@/lib/auth/types";
 
@@ -39,9 +40,12 @@ export async function signIn(provider: AuthProviderId): Promise<SignInResult> {
   }
 }
 
-// Выход. Без сети сервер не ответит — тогда выходим хотя бы на этом телефоне.
+// Выход. Сначала пробуем отправить несохранённые изменения в аккаунт.
+// Без сети сервер не ответит — тогда выходим хотя бы на этом телефоне.
 // Заодно выходим из провайдеров, которые помнят аккаунт на телефоне (Google).
+// Данные на телефоне остаются.
 export async function signOut() {
+  await syncBeforeSignOut();
   await Promise.all(
     PROVIDER_IDS.map((id) => AUTH_PROVIDERS[id].signOut?.().catch(() => {})),
   );

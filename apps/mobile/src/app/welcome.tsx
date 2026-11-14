@@ -4,11 +4,16 @@ import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/Button";
+import { useAuth, useAvailableProviders } from "@/hooks/useAuth";
 import { theme } from "@/theme";
 
-// Временный демо-экран приветствия для проверки темы и кнопок.
+// Приветствие: начать онбординг или войти в аккаунт, который уже есть.
 export default function Welcome() {
   const { t } = useTranslation();
+  const { isSignedIn } = useAuth();
+  const providers = useAvailableProviders();
+  // Уже вошли или войти на этом телефоне нечем — кнопку входа не показываем.
+  const canSignIn = !isSignedIn && providers !== null && providers.length > 0;
 
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
@@ -22,11 +27,19 @@ export default function Welcome() {
           title={t("welcome.start")}
           onPress={() => router.push("/onboarding/work")}
         />
-        <Button
-          title={t("welcome.haveAccount")}
-          variant="ghost"
-          onPress={() => {}}
-        />
+        {/* Вход в аккаунт: если в нём уже пройден онбординг, приложение сразу откроет уроки. */}
+        {canSignIn ? (
+          <Button
+            title={t("welcome.haveAccount")}
+            variant="ghost"
+            onPress={() =>
+              router.push({
+                pathname: "/save-progress",
+                params: { mode: "signIn" },
+              })
+            }
+          />
+        ) : null}
       </View>
     </SafeAreaView>
   );
