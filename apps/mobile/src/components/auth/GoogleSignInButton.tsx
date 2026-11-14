@@ -38,7 +38,8 @@ export function GoogleSignInButton({ onPress }: GoogleSignInButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    height: BUTTON_HEIGHT,
+    minHeight: BUTTON_HEIGHT,
+    paddingVertical: theme.spacing.sm,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.headline,
+    flexShrink: 1,
+    textAlign: "center",
     color: theme.colors.googleButtonText,
   },
 });

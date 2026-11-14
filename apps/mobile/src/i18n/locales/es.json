@@ -17,7 +17,8 @@
     "title": "La IA puede hacer más de lo que crees",
     "body": "Te enseñamos a conseguir justo lo que necesitas, en el trabajo y en tu día a día.",
     "start": "Empezar",
-    "haveAccount": "Ya tengo una cuenta"
+    "haveAccount": "Ya tengo una cuenta",
+    "signedInAs": "Has iniciado sesión como {{name}}"
   },
   "onboarding": {
     "work": {
@@ -208,7 +209,11 @@
     "signOutTitle": "¿Cerrar sesión?",
     "signOutMessage": "Tu progreso en este teléfono se mantendrá.",
     "resetMessageSignedIn": "Se borrarán tus respuestas, tu progreso y tus peticiones guardadas en este teléfono y en tu cuenta. La app volverá a empezar desde la elección de idioma.",
-    "resetErrorTitle": "No se pudieron borrar los datos"
+    "resetErrorTitle": "No se pudieron borrar los datos",
+    "saved": "Guardadas",
+    "promptsCount_one": "{{count}} petición",
+    "promptsCount_other": "{{count}} peticiones",
+    "settingsSubtitle": "Idioma, tiempo al día, recordatorios, cuenta"
   },
   "auth": {
     "saveTitle": "Guarda tu progreso",
@@ -228,5 +233,52 @@
     "otherAccountMessage": "El progreso de este teléfono pertenece a otra cuenta. ¿Quieres ver el progreso de la cuenta con la que acabas de iniciar sesión o añadirle el progreso de este teléfono?",
     "otherAccountReplace": "Ver el progreso de esta cuenta",
     "otherAccountMerge": "Añadir el progreso del teléfono"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "general": "General",
+    "reminders": "Recordatorios",
+    "reminderTitle": "Recordatorio diario",
+    "reminderSubtitle": "Una notificación a la hora que elijas. Si ese día ya hiciste una lección, no te lo recordaremos.",
+    "reminderTime": "Hora",
+    "reminderBlocked": "Las notificaciones de AI Navigator están desactivadas en los Ajustes del iPhone, así que no recibirás recordatorios.",
+    "testReminder": "Recordatorio de prueba en 5 segundos"
+  },
+  "reminders": {
+    "channelName": "Recordatorios",
+    "deniedTitle": "Notificaciones desactivadas",
+    "deniedMessage": "Para recibir recordatorios, permite las notificaciones de AI Navigator en los Ajustes del iPhone.",
+    "notNow": "Ahora no",
+    "openSettings": "Abrir Ajustes del iPhone",
+    "messages": {
+      "1": {
+        "title": "Un minuto para la IA",
+        "body": "Tienes una lección corta esperando cuando te venga bien."
+      },
+      "2": {
+        "title": "¿Probamos algo nuevo?",
+        "body": "Hoy puedes aprender un truco más con la IA."
+      },
+      "3": {
+        "title": "Un pequeño paso",
+        "body": "Un par de minutos y otra lección completada. Pásate si tienes tiempo."
+      },
+      "4": {
+        "title": "Una idea",
+        "body": "Abre una lección y prueba la IA en acción."
+      },
+      "5": {
+        "title": "Hola de AI Navigator",
+        "body": "Hay una lección nueva lista. Empieza cuando quieras."
+      },
+      "6": {
+        "title": "Hora de curiosear",
+        "body": "Descubre cómo te puede ayudar la IA hoy."
+      },
+      "7": {
+        "title": "Sin prisas",
+        "body": "Una lección corta te llevará solo unos minutos."
+      }
+    }
   }
 }

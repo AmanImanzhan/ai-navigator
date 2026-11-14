@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { ChoiceCard } from "@/components/ChoiceCard";
 import { ProgressHeader } from "@/components/ProgressHeader";
 import { DAILY_MINUTES, type DailyMinutes } from "@/data/onboarding";
+import { useReminderSwitch } from "@/hooks/useReminderSwitch";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -14,10 +15,11 @@ import { theme } from "@/theme";
 export default function OnboardingTime() {
   const { t } = useTranslation();
   const savedMinutes = useAppStore((state) => state.minutesPerDay);
-  const savedReminder = useAppStore((state) => state.reminderEnabled);
   const completeOnboarding = useAppStore((state) => state.completeOnboarding);
   const [minutes, setMinutes] = useState<DailyMinutes>(savedMinutes);
-  const [remind, setRemind] = useState(savedReminder);
+  // Напоминание по умолчанию выключено. Включили — сразу спрашиваем разрешение iOS;
+  // отказ — переключатель остаётся выключенным и объясняем, где включить.
+  const reminder = useReminderSwitch();
 
   return (
     <SafeAreaView style={styles.screen} edges={["top", "bottom"]}>
@@ -53,8 +55,9 @@ export default function OnboardingTime() {
             </Text>
           </View>
           <Switch
-            value={remind}
-            onValueChange={setRemind}
+            value={reminder.enabled}
+            onValueChange={reminder.toggle}
+            disabled={reminder.busy}
             trackColor={{ false: theme.colors.track, true: theme.colors.accent }}
             ios_backgroundColor={theme.colors.track}
             accessibilityLabel={t("onboarding.time.reminderTitle")}
@@ -66,7 +69,7 @@ export default function OnboardingTime() {
         {/* Переход на /home делает _layout: после onboardingDone онбординг закрыт. */}
         <Button
           title={t("common.done")}
-          onPress={() => completeOnboarding(minutes, remind)}
+          onPress={() => completeOnboarding(minutes)}
         />
       </View>
     </SafeAreaView>

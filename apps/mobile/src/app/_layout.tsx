@@ -5,6 +5,7 @@ import { useEffect } from "react";
 // Подключаем переводы до первого экрана.
 import "@/i18n";
 import { useContentSync } from "@/hooks/useContentSync";
+import { useReminders } from "@/hooks/useReminders";
 import { useSync } from "@/hooks/useSync";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
 import { listenToAuthChanges } from "@/store/useAuthStore";
@@ -27,6 +28,9 @@ export default function RootLayout() {
 
   // Прогресс и запросы вошедшего — в аккаунт и обратно.
   useSync(appHydrated);
+
+  // Напоминания: расписание и открытие Главной по нажатию.
+  useReminders(hydrated);
 
   useEffect(() => {
     if (hydrated) SplashScreen.hide();
@@ -67,6 +71,7 @@ export default function RootLayout() {
         <Stack.Screen name="template/[id]/fill" />
         <Stack.Screen name="library/tool/[id]" />
         <Stack.Screen name="library/concept/[id]" />
+        <Stack.Screen name="settings" />
         {/* Выбор языка из Профиля — шторка снизу высотой по содержимому. */}
         <Stack.Screen
           name="language-picker"

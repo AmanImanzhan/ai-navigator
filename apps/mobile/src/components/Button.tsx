@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text } from "react-native";
 import { theme } from "@/theme";
 
 // Высота кнопки. Нужна и другим кнопкам (например, Apple), чтобы они стояли вровень.
+// Это минимум: длинная подпись или крупный системный шрифт переносятся, а не обрезаются.
 export const BUTTON_HEIGHT = 54;
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
@@ -40,7 +41,8 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    height: BUTTON_HEIGHT,
+    minHeight: BUTTON_HEIGHT,
+    paddingVertical: theme.spacing.sm,
     borderRadius: theme.radius.md,
     paddingHorizontal: theme.spacing.lg,
     alignItems: "center",
@@ -48,6 +50,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.headline,
+    textAlign: "center",
   },
   disabled: {
     opacity: 0.4,

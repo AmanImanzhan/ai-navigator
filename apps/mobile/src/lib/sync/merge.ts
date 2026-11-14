@@ -14,7 +14,6 @@ export type LocalSyncData = {
   language: LanguageCode;
   occupation: OccupationId | null;
   minutesPerDay: DailyMinutes;
-  reminderEnabled: boolean;
   onboardingDone: boolean;
   completedLessons: string[];
   lessonCompletedAt: Record<string, number>;
@@ -28,7 +27,6 @@ export type RemoteProfile = {
   language: LanguageCode;
   occupation: OccupationId | null;
   minutesPerDay: DailyMinutes;
-  reminderEnabled: boolean;
   onboardingCompleted: boolean;
 };
 
@@ -55,16 +53,14 @@ export type MergeResult = {
   pendingSync: PendingSync;
   // Ответы онбординга из облака, если их нужно взять (иначе null). Язык не трогаем:
   // его человек только что выбрал на этом телефоне.
-  onboarding: Pick<
-    RemoteProfile,
-    "occupation" | "minutesPerDay" | "reminderEnabled"
-  > | null;
+  onboarding: Pick<RemoteProfile, "occupation" | "minutesPerDay"> | null;
 };
 
 // Правила:
 // - уроки: объединение; если урок пройден и там и там — самая ранняя дата;
 // - запросы: объединение по id, но удалённое где угодно остаётся удалённым —
 //   и в облаке (deletedAt), и на телефоне (pendingSync.deletedPrompts);
+// - напоминания не синхронизируются: у каждого телефона свои (useReminderStore);
 // - онбординг: телефон главнее; облако — только если на телефоне онбординг не пройден
 //   (вход через «У меня уже есть аккаунт») или человек выбрал прогресс аккаунта.
 export function mergeSyncData(
@@ -152,7 +148,6 @@ export function mergeSyncData(
     onboarding = {
       occupation: cloud.occupation,
       minutesPerDay: cloud.minutesPerDay,
-      reminderEnabled: cloud.reminderEnabled,
     };
     // Язык остаётся с телефона — если он другой, сообщаем облаку.
     uploadProfile = cloud.language !== local.language;
@@ -163,8 +158,7 @@ export function mergeSyncData(
       !cloud.onboardingCompleted ||
       cloud.language !== local.language ||
       cloud.occupation !== local.occupation ||
-      cloud.minutesPerDay !== local.minutesPerDay ||
-      cloud.reminderEnabled !== local.reminderEnabled;
+      cloud.minutesPerDay !== local.minutesPerDay;
   } else {
     // Онбординг ещё не пройден — отправим, когда пройдёт.
     uploadProfile = local.pendingSync.profile;

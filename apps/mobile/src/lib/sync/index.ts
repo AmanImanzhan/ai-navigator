@@ -152,7 +152,6 @@ async function push(userId: string) {
       language: state.language,
       occupation: state.occupation,
       minutesPerDay: state.minutesPerDay,
-      reminderEnabled: state.reminderEnabled,
       onboardingDone: state.onboardingDone,
     },
   });

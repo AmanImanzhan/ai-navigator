@@ -40,12 +40,14 @@ type AppData = {
   // null — ещё не ответили на «Чем вы занимаетесь?».
   occupation: OccupationId | null;
   minutesPerDay: DailyMinutes;
-  reminderEnabled: boolean;
   onboardingDone: boolean;
   // id пройденных уроков.
   completedLessons: string[];
   // Когда пройден каждый урок (миллисекунды). При слиянии с облаком берём самую раннюю дату.
   lessonCompletedAt: Record<string, number>;
+  // Когда последний раз дошли до конца урока (в том числе повторно). Только для этого телефона:
+  // по нему напоминание понимает, что сегодня уже занимались.
+  lastLessonAt: number | null;
   savedPrompts: SavedPrompt[];
   // Окно «Сохраните прогресс» уже предлагали — сами больше не показываем.
   saveProgressPromptShown: boolean;
@@ -58,10 +60,8 @@ type AppData = {
 type AppActions = {
   setLanguage: (language: LanguageCode) => void;
   saveOccupation: (occupation: OccupationId) => void;
-  completeOnboarding: (
-    minutesPerDay: DailyMinutes,
-    reminderEnabled: boolean,
-  ) => void;
+  completeOnboarding: (minutesPerDay: DailyMinutes) => void;
+  setMinutesPerDay: (minutesPerDay: DailyMinutes) => void;
   markLessonCompleted: (id: string) => void;
   savePrompt: (templateId: string, title: string, text: string) => void;
   deletePrompt: (id: string) => void;
@@ -81,18 +81,19 @@ const INITIAL_DATA: AppData = {
   language: "en",
   occupation: null,
   minutesPerDay: 10,
-  reminderEnabled: true,
   onboardingDone: false,
   completedLessons: [],
   lessonCompletedAt: {},
+  lastLessonAt: null,
   savedPrompts: [],
   saveProgressPromptShown: false,
   pendingSync: EMPTY_PENDING_SYNC,
   accountId: null,
 };
 
-// Версия формы сохранённых данных. 1 — добавлены синхронизация и UUID у запросов.
-const STORE_VERSION = 1;
+// Версия формы сохранённых данных.
+// 1 — синхронизация и UUID у запросов; 2 — напоминания переехали в useReminderStore.
+const STORE_VERSION = 2;
 
 function addUnique(list: string[], id: string): string[] {
   return list.includes(id) ? list : [...list, id];
@@ -111,7 +112,13 @@ function migrate(persisted: unknown, version: number): unknown {
   if (version >= STORE_VERSION || typeof persisted !== "object" || !persisted) {
     return persisted;
   }
-  const old = persisted as Partial<AppData>;
+  // reminderEnabled был до версии 2: теперь напоминания хранятся отдельно (useReminderStore).
+  const { reminderEnabled: _reminderEnabled, ...rest } = persisted as Partial<
+    AppData & { reminderEnabled: boolean }
+  >;
+  if (version >= 1) return rest;
+
+  const old = rest;
   const now = Date.now();
   return {
     ...old,
@@ -137,19 +144,21 @@ export const useAppStore = create<AppData & AppActions>()(
         set((state) => ({ language, ...withProfilePending(state) })),
       saveOccupation: (occupation) =>
         set((state) => ({ occupation, ...withProfilePending(state) })),
-      completeOnboarding: (minutesPerDay, reminderEnabled) =>
+      completeOnboarding: (minutesPerDay) =>
         set((state) => ({
           minutesPerDay,
-          reminderEnabled,
           onboardingDone: true,
           ...withProfilePending(state),
         })),
+      setMinutesPerDay: (minutesPerDay) =>
+        set((state) => ({ minutesPerDay, ...withProfilePending(state) })),
       markLessonCompleted: (id) =>
         set((state) =>
-          // Не добавляем один урок дважды.
+          // Не добавляем один урок дважды — но отмечаем, что сегодня занимались.
           state.completedLessons.includes(id)
-            ? state
+            ? { lastLessonAt: Date.now() }
             : {
+                lastLessonAt: Date.now(),
                 completedLessons: [...state.completedLessons, id],
                 lessonCompletedAt: {
                   ...state.lessonCompletedAt,

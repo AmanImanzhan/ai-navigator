@@ -17,7 +17,8 @@
     "title": "AI can do more than you think",
     "body": "We'll show you how to get exactly what you need — at work and in everyday life.",
     "start": "Get started",
-    "haveAccount": "I already have an account"
+    "haveAccount": "I already have an account",
+    "signedInAs": "Signed in as {{name}}"
   },
   "onboarding": {
     "work": {
@@ -208,7 +209,11 @@
     "signOutTitle": "Sign out?",
     "signOutMessage": "Your progress on this phone will stay.",
     "resetMessageSignedIn": "Your answers, lesson progress and saved prompts will be deleted on this phone and in your account. The app will start again from language selection.",
-    "resetErrorTitle": "Couldn't reset your data"
+    "resetErrorTitle": "Couldn't reset your data",
+    "saved": "Saved",
+    "promptsCount_one": "{{count}} prompt",
+    "promptsCount_other": "{{count}} prompts",
+    "settingsSubtitle": "Language, time per day, reminders, account"
   },
   "auth": {
     "saveTitle": "Save your progress",
@@ -228,5 +233,52 @@
     "otherAccountMessage": "The progress on this phone belongs to another account. Show the progress of the account you just signed in to, or add the progress from this phone to it?",
     "otherAccountReplace": "Show this account's progress",
     "otherAccountMerge": "Add progress from this phone"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "reminders": "Reminders",
+    "reminderTitle": "Daily reminder",
+    "reminderSubtitle": "One notification at the time you choose. If you've already done a lesson that day, we won't remind you.",
+    "reminderTime": "Time",
+    "reminderBlocked": "Notifications for AI Navigator are turned off in iPhone Settings, so reminders won't arrive.",
+    "testReminder": "Test reminder in 5 seconds"
+  },
+  "reminders": {
+    "channelName": "Reminders",
+    "deniedTitle": "Notifications are off",
+    "deniedMessage": "To get reminders, allow notifications for AI Navigator in iPhone Settings.",
+    "notNow": "Not now",
+    "openSettings": "Open iPhone Settings",
+    "messages": {
+      "1": {
+        "title": "A minute for AI",
+        "body": "A short lesson is ready whenever you are."
+      },
+      "2": {
+        "title": "Try something new?",
+        "body": "Today you could pick up one more handy AI trick."
+      },
+      "3": {
+        "title": "A small step",
+        "body": "A couple of minutes, and another lesson is done. Stop by if you have time."
+      },
+      "4": {
+        "title": "Here's an idea",
+        "body": "Open a lesson and try AI in action."
+      },
+      "5": {
+        "title": "Hi from AI Navigator",
+        "body": "A new lesson is ready. Start whenever you like."
+      },
+      "6": {
+        "title": "Time to be curious",
+        "body": "See how AI can help you today."
+      },
+      "7": {
+        "title": "No rush",
+        "body": "A short lesson takes just a few minutes."
+      }
+    }
   }
 }

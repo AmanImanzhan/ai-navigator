@@ -42,9 +42,7 @@ export async function fetchRemoteData(userId: string): Promise<RemoteSyncData> {
       .select("id, template_id, title, text, created_at, deleted_at"),
     db
       .from("profiles")
-      .select(
-        "language, occupation, minutes_per_day, reminder_enabled, onboarding_completed_at",
-      )
+      .select("language, occupation, minutes_per_day, onboarding_completed_at")
       .eq("id", userId)
       .maybeSingle(),
   ]);
@@ -73,7 +71,6 @@ export async function fetchRemoteData(userId: string): Promise<RemoteSyncData> {
           minutesPerDay: isDailyMinutes(row.minutes_per_day)
             ? row.minutes_per_day
             : 10,
-          reminderEnabled: row.reminder_enabled,
           onboardingCompleted: row.onboarding_completed_at !== null,
         }
       : null,
@@ -91,7 +88,6 @@ export type LocalPushData = {
     language: TablesInsert<"profiles">["language"];
     occupation: OccupationId | null;
     minutesPerDay: DailyMinutes;
-    reminderEnabled: boolean;
     onboardingDone: boolean;
   };
 };
@@ -169,7 +165,6 @@ export async function pushPending(
         language: local.profile.language,
         occupation: local.profile.occupation,
         minutes_per_day: local.profile.minutesPerDay,
-        reminder_enabled: local.profile.reminderEnabled,
         onboarding_completed_at: new Date().toISOString(),
       },
       { onConflict: "id" },

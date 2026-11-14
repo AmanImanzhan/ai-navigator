@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/Button";
@@ -30,7 +30,12 @@ export default function LanguageSelect() {
         <Text style={styles.caption}>Выберите язык · Elige tu idioma</Text>
       </View>
 
-      <View style={styles.list} accessibilityRole="radiogroup">
+      {/* Список прокручивается, если не помещается, — кнопка «Продолжить» всегда видна. */}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.list}
+        accessibilityRole="radiogroup"
+      >
         {LANGUAGES.map((language) => (
           <ChoiceCard
             key={language.code}
@@ -41,7 +46,7 @@ export default function LanguageSelect() {
             onPress={() => setSelected(language.code)}
           />
         ))}
-      </View>
+      </ScrollView>
 
       <View style={styles.actions}>
         {/* Кнопка сразу на выбранном языке: Continue / Продолжить / Continuar. */}
@@ -73,11 +78,15 @@ const styles = StyleSheet.create({
     ...theme.typography.caption,
     color: theme.colors.textSecondary,
   },
-  list: {
+  scroll: {
     flex: 1,
+  },
+  list: {
     gap: theme.spacing.sm,
+    paddingBottom: theme.spacing.md,
   },
   actions: {
+    paddingTop: theme.spacing.sm,
     paddingBottom: theme.spacing.md,
   },
 });
