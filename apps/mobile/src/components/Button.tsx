@@ -6,7 +6,10 @@ import { theme } from "@/theme";
 // Это минимум: длинная подпись или крупный системный шрифт переносятся, а не обрезаются.
 export const BUTTON_HEIGHT = 54;
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+// danger — подтверждение опасного действия (мягкий красный фон);
+// dangerText — ссылка на опасное действие (только красный текст, без фона).
+type ButtonVariant =
+  "primary" | "secondary" | "ghost" | "danger" | "dangerText";
 
 type ButtonProps = {
   title: string;
@@ -66,6 +69,8 @@ const containerStyles = StyleSheet.create({
     borderColor: theme.colors.border,
   },
   ghost: { backgroundColor: "transparent" },
+  danger: { backgroundColor: theme.colors.errorBg },
+  dangerText: { backgroundColor: "transparent" },
 });
 
 // Как кнопка слегка темнеет при нажатии.
@@ -73,10 +78,14 @@ const pressedStyles = StyleSheet.create({
   primary: { backgroundColor: theme.colors.accentPressed },
   secondary: { backgroundColor: theme.colors.track },
   ghost: { backgroundColor: theme.colors.accentSubtle },
+  danger: { opacity: 0.8 },
+  dangerText: { backgroundColor: theme.colors.errorBg },
 });
 
 const titleStyles = StyleSheet.create({
   primary: { color: theme.colors.onAccent },
   secondary: { color: theme.colors.text },
   ghost: { color: theme.colors.accent },
+  danger: { color: theme.colors.error },
+  dangerText: { color: theme.colors.error },
 });

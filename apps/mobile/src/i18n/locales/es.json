@@ -280,5 +280,27 @@
         "body": "Una lección corta te llevará solo unos minutos."
       }
     }
+  },
+  "deleteAccount": {
+    "title": "Eliminar cuenta",
+    "intro": "No se puede deshacer. Después no podrás recuperar la cuenta ni tus datos.",
+    "whatTitle": "Qué se eliminará",
+    "whatProgress": "Tu progreso en las lecciones",
+    "whatPrompts": "Tus peticiones guardadas",
+    "whatSettings": "Las respuestas y los ajustes guardados en tu cuenta",
+    "whatAccount": "La propia cuenta y el inicio de sesión en esta app con Apple o Google",
+    "phone": "Los datos de este teléfono también se eliminarán y la app volverá a empezar desde la elección de idioma.",
+    "subscriptionTitle": "La suscripción no se cancela sola",
+    "subscriptionText": "Si te suscribiste en el App Store, cancélala aparte: Ajustes del iPhone → tu nombre → Suscripciones.",
+    "appleNote": "Para confirmar, te pediremos que inicies sesión con Apple otra vez.",
+    "button": "Eliminar la cuenta para siempre",
+    "inProgress": "Eliminando la cuenta…",
+    "confirmTitle": "¿Eliminar tu cuenta?",
+    "confirmMessage": "Tu progreso, tus peticiones guardadas y tu cuenta se eliminarán para siempre.",
+    "confirmButton": "Eliminar",
+    "doneTitle": "Cuenta eliminada",
+    "doneMessage": "Todos tus datos se han eliminado. Gracias por haber estado con nosotros.",
+    "errorTitle": "No se pudo eliminar la cuenta",
+    "errorGeneric": "Tu cuenta y tus datos siguen intactos. Inténtalo de nuevo un poco más tarde."
   }
 }

@@ -3,3 +3,5 @@ node_modules/
 .env*
 !.env.example
 .DS_Store
+# Ключи Apple (.p8) — только в секретах Supabase, никогда в git.
+*.p8

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 // Подключаем переводы до первого экрана.
 import "@/i18n";
+import { useAppleRevocation } from "@/hooks/useAppleRevocation";
 import { useContentSync } from "@/hooks/useContentSync";
 import { useReminders } from "@/hooks/useReminders";
 import { useSync } from "@/hooks/useSync";
@@ -31,6 +32,9 @@ export default function RootLayout() {
 
   // Напоминания: расписание и открытие Главной по нажатию.
   useReminders(hydrated);
+
+  // Отключили «Вход с Apple» в настройках iPhone — выходим из аккаунта.
+  useAppleRevocation(hydrated);
 
   useEffect(() => {
     if (hydrated) SplashScreen.hide();
@@ -72,6 +76,7 @@ export default function RootLayout() {
         <Stack.Screen name="library/tool/[id]" />
         <Stack.Screen name="library/concept/[id]" />
         <Stack.Screen name="settings" />
+        <Stack.Screen name="delete-account" />
         {/* Выбор языка из Профиля — шторка снизу высотой по содержимому. */}
         <Stack.Screen
           name="language-picker"

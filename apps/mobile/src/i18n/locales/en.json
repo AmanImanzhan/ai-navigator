@@ -280,5 +280,27 @@
         "body": "A short lesson takes just a few minutes."
       }
     }
+  },
+  "deleteAccount": {
+    "title": "Delete account",
+    "intro": "This can't be undone. You won't be able to restore your account or data later.",
+    "whatTitle": "What will be deleted",
+    "whatProgress": "Your lesson progress",
+    "whatPrompts": "Your saved prompts",
+    "whatSettings": "Answers and settings saved in your account",
+    "whatAccount": "The account itself and signing in to this app with Apple or Google",
+    "phone": "Data on this phone will be deleted too, and the app will start over from language selection.",
+    "subscriptionTitle": "Your subscription won't be cancelled automatically",
+    "subscriptionText": "If you subscribed through the App Store, cancel it separately: iPhone Settings → your name → Subscriptions.",
+    "appleNote": "To confirm, we'll ask you to sign in with Apple once more.",
+    "button": "Delete account permanently",
+    "inProgress": "Deleting your account…",
+    "confirmTitle": "Delete your account?",
+    "confirmMessage": "Your progress, saved prompts and account will be deleted permanently.",
+    "confirmButton": "Delete",
+    "doneTitle": "Account deleted",
+    "doneMessage": "All your data has been deleted. Thank you for being with us.",
+    "errorTitle": "Couldn't delete your account",
+    "errorGeneric": "Your account and data are untouched. Please try again a little later."
   }
 }

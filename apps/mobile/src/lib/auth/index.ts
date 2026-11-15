@@ -1,4 +1,8 @@
-import { isAuthRetryableFetchError, type User } from "@supabase/supabase-js";
+import {
+  FunctionsFetchError,
+  isAuthRetryableFetchError,
+  type User,
+} from "@supabase/supabase-js";
 
 import { appleProvider } from "@/lib/auth/apple";
 import { googleProvider } from "@/lib/auth/google";
@@ -7,8 +11,11 @@ import type {
   AuthProviderId,
   SignInResult,
 } from "@/lib/auth/types";
+import { resetReminders } from "@/lib/reminders";
 import { supabase } from "@/lib/supabase";
-import { syncBeforeSignOut } from "@/lib/sync";
+import { forgetMergedAccount, syncBeforeSignOut } from "@/lib/sync";
+import { useAppStore } from "@/store/useAppStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export type * from "@/lib/auth/types";
 
@@ -61,6 +68,8 @@ export async function signOut() {
 // («Network request failed», «The Internet connection appears to be offline»).
 export function isNetworkError(error: unknown): boolean {
   if (isAuthRetryableFetchError(error)) return true;
+  // Серверная функция не ответила (нет сети).
+  if (error instanceof FunctionsFetchError) return true;
   return (
     error instanceof Error && /network|internet|offline/i.test(error.message)
   );
@@ -71,4 +80,70 @@ export function isNetworkError(error: unknown): boolean {
 export function getDisplayName(user: User): string | null {
   const name: unknown = user.user_metadata.full_name;
   return typeof name === "string" && name.trim() ? name.trim() : null;
+}
+
+// ---------- Удаление аккаунта ----------
+
+export type DeleteAccountResult =
+  | { status: "deleted" }
+  | { status: "cancelled" }
+  | { status: "error"; error: unknown };
+
+// Через какие способы входа человек входил в этот аккаунт (их может быть несколько).
+function linkedProviders(user: User): AuthProviderId[] {
+  const providers = new Set(user.identities?.map((item) => item.provider));
+  return PROVIDER_IDS.filter((id) => providers.has(id));
+}
+
+// После удаления на сервере: выходим и стираем всё на телефоне — данные, очередь
+// синхронизации, напоминания. Онбординг сбросится, и приложение само откроет начало.
+async function clearPhoneAfterDeletion() {
+  // Сначала забываем аккаунт в синхронизации — чтобы ничего не отправилось в удалённый аккаунт.
+  forgetMergedAccount();
+  // scope: "local" — аккаунта на сервере уже нет, спрашивать сервер незачем.
+  await supabase?.auth.signOut({ scope: "local" }).catch(() => {});
+  useAppStore.getState().resetAll(null);
+  await resetReminders();
+}
+
+// Удаляет аккаунт: подтверждение у Apple (если входили через Apple) → серверная функция
+// delete-account → отзыв доступа Google → очистка телефона.
+// Ошибка или нет сети — телефон не трогаем: данные и вход остаются как были.
+export async function deleteAccount(): Promise<DeleteAccountResult> {
+  const user = useAuthStore.getState().session?.user;
+  if (!supabase || !user) {
+    return { status: "error", error: new Error("Нет входа в аккаунт") };
+  }
+  const providers = linkedProviders(user);
+
+  // 1. Подготовка: Apple покажет своё окно. Закрыли окно — ничего не удаляем.
+  let body: Record<string, string> = {};
+  for (const id of providers) {
+    const prepared = await AUTH_PROVIDERS[id].prepareAccountDeletion?.();
+    if (!prepared) continue;
+    if (prepared.status !== "ready") return prepared;
+    body = { ...body, ...prepared.body };
+  }
+
+  // 2. Сервер удаляет аккаунт (и данные в облаке — каскадом). Токен входа
+  //    supabase-js подставит сам: удалить можно только свой аккаунт.
+  const { data, error } = await supabase.functions.invoke<{
+    deleted?: boolean;
+  }>("delete-account", { body });
+  if (error) return { status: "error", error };
+  if (data?.deleted !== true) {
+    return {
+      status: "error",
+      error: new Error("Сервер не подтвердил удаление"),
+    };
+  }
+
+  // 3. Аккаунта уже нет — дальше ошибки не важны, просто убираем всё за собой.
+  await Promise.all(
+    providers.map((id) =>
+      AUTH_PROVIDERS[id].afterAccountDeletion?.().catch(() => {}),
+    ),
+  );
+  await clearPhoneAfterDeletion();
+  return { status: "deleted" };
 }

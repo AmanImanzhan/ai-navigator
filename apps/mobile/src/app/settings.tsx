@@ -127,6 +127,12 @@ export default function Settings() {
               variant="secondary"
               onPress={handleSignOut}
             />
+            {/* Опасное действие — красным текстом, но без яркой кнопки. */}
+            <Button
+              title={t("deleteAccount.title")}
+              variant="dangerText"
+              onPress={() => router.push("/delete-account")}
+            />
           </View>
         ) : providers && providers.length > 0 ? (
           <SignInCard />

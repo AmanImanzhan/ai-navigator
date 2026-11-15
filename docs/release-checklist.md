@@ -10,18 +10,14 @@
 - [ ] **Google Auth Platform → Audience:** нажать **Publish app** (сейчас Testing — войти могут
       только тест-пользователи). Для scopes `openid`, `email`, `profile` полная проверка Google
       не нужна.
-- [ ] **Удаление аккаунта в приложении** — требование App Store (Задача 25):
-  - кнопка «Удалить аккаунт» в Профиле с подтверждением; предупредить, что подписка
-    App Store сама не отменяется;
-  - для Apple: перед удалением ещё раз вызвать вход Apple и получить свежий
-    `authorizationCode` (Supabase токены Apple при нативном входе не хранит);
-  - серверная функция (Edge Function или Next.js API, с secret key): проверить пользователя,
-    обменять `authorizationCode` на токен и отозвать его через Apple `/auth/revoke`
-    (нужен ключ `.p8` с Sign in with Apple, Team ID, Key ID), затем
-    `auth.admin.deleteUser` — данные удалятся каскадом;
-  - в приложении после удаления — выход и сброс данных на телефоне;
-  - `addRevokeListener` из `expo-apple-authentication`: если человек отключил вход через
-    Apple в настройках iOS — выйти из аккаунта.
+- [x] **Удаление аккаунта в приложении** — требование App Store 5.1.1(v) (Задача 25.2):
+      Настройки → «Удалить аккаунт»; Edge Function `delete-account` отзывает доступ Apple
+      и удаляет пользователя (данные — каскадом); Google — `revokeAccess`; отзыв «Входа с Apple»
+      в настройках iOS разлогинивает.
+- [ ] **Секреты и деплой `delete-account`** для production-проекта Supabase:
+      `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_CLIENT_ID`, `APPLE_PRIVATE_KEY`
+      (`supabase secrets set`), затем `supabase functions deploy delete-account`.
+      Проверить в логах функции, что нет записей «доступ Apple не отозван».
 
 ## Сборка и окружение
 

@@ -2,6 +2,7 @@ import {
   GoogleSignin,
   isCancelledResponse,
   isErrorWithCode,
+  isNoSavedCredentialFoundResponse,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import Constants from "expo-constants";
@@ -115,6 +116,21 @@ async function signOut() {
   await GoogleSignin.signOut();
 }
 
+// После удаления аккаунта отзываем доступ приложения к аккаунту Google и выходим из Google.
+// Если библиотека не помнит вход (приложение перезапускали) — сначала тихо восстанавливаем его.
+async function afterAccountDeletion() {
+  if (!ensureConfigured()) return;
+  try {
+    await GoogleSignin.revokeAccess();
+  } catch {
+    const restored = await GoogleSignin.signInSilently().catch(() => null);
+    if (restored && !isNoSavedCredentialFoundResponse(restored)) {
+      await GoogleSignin.revokeAccess().catch(() => {});
+    }
+  }
+  await GoogleSignin.signOut().catch(() => {});
+}
+
 export const googleProvider: AuthProvider = {
   isAvailable: async () =>
     (Platform.OS === "ios" || Platform.OS === "android") &&
@@ -122,4 +138,5 @@ export const googleProvider: AuthProvider = {
     getClientIds() !== null,
   signIn,
   signOut,
+  afterAccountDeletion,
 };
