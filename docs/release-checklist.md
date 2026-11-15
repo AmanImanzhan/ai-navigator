@@ -4,9 +4,10 @@
 
 ## Аккаунты и вход
 
-- [ ] **Google Auth Platform → Branding:** домашняя страница приложения, ссылка на политику
-      конфиденциальности, (по желанию) логотип. Логотип и название на экране согласия требуют
-      проверки бренда — заложите несколько дней.
+- [ ] **Google Auth Platform → Branding:** Application home page — `https://<проект>.vercel.app/`,
+      Privacy policy — `…/privacy`, Terms of service — `…/terms`; в Authorized domains — домен сайта.
+      (По желанию) логотип: логотип и название на экране согласия требуют проверки бренда —
+      заложите несколько дней; для неё лучше свой домен, а не *.vercel.app.
 - [ ] **Google Auth Platform → Audience:** нажать **Publish app** (сейчас Testing — войти могут
       только тест-пользователи). Для scopes `openid`, `email`, `profile` полная проверка Google
       не нужна.
@@ -18,6 +19,21 @@
       `APPLE_TEAM_ID`, `APPLE_KEY_ID`, `APPLE_CLIENT_ID`, `APPLE_PRIVATE_KEY`
       (`supabase secrets set`), затем `supabase functions deploy delete-account`.
       Проверить в логах функции, что нет записей «доступ Apple не отозван».
+
+## Сайт (apps/web)
+
+- [ ] **Деплой на Vercel** (Root Directory `apps/web`) и переменные `SUPABASE_URL`,
+      `SUPABASE_PUBLISHABLE_KEY` для Production и Preview. Проверка: `…/api/health` отвечает `ok`.
+- [ ] **Заполнить все `[TODO: …]`** в политике, условиях и поддержке
+      (`apps/web/src/content/legal/*`, `support.email` в `src/i18n/dictionaries/*`): имя
+      разработчика, страна, почта, дата, возраст, срок резервных копий, список сервисов.
+      После этого убрать пометку «Черновик» (`legal.draftNote`).
+- [ ] **App Store Connect:** Privacy Policy URL — `…/privacy`, Support URL — `…/support`,
+      Marketing URL — главная.
+- [ ] **Значок App Store** на главной вместо «Скоро в App Store» — после выхода приложения,
+      по правилам Apple Marketing Guidelines.
+- [ ] **Иконка сайта:** сейчас заглушка `apps/web/src/app/icon.svg`.
+- [ ] **Свой домен** (по желанию) — затем `NEXT_PUBLIC_SITE_URL` на Vercel.
 
 ## Сборка и окружение
 
@@ -37,7 +53,8 @@
 - [ ] **Платный контент читается всеми.** RLS для `lessons` и `lesson_translations` проверяет
       только `published`, а не подписку. Перед запуском подписки: отдавать содержимое платных
       направлений только подписчикам (RLS по таблице `subscriptions` или выдача через сервер).
-- [ ] **Политика конфиденциальности** — нужна и для App Store, и для Google. Указать, что храним:
-      имя, почту, прогресс, сохранённые запросы.
+- [x] **Политика конфиденциальности** — черновик на сайте (`/privacy`, `/ru/privacy`, `/es/privacy`):
+      имя, почта, прогресс, сохранённые запросы, локальные уведомления, планы (ИИ-помощник,
+      подписка, аналитика). Осталось заполнить `[TODO: …]` (см. «Сайт»).
 - [ ] **App Store → App Privacy:** заполнить, какие данные собираются (контактная информация,
       идентификатор пользователя, контент пользователя).

@@ -1,0 +1,62 @@
+/*
+  Дизайн-токены сайта — единственное место с цветами и размерами.
+  Значения — из CLAUDE.md, те же, что в приложении (apps/mobile/src/theme).
+  В компонентах используем только var(--…), а не hex-коды и пиксели.
+*/
+
+:root {
+  /* ---------- Цвета ---------- */
+  --color-bg: #f8f5f0;
+  --color-card: #ffffff;
+  --color-accent: #d85a30;
+  --color-accent-pressed: #bf4e28;
+  --color-accent-subtle: #fbeae3;
+  --color-on-accent: #ffffff;
+  --color-text: #2a1e18;
+  --color-text-secondary: #6e625b;
+  --color-border: #ece5dc;
+  --color-success: #2f7d4a;
+  --color-success-bg: #e7f3e9;
+  --color-warning: #9a6a12;
+  --color-warning-bg: #fdf2dd;
+  --color-error: #c0392b;
+  --color-error-bg: #fbeaea;
+  --color-track: #efe8e0;
+
+  /* ---------- Шрифт: системный (SF Pro на Apple), как в приложении ---------- */
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* Размеры текста из CLAUDE.md: Display 28, Title 22, Headline 17, Body 17,
+     Callout 15, Label 13, Caption 13. */
+  --text-display: 700 28px / 34px var(--font-family);
+  --text-title: 600 22px / 28px var(--font-family);
+  --text-headline: 600 17px / 22px var(--font-family);
+  --text-body: 400 17px / 26px var(--font-family);
+  --text-callout: 400 15px / 22px var(--font-family);
+  --text-label: 500 13px / 18px var(--font-family);
+  --text-caption: 400 13px / 18px var(--font-family);
+  /* Только для сайта: крупный заголовок главной (на телефоне — как Display). */
+  --text-hero: 700 clamp(28px, 5vw, 48px) / 1.15 var(--font-family);
+
+  /* ---------- Отступы: 4 / 8 / 12 / 16 / 20 / 24 / 32 ---------- */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+
+  /* ---------- Скругления: 12 / 14 / 16 / full ---------- */
+  --radius-sm: 12px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* ---------- Только для сайта ---------- */
+  /* Ширина колонки текста: читать удобнее, если строка не шире ~70 символов. */
+  --content-width: 720px;
+  --page-width: 1040px;
+}

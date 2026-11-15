@@ -10,13 +10,24 @@ After changes, explain what each new file/function does. Keep tasks small.
 ## Stack
 - Monorepo with npm workspaces:
   - apps/mobile — Expo SDK 58 + React Native + TypeScript + Expo Router
-  - apps/web — Next.js (later)
+  - apps/web — Next.js 16 (App Router, TypeScript): public site (en/ru/es) + API for the app, deployed on Vercel
   - packages/shared — shared types and theme tokens (later)
 - Backend (later): Supabase (Postgres, Auth with Apple/Google), Next.js API, Vercel AI SDK
 - Payments (later): RevenueCat. Languages: English (default), Russian, Spanish
 
 ## Expo rules
 Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on memory.
+
+## Web rules (apps/web)
+- Check current Next.js docs (nextjs.org/docs), don't rely on memory. Run from apps/web:
+  `npm run dev`, `npm run build`, `npm run typecheck`, `npm run lint`.
+- Pages in src/app/[lang] (English without prefix: /privacy; /ru/…, /es/… — see src/proxy.ts).
+  Texts in src/i18n/dictionaries (en/ru/es), legal texts in src/content/legal.
+- Styles: CSS Modules + tokens in src/styles/tokens.css (same values as the design system below);
+  never hardcode colors or sizes in components.
+- API routes in src/app/api. Check the user with getUserFromRequest (lib/supabase/server.ts);
+  the secret key only via lib/supabase/admin.ts (server-only), never NEXT_PUBLIC_.
+- Keep react/react-dom versions identical to apps/mobile (one React copy in the monorepo).
 
 ## Design system
 - Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,

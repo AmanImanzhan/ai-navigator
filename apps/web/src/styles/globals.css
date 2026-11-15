@@ -1,0 +1,55 @@
+@import "./tokens.css";
+
+/* Базовые стили всего сайта. Оформление отдельных частей — в *.module.css рядом с компонентами. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Сайт светлый, как приложение: просим браузер не перекрашивать формы в тёмные. */
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: var(--text-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-accent-pressed);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--space-xxs);
+}
+
+/* Пометки «[TODO: …]» в черновиках документов — видно, что ещё заполнить. */
+mark.todo {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+  padding: 0 var(--space-xxs);
+  border-radius: var(--space-xxs);
+}
