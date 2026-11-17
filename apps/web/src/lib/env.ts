@@ -28,3 +28,8 @@ export function getSupabasePublishableKey(): string {
 export function getSupabaseSecretKey(): string {
   return read("SUPABASE_SECRET_KEY");
 }
+
+// Ключ Anthropic (ИИ-помощник). Только сервер; на Vercel — с пометкой Sensitive.
+export function getAnthropicApiKey(): string {
+  return read("ANTHROPIC_API_KEY");
+}

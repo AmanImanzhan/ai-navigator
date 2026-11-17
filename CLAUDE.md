@@ -29,6 +29,17 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   the secret key only via lib/supabase/admin.ts (server-only), never NEXT_PUBLIC_.
 - Keep react/react-dom versions identical to apps/mobile (one React copy in the monorepo).
 
+## AI assistant (apps/web/src/lib/ai, routes in src/app/api/ai)
+- Vercel AI SDK + @ai-sdk/anthropic. Check current docs (ai-sdk.dev, Claude API) — APIs change often.
+- Model, limits, timeouts, max tokens — only in src/lib/ai/config.ts. System prompts — in
+  src/lib/ai/prompts (one file per scenario and language).
+- Daily limit: Postgres functions consume_ai_request / refund_ai_request (by auth.uid(), no secret key).
+  Consume before calling the model; refund if the model fails.
+- Lesson/template context is loaded from the database, never taken from the request.
+- Never log user prompts or model answers — only error types and codes.
+- API protocol types (requests, NDJSON events, error codes) live in packages/shared/src/ai.ts.
+- Manual check: `npm run ai:smoke` (root) prints a test user token and curl commands.
+
 ## Design system
 - Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,
   on-accent #FFFFFF (text on accent),

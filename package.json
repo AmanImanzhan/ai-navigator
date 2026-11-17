@@ -9,7 +9,8 @@
   "scripts": {
     "db:push": "supabase db push --remote",
     "db:types": "supabase gen types typescript --remote --schema public > packages/shared/src/database.types.ts",
-    "seed:content": "tsx --tsconfig scripts/tsconfig.json scripts/seed-content.ts"
+    "seed:content": "tsx --tsconfig scripts/tsconfig.json scripts/seed-content.ts",
+    "ai:smoke": "tsx --tsconfig scripts/tsconfig.json scripts/ai-smoke.ts"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.119.0",

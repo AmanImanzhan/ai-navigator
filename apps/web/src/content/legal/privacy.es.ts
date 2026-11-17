@@ -38,6 +38,15 @@ export const PRIVACY_ES: LegalDocument = {
       ],
     },
     {
+      heading: "Asistente de IA",
+      paragraphs: [
+        "En las lecciones puedes usar el asistente de IA integrado: responde a una petición que escribiste y la analiza brevemente, o propone valores para los campos de una plantilla. El asistente solo está disponible después de iniciar sesión.",
+        "Para generar una respuesta, el texto que envías al asistente (tu petición o la descripción de tu situación), junto con la lección o plantilla a la que pertenece, se envía a Anthropic, la empresa que desarrolla los modelos de IA Claude. Según las condiciones comerciales de Anthropic, estos datos no se usan para entrenar sus modelos. [TODO: comprobar cuánto tiempo conserva Anthropic los datos de la API]",
+        "No guardamos el texto de tus peticiones ni las respuestas del asistente. Solo guardamos cuántas veces usaste el asistente hoy (para aplicar el límite diario) y un registro técnico de cada uso, sin su contenido, durante un máximo de 2 días.",
+        "No incluyas datos personales en tus peticiones: números de documentos o tarjetas, teléfonos, direcciones.",
+      ],
+    },
+    {
       heading: "Herramientas de IA en las lecciones",
       paragraphs: [
         "Las lecciones enlazan a servicios de IA de terceros (por ejemplo, ChatGPT, Gemini, Claude). No les enviamos tus datos. Cuando usas esos servicios, se aplican sus propias políticas de privacidad.",
@@ -47,7 +56,6 @@ export const PRIVACY_ES: LegalDocument = {
       heading: "Funciones previstas",
       paragraphs: ["Actualizaremos esta política antes de lanzar:"],
       items: [
-        "Un asistente de IA en la app: el texto de tus peticiones se enviará a [TODO: proveedor de IA] para generar una respuesta, y contaremos las peticiones diarias para aplicar límites.",
         "Suscripciones a través del App Store: recibiremos el estado de tu suscripción (activa, caducada). Los pagos los gestiona Apple: nunca vemos los datos de tu tarjeta. [TODO: RevenueCat, si se usa]",
         "Analítica: [TODO: ahora no hay ninguna; describir la herramienta si se añade].",
       ],
@@ -69,6 +77,7 @@ export const PRIVACY_ES: LegalDocument = {
         "Supabase: nuestra base de datos y servicio de inicio de sesión, con servidores en la UE (Fráncfort, Alemania).",
         "Apple y Google: cuando inicias sesión con ellos, según sus políticas.",
         "Vercel: alojamiento de este sitio web.",
+        "Anthropic: genera las respuestas del asistente de IA (servidores en EE. UU.).",
       ],
       afterItems: [
         "[TODO: revisar la lista de proveedores antes del lanzamiento]",

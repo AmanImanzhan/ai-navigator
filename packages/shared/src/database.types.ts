@@ -32,6 +32,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage_reservations: {
+        Row: {
+          created_at: string
+          day: string
+          id: string
+          refunded_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day: string
+          id?: string
+          refunded_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          id?: string
+          refunded_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       lesson_notes: {
         Row: {
           lesson_id: string
@@ -406,6 +430,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_ai_request: {
+        Args: { p_limit: number }
+        Returns: {
+          allowed: boolean
+          remaining: number
+          reservation_id: string
+          reset_at: string
+          used: number
+        }[]
+      }
+      refund_ai_request: { Args: { p_reservation: string }; Returns: boolean }
       reset_my_data: { Args: never; Returns: undefined }
     }
     Enums: {

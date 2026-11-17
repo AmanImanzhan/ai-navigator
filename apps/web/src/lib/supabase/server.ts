@@ -42,7 +42,10 @@ export async function getUserFromRequest(
   if (!token) return null;
 
   const supabase = createUserClient(token);
-  const { data, error } = await supabase.auth.getClaims(token);
+  // Испорченный токен (не JWT) getClaims не возвращает ошибкой, а бросает — это тоже «не вошёл».
+  const claims = await supabase.auth.getClaims(token).catch(() => null);
+  if (!claims) return null;
+  const { data, error } = claims;
   if (error || !data) return null;
 
   const { sub, email, role } = data.claims;

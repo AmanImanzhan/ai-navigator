@@ -38,6 +38,15 @@ export const PRIVACY_EN: LegalDocument = {
       ],
     },
     {
+      heading: "AI assistant",
+      paragraphs: [
+        "In lessons you can use the built-in AI assistant: it answers a prompt you wrote and briefly reviews it, or suggests values for the fields of a prompt template. The assistant is available only after you sign in.",
+        "To generate an answer, the text you send to the assistant (your prompt or the description of your situation), together with the lesson or template it belongs to, is sent to Anthropic, the company that makes the Claude AI models. Under Anthropic's commercial terms, this data isn't used to train their models. [TODO: check how long Anthropic keeps API data]",
+        "We don't store the text of your requests or the assistant's answers. We only store how many times you used the assistant today (to apply the daily limit) and a technical record of each use, without its content, for up to 2 days.",
+        "Please don't include personal data in your requests: document or card numbers, phone numbers, addresses.",
+      ],
+    },
+    {
       heading: "AI tools in lessons",
       paragraphs: [
         "Lessons link to third-party AI services (for example ChatGPT, Gemini, Claude). We don't send your data to them. When you use those services, their own privacy policies apply.",
@@ -47,7 +56,6 @@ export const PRIVACY_EN: LegalDocument = {
       heading: "Planned features",
       paragraphs: ["We'll update this policy before launching:"],
       items: [
-        "An AI assistant in the app: the text of your requests will be sent to [TODO: AI provider] to generate an answer, and we'll count the number of requests per day to apply limits.",
         "Subscriptions through the App Store: we'll receive the status of your subscription (active, expired). Payments are handled by Apple — we never see your card details. [TODO: RevenueCat, if used]",
         "Analytics: [TODO: currently none; describe the tool if added].",
       ],
@@ -69,6 +77,7 @@ export const PRIVACY_EN: LegalDocument = {
         "Supabase — our database and sign-in service, servers in the EU (Frankfurt, Germany).",
         "Apple and Google — when you sign in with them, according to their policies.",
         "Vercel — hosting of this website.",
+        "Anthropic — generates the AI assistant's answers (servers in the USA).",
       ],
       afterItems: ["[TODO: check the list of service providers before launch]"],
     },
