@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
+import { AiTryPanel } from "@/components/ai/AiTryPanel";
 import { CopyButton } from "@/components/CopyButton";
 import { LessonHighlight } from "@/components/lesson/LessonHighlight";
 import { LessonLabel } from "@/components/lesson/LessonLabel";
@@ -11,15 +12,23 @@ import { theme } from "@/theme";
 
 type PracticeCardViewProps = {
   card: PracticeCard;
+  lessonId: string;
   tool?: ToolLink;
 };
 
 // Карточка «Попробуй сам»: свой запрос, улучшенный запрос и кнопки.
 // Каждая часть необязательна — показываем только то, что есть в уроке.
-export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
+// Если в уроке есть запрос — можно сразу спросить AI в приложении (AiTryPanel);
+// скопировать запрос и открыть инструмент — второй вариант.
+export function PracticeCardView({
+  card,
+  lessonId,
+  tool,
+}: PracticeCardViewProps) {
   const { t } = useTranslation();
   const { userPrompt, improvedLabel, improvedPrompt, share, followUp, note } =
     card;
+  const aiPrompt = improvedPrompt ?? userPrompt;
 
   return (
     <View style={styles.container}>
@@ -45,8 +54,17 @@ export function PracticeCardView({ card, tool }: PracticeCardViewProps) {
 
       {note ? <Text style={styles.note}>{note}</Text> : null}
 
+      {aiPrompt ? (
+        <AiTryPanel lessonId={lessonId} initialPrompt={aiPrompt} />
+      ) : null}
+
       {improvedPrompt || share || tool ? (
         <View style={styles.actions}>
+          {aiPrompt ? (
+            <Text style={styles.blockTitle}>
+              {t("lesson.practice.orCopy")}
+            </Text>
+          ) : null}
           {share ? <ShareButton action={share} /> : null}
           {improvedPrompt ? (
             <CopyButton

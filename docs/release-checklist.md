@@ -46,9 +46,14 @@
       или злоупотребление не обошлись дорого. Включить уведомление о расходах.
 - [ ] **Дневной лимит** `FREE_DAILY_LIMIT` (`apps/web/src/lib/ai/config.ts`) — проверить значение;
       для подписчиков — больше (после подключения подписки).
-- [ ] **Удалить тестового пользователя** `ai-smoke@example.com`: `npm run ai:smoke -- --delete`.
+- [x] **Тестовый пользователь** `ai-smoke@example.com` удалён. Вход по почте в Supabase выключен
+      (только Apple и Google), поэтому `npm run ai:smoke` больше не может создать пользователя и
+      получить токен. Для ручной проверки: временно включить Email (Authentication → Sign In /
+      Providers), прогнать скрипт, затем `npm run ai:smoke -- --delete` и снова выключить Email.
 - [ ] **Политика конфиденциальности:** заполнить `[TODO]` про срок хранения данных у Anthropic.
-- [ ] **Подключение в приложении** — Задача 28.
+- [x] **Подключение в приложении** — Задача 28 (`apps/mobile/src/lib/ai`, `components/ai`).
+- [ ] **Подписка:** больше запросов для подписчиков — лимит на сервере (`FREE_DAILY_LIMIT`) и
+      кнопка «Больше запросов» в `LimitReachedText` (`apps/mobile/src/components/ai/AiUsageNote.tsx`).
 
 ## Сборка и окружение
 
@@ -57,7 +62,10 @@
       ```bash
       npx eas-cli@latest env:set --name EXPO_PUBLIC_SUPABASE_URL --value "https://<ref>.supabase.co" --environment preview --environment production --visibility plaintext
       npx eas-cli@latest env:set --name EXPO_PUBLIC_SUPABASE_KEY --value "sb_publishable_…" --environment preview --environment production --visibility sensitive
+      npx eas-cli@latest env:set --name EXPO_PUBLIC_API_URL --value "https://ai-navigator-omega-dusky.vercel.app" --environment preview --environment production --visibility plaintext
       ```
+      `EXPO_PUBLIC_API_URL` — адрес сайта с API ИИ-помощника, без `/` в конце. Если подключите
+      свой домен — указать его и пересобрать (переменные `EXPO_PUBLIC_` вшиваются при сборке).
       Secret key в EAS не добавлять никогда.
 - [ ] **Заставка:** сейчас синяя `#208AEF` из шаблона (`app.json` → плагин `expo-splash-screen`) —
       заменить на цвета приложения и свою картинку.

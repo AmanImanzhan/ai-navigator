@@ -38,7 +38,10 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - Lesson/template context is loaded from the database, never taken from the request.
 - Never log user prompts or model answers — only error types and codes.
 - API protocol types (requests, NDJSON events, error codes) live in packages/shared/src/ai.ts.
-- Manual check: `npm run ai:smoke` (root) prints a test user token and curl commands.
+- Manual check: `npm run ai:smoke` (root) prints a test user token and curl commands
+  (needs Email sign-in temporarily enabled in Supabase — it's off in the project; see the script header).
+- Mobile client: apps/mobile/src/lib/ai (API_URL from EXPO_PUBLIC_API_URL, streaming via `expo/fetch`
+  + NDJSON, AiClientError codes), hooks useAiTry / useAiFill / useAiUsage, UI in src/components/ai.
 
 ## Design system
 - Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,

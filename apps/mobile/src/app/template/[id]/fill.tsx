@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { AiFillPanel } from "@/components/ai/AiFillPanel";
 import { BackHeader } from "@/components/BackHeader";
 import { Button } from "@/components/Button";
 import { CopyButton } from "@/components/CopyButton";
@@ -27,7 +28,8 @@ function fieldLabel(name: string): string {
   return name.charAt(0).toLocaleUpperCase() + name.slice(1);
 }
 
-// Заполнение шаблона: поле ввода на каждое [поле], ниже живой предпросмотр готового запроса.
+// Заполнение шаблона: помощник (заполнить по описанию ситуации), поле ввода на каждое [поле],
+// ниже живой предпросмотр готового запроса.
 export default function FillTemplateScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -59,6 +61,11 @@ export default function FillTemplateScreen() {
   const filled = fillTemplate(template.prompt, values);
   const hasAnyValue = fields.some((field) => values[field]?.trim());
 
+  // ИИ предложил значения: подставляем их, остальные поля не трогаем. Человек может поправить.
+  function handleAiValues(aiValues: Record<string, string>) {
+    setValues((current) => ({ ...current, ...aiValues }));
+  }
+
   function handleSave() {
     if (!template) return;
     savePrompt(template.id, template.title, filled);
@@ -79,6 +86,14 @@ export default function FillTemplateScreen() {
             <Text style={styles.title}>{t("template.fillTitle")}</Text>
             <Text style={styles.subtitle}>{template.title}</Text>
           </View>
+
+          {fields.length > 0 ? (
+            <AiFillPanel
+              templateId={template.id}
+              fields={fields}
+              onValues={handleAiValues}
+            />
+          ) : null}
 
           {fields.map((field) => (
             <View key={field} style={styles.field}>

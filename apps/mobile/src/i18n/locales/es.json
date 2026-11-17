@@ -97,7 +97,8 @@
       "youWrite": "Tú escribes:",
       "better": "Mejor así:",
       "copy": "Copiar petición",
-      "followUp": "{{hint}}: «{{prompt}}»"
+      "followUp": "{{hint}}: «{{prompt}}»",
+      "orCopy": "O copia la petición y pruébala en cualquier IA:"
     },
     "moreAbout": "Más en la Guía:"
   },
@@ -226,7 +227,9 @@
     "errorGeneric": "Algo salió mal. Inténtalo de nuevo un poco más tarde.",
     "continueWithGoogle": "Continuar con Google",
     "signInTitle": "Inicia sesión en tu cuenta",
-    "signInText": "Tus lecciones completadas, tus peticiones guardadas y tus ajustes se cargarán desde tu cuenta."
+    "signInText": "Tus lecciones completadas, tus peticiones guardadas y tus ajustes se cargarán desde tu cuenta.",
+    "aiTitle": "Inicia sesión para preguntar a la IA",
+    "aiText": "Las respuestas las prepara la IA en nuestro servidor. Con una cuenta, cada persona tiene sus propias peticiones gratis al día y nadie abusa del asistente. Además, se guarda tu progreso."
   },
   "sync": {
     "otherAccountTitle": "Otra cuenta",
@@ -302,5 +305,59 @@
     "doneMessage": "Todos tus datos se han eliminado. Gracias por haber estado con nosotros.",
     "errorTitle": "No se pudo eliminar la cuenta",
     "errorGeneric": "Tu cuenta y tus datos siguen intactos. Inténtalo de nuevo un poco más tarde."
+  },
+  "ai": {
+    "try": {
+      "title": "Pregunta a la IA aquí mismo",
+      "hint": "Puedes ajustar la petición a tu gusto. La IA responderá y te dirá qué está bien y qué se puede mejorar.",
+      "inputLabel": "Tu petición a la IA",
+      "ask": "Preguntar a la IA",
+      "askAgain": "Preguntar de nuevo",
+      "stop": "Detener",
+      "thinking": "La IA está pensando…",
+      "answer": "Respuesta de la IA",
+      "review": "Qué está bien y qué mejorar",
+      "stopped": "Detuviste la respuesta.",
+      "copyAnswer": "Copiar respuesta",
+      "announceStart": "La IA está respondiendo",
+      "announceDone": "La respuesta de la IA está lista. Abajo verás qué está bien y qué mejorar en tu petición."
+    },
+    "fill": {
+      "title": "Rellenar con el asistente",
+      "hint": "Describe tu situación con tus palabras y la IA rellenará los campos. Puedes corregirlos.",
+      "inputLabel": "Describe tu situación",
+      "placeholder": "Por ejemplo: quiero pedir a mis vecinos, con amabilidad, que no hagan ruido después de las 22:00",
+      "submit": "Rellenar con la IA",
+      "loading": "La IA está rellenando…",
+      "done": "Listo: revisa los campos de abajo.",
+      "nothing": "La IA no encontró qué poner. Añade más detalles o rellena los campos tú.",
+      "tip": "Consejo: {{tip}}",
+      "announceDone": "Campos rellenados. Revísalos."
+    },
+    "signIn": {
+      "text": "Para preguntar a la IA desde la app, inicia sesión. Es gratis.",
+      "button": "Iniciar sesión"
+    },
+    "usage": {
+      "left": "Te quedan {{remaining}} de {{limit}} hoy",
+      "today": "hoy a las {{time}}",
+      "tomorrow": "mañana a las {{time}}"
+    },
+    "errors": {
+      "unauthorized": "No pudimos confirmar tu sesión. Cierra sesión en Perfil y vuelve a entrar.",
+      "invalid_request": "No se pudo enviar la petición. Inténtalo de nuevo.",
+      "input_too_long": "El texto es demasiado largo: acórtalo a {{max}} caracteres.",
+      "not_found": "El asistente aún no funciona con esta lección. Inténtalo más tarde.",
+      "limit_reached": "Ya usaste las peticiones a la IA de hoy. Tendrás nuevas {{when}}.",
+      "limit_reached_soon": "Ya usaste las peticiones a la IA de hoy. Tendrás nuevas mañana.",
+      "ai_declined": "La IA no quiso responder a esta petición. Prueba a formularla de otra manera; no se ha gastado ningún intento.",
+      "ai_unavailable": "La IA no responde ahora mismo. No se ha gastado ningún intento: vuelve a probar en un minuto.",
+      "server_not_configured": "El asistente no está disponible por ahora. Inténtalo más tarde.",
+      "not_configured": "El asistente no está disponible por ahora. Inténtalo más tarde.",
+      "network": "No hay conexión a internet. Revisa la red e inténtalo de nuevo.",
+      "timeout": "La respuesta tarda demasiado; puede que la conexión sea débil. Inténtalo de nuevo.",
+      "cancelled": "Petición detenida.",
+      "retry": "Intentar de nuevo"
+    }
   }
 }

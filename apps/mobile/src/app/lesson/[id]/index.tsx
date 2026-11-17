@@ -1,7 +1,13 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/Button";
@@ -59,22 +65,31 @@ export default function LessonScreen() {
         <ProgressHeader button="close" step={index + 1} total={total} />
       </View>
 
-      {/* key={index}: при смене карточки прокрутка начинается сверху. */}
-      <ScrollView key={index} contentContainerStyle={styles.content}>
-        <LessonCardView
-          card={card}
-          tool={getLessonTool(content)}
-          onQuizAnswered={() => setQuizAnswered(true)}
-        />
-      </ScrollView>
+      {/* В «Попробуй сам» есть поле ввода: клавиатура не должна его закрывать. */}
+      <KeyboardAvoidingView style={styles.body} behavior="padding">
+        {/* key={index}: при смене карточки прокрутка начинается сверху. */}
+        <ScrollView
+          key={index}
+          contentContainerStyle={styles.content}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
+        >
+          <LessonCardView
+            card={card}
+            lessonId={id}
+            tool={getLessonTool(content)}
+            onQuizAnswered={() => setQuizAnswered(true)}
+          />
+        </ScrollView>
 
-      <View style={styles.actions}>
-        <Button
-          title={isLast ? t("lesson.finish") : t("common.next")}
-          disabled={nextDisabled}
-          onPress={handleNext}
-        />
-      </View>
+        <View style={styles.actions}>
+          <Button
+            title={isLast ? t("lesson.finish") : t("common.next")}
+            disabled={nextDisabled}
+            onPress={handleNext}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -83,6 +98,9 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.bg,
+  },
+  body: {
+    flex: 1,
   },
   top: {
     paddingHorizontal: theme.spacing.xl,

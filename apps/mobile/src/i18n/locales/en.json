@@ -97,7 +97,8 @@
       "youWrite": "You write:",
       "better": "Try this instead:",
       "copy": "Copy prompt",
-      "followUp": "{{hint}}: “{{prompt}}”"
+      "followUp": "{{hint}}: “{{prompt}}”",
+      "orCopy": "Or copy the prompt and try it in any AI tool:"
     },
     "moreAbout": "More in the Guide:"
   },
@@ -226,7 +227,9 @@
     "errorGeneric": "Something went wrong. Please try again a little later.",
     "continueWithGoogle": "Continue with Google",
     "signInTitle": "Sign in to your account",
-    "signInText": "Your completed lessons, saved prompts and settings will be loaded from your account."
+    "signInText": "Your completed lessons, saved prompts and settings will be loaded from your account.",
+    "aiTitle": "Sign in to ask AI",
+    "aiText": "Answers are prepared by AI on our server. An account gives everyone their own free requests each day and keeps the helper from being misused. Your progress gets saved, too."
   },
   "sync": {
     "otherAccountTitle": "Different account",
@@ -302,5 +305,59 @@
     "doneMessage": "All your data has been deleted. Thank you for being with us.",
     "errorTitle": "Couldn't delete your account",
     "errorGeneric": "Your account and data are untouched. Please try again a little later."
+  },
+  "ai": {
+    "try": {
+      "title": "Ask AI right here",
+      "hint": "Feel free to edit the prompt. AI will answer and point out what works well and what could be better.",
+      "inputLabel": "Your prompt to AI",
+      "ask": "Ask AI",
+      "askAgain": "Ask again",
+      "stop": "Stop",
+      "thinking": "AI is thinking…",
+      "answer": "AI's answer",
+      "review": "What works and what to improve",
+      "stopped": "You stopped the answer.",
+      "copyAnswer": "Copy answer",
+      "announceStart": "AI is answering",
+      "announceDone": "AI's answer is ready. Below: what works and what to improve in your prompt."
+    },
+    "fill": {
+      "title": "Fill in with the helper",
+      "hint": "Describe your situation in your own words, and AI will fill in the fields. You can edit them.",
+      "inputLabel": "Describe your situation",
+      "placeholder": "For example: I want to politely ask my neighbors to keep it quiet after 10 PM",
+      "submit": "Fill in with AI",
+      "loading": "AI is filling in…",
+      "done": "Done — check the fields below.",
+      "nothing": "AI couldn't find anything to fill in. Add more details or fill in the fields yourself.",
+      "tip": "Tip: {{tip}}",
+      "announceDone": "Fields filled in. Please check them."
+    },
+    "signIn": {
+      "text": "To ask AI right in the app, sign in — it's free.",
+      "button": "Sign in"
+    },
+    "usage": {
+      "left": "{{remaining}} of {{limit}} left today",
+      "today": "today at {{time}}",
+      "tomorrow": "tomorrow at {{time}}"
+    },
+    "errors": {
+      "unauthorized": "We couldn't confirm your sign-in. Sign out in Profile and sign in again.",
+      "invalid_request": "Couldn't send the request. Please try again.",
+      "input_too_long": "The text is too long — please shorten it to {{max}} characters.",
+      "not_found": "The helper doesn't work with this lesson yet. Please try later.",
+      "limit_reached": "You've used today's AI requests. New ones arrive {{when}}.",
+      "limit_reached_soon": "You've used today's AI requests. New ones arrive tomorrow.",
+      "ai_declined": "AI chose not to answer this request. Try wording it differently — this didn't use up a request.",
+      "ai_unavailable": "AI isn't responding right now. This didn't use up a request — try again in a minute.",
+      "server_not_configured": "The helper is temporarily unavailable. Please try later.",
+      "not_configured": "The helper is temporarily unavailable. Please try later.",
+      "network": "No internet connection. Check your network and try again.",
+      "timeout": "The answer is taking too long — the connection may be weak. Please try again.",
+      "cancelled": "Request stopped.",
+      "retry": "Try again"
+    }
   }
 }

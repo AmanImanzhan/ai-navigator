@@ -9,6 +9,8 @@ import type { LessonCard, ToolLink } from "@/data/lessons";
 
 type LessonCardViewProps = {
   card: LessonCard;
+  // id урока — для ИИ-помощника в практике.
+  lessonId: string;
   // Главный инструмент урока — для кнопки «Открыть …» в практике.
   tool?: ToolLink;
   // Пользователь ответил на вопрос в карточке quiz.
@@ -18,6 +20,7 @@ type LessonCardViewProps = {
 // Выбирает, какой компонент показать, по типу карточки.
 export function LessonCardView({
   card,
+  lessonId,
   tool,
   onQuizAnswered,
 }: LessonCardViewProps) {
@@ -33,7 +36,7 @@ export function LessonCardView({
     case "quiz":
       return <QuizCardView card={card} onAnswered={onQuizAnswered} />;
     case "practice":
-      return <PracticeCardView card={card} tool={tool} />;
+      return <PracticeCardView card={card} lessonId={lessonId} tool={tool} />;
     case "summary":
       return <SummaryCardView card={card} />;
   }
