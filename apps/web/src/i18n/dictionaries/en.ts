@@ -26,19 +26,19 @@ export const EN: Dictionary = {
     rights: "All rights reserved.",
   },
   home: {
-    eyebrow: "For people who aren't tech experts",
+    eyebrow: "AI is easier than you think",
     title: "Learn to use AI — one short lesson at a time",
-    lead: "AI Navigator teaches practical AI skills in lessons of 5–10 minutes. No jargon: you learn by doing real everyday tasks — at work and at home.",
+    lead: "AI Navigator teaches practical AI skills in lessons of 5–10 minutes. In plain language, on real everyday tasks: you try things right away — at work and at home.",
     appStoreSoon: "Coming soon to the App Store",
     audienceTitle: "Who it's for",
     audienceText:
-      "For anyone who has heard about AI but doesn't know where to start:",
+      "For anyone who wants AI to help at work and in everyday life:",
     audience: [
       "Office workers who want to save time on routine tasks",
       "Managers who prepare reports, meetings and plans",
       "Small business owners who write texts and make visuals themselves",
       "Students who want to learn faster",
-      "Retirees who want to stay up to date",
+      "Retirees who enjoy learning new things",
     ],
     benefitsTitle: "Why AI Navigator",
     benefits: [

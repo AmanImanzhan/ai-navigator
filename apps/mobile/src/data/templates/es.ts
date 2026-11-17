@@ -86,7 +86,7 @@ export const ES: LocaleTemplates = {
       purpose: "Entender eso de lo que todos hablan, desde la inflación hasta la nube.",
       tools: [CHATGPT, CLAUDE],
       prompt:
-        "Explícale qué es [tema] a alguien que no sabe nada del tema. Lo necesito para [para qué]. Sin tecnicismos, en menos de 150 palabras y termina con un ejemplo de la vida diaria",
+        "Explícale qué es [tema] a alguien que no es del ámbito. Lo necesito para [para qué]. Sin tecnicismos, en menos de 150 palabras y termina con un ejemplo de la vida diaria",
       example:
         "Una explicación breve de media página y un ejemplo cotidiano fácil de recordar.",
     },
@@ -653,7 +653,7 @@ export const ES: LocaleTemplates = {
       purpose: "Saber si una foto se sacó de otro lugar o de otra época.",
       tools: [GOOGLE_LENS.es, CHATGPT],
       prompt:
-        "Explícame paso a paso cómo usar Google Lens en [teléfono] para ver dónde más aparece esta foto y de dónde viene. Breve, para principiantes",
+        "Explícame paso a paso cómo usar Google Lens en [teléfono] para ver dónde más aparece esta foto y de dónde viene. Breve y con palabras claras",
       example:
         "4 pasos con botones claros: al terminar ves dónde se publicó la foto antes.",
     },
@@ -680,7 +680,7 @@ export const ES: LocaleTemplates = {
       purpose: "Impedir que usen tus chats para entrenar la IA y borrar el historial.",
       tools: [CHATGPT, GEMINI],
       prompt:
-        "Explícame paso a paso cómo impedir que usen mis chats para entrenar la IA y cómo borrar el historial en [servicio] desde mi [teléfono o computadora]. Breve, para principiantes",
+        "Explícame paso a paso cómo impedir que usen mis chats para entrenar la IA y cómo borrar el historial en [servicio] desde mi [teléfono o computadora]. Breve y con palabras claras",
       example:
         "4–5 pasos con los nombres de los botones de los ajustes. Los menús cambian a veces: guíate por lo que ves en pantalla.",
     },

@@ -1036,9 +1036,9 @@ export const EN: LocaleLessons = {
       },
     },
     "16": {
-      title: "A spreadsheet with formulas, no Excel skills needed",
+      title: "A spreadsheet with formulas, with AI's help",
       content: {
-        skill: "Now you can get spreadsheet formulas from AI — even if you don't know Excel",
+        skill: "Now you can get ready-made formulas for your spreadsheets from AI",
         helperCriteria: "the app and its settings, where the data is, the row range, what to calculate",
         cards: [
           {

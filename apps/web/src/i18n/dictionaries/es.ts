@@ -27,19 +27,19 @@ export const ES: Dictionary = {
     rights: "Todos los derechos reservados.",
   },
   home: {
-    eyebrow: "Para quienes no son expertos en tecnología",
+    eyebrow: "La IA es más fácil de lo que crees",
     title: "Aprende a usar la IA, una lección corta cada vez",
-    lead: "AI Navigator enseña habilidades prácticas con la IA en lecciones de 5 a 10 minutos. Sin tecnicismos: aprendes haciendo tareas reales, en el trabajo y en casa.",
+    lead: "AI Navigator enseña habilidades prácticas con la IA en lecciones de 5 a 10 minutos. Con un lenguaje claro y con tareas reales: lo pruebas al momento, en el trabajo y en casa.",
     appStoreSoon: "Próximamente en el App Store",
     audienceTitle: "Para quién es",
     audienceText:
-      "Para cualquiera que ha oído hablar de la IA pero no sabe por dónde empezar:",
+      "Para quien quiera que la IA le ayude en el trabajo y en el día a día:",
     audience: [
       "Personas que trabajan en oficina y quieren dedicar menos tiempo a la rutina",
       "Responsables de equipo que preparan informes, reuniones y planes",
       "Dueños de pequeños negocios que escriben sus textos y crean sus imágenes",
       "Estudiantes que quieren aprender más rápido",
-      "Personas jubiladas que quieren estar al día",
+      "Personas jubiladas a las que les gusta aprender cosas nuevas",
     ],
     benefitsTitle: "Por qué AI Navigator",
     benefits: [

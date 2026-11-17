@@ -1036,9 +1036,9 @@ export const ES: LocaleLessons = {
       },
     },
     "16": {
-      title: "Una hoja de cálculo con fórmulas sin saber Excel",
+      title: "Una hoja de cálculo con fórmulas con ayuda de la IA",
       content: {
-        skill: "Ya sabes conseguir fórmulas para tus hojas de cálculo con la IA, aunque no sepas Excel",
+        skill: "Ya sabes conseguir con la IA fórmulas listas para tus hojas de cálculo",
         helperCriteria: "programa e idioma, ubicación de los datos, rango de filas, qué calcular",
         cards: [
           {

@@ -86,7 +86,7 @@ export const EN: LocaleTemplates = {
       purpose: "Understand what everyone's talking about — from inflation to cloud storage.",
       tools: [CHATGPT, CLAUDE],
       prompt:
-        "Explain what [topic] is to someone who knows nothing about it. I need this to [why]. No jargon, under 150 words, and end with a real-life example",
+        "Explain what [topic] is to someone outside the field. I need this to [why]. No jargon, under 150 words, and end with a real-life example",
       example:
         "A short half-page explanation and an everyday example that's easy to remember.",
     },
@@ -653,7 +653,7 @@ export const EN: LocaleTemplates = {
       purpose: "Check whether a photo was taken from another place or time.",
       tools: [GOOGLE_LENS.en, CHATGPT],
       prompt:
-        "Explain step by step how to use Google Lens on [phone] to find where else this photo appears and where it came from. Short, for a beginner",
+        "Explain step by step how to use Google Lens on [phone] to find where else this photo appears and where it came from. Short and in plain language",
       example:
         "4 steps with clear buttons — after them, you'll see where the photo was posted before.",
     },
@@ -680,7 +680,7 @@ export const EN: LocaleTemplates = {
       purpose: "Stop your chats from being used for training and delete your history.",
       tools: [CHATGPT, GEMINI],
       prompt:
-        "Explain step by step how to stop my chats from being used for training and delete my history in [service] on my [phone or computer]. Short, for a beginner",
+        "Explain step by step how to stop my chats from being used for training and delete my history in [service] on my [phone or computer]. Short and in plain language",
       example:
         "4–5 steps with the names of the buttons in the settings. Menus sometimes change — check against your screen.",
     },
