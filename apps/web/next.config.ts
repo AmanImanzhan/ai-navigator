@@ -7,6 +7,15 @@ const nextConfig: NextConfig = {
     // Своя страница 404: корневой layout лежит в app/[lang], поэтому общий 404 — отдельным файлом.
     globalNotFound: true,
   },
+  // Админку не индексировать — даже ответы без HTML (редиректы, обработчик входа).
+  async headers() {
+    return [
+      {
+        source: "/admin/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

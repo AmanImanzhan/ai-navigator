@@ -29,6 +29,18 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   the secret key only via lib/supabase/admin.ts (server-only), never NEXT_PUBLIC_.
 - Keep react/react-dom versions identical to apps/mobile (one React copy in the monorepo).
 
+## Admin panel (apps/web/src/app/admin, logic in src/lib/admin)
+- Own root layout, Russian only, no [lang]; noindex (metadata + X-Robots-Tag in next.config.ts), not in sitemap.
+- Sign-in: Google via Supabase OAuth (PKCE), session in cookies (@supabase/ssr, lib/supabase/session.ts);
+  src/proxy.ts refreshes the session for /admin (lib/supabase/proxy.ts). Check users only with getClaims().
+- Admins = table public.admins (service role only). Every page calls requireAdminPage(), every Server
+  Action calls getAdminForAction() — UI checks are not security. The secret-key client comes only from
+  AdminContext (lib/admin/auth.ts); data loaders take AdminContext.
+- Content validation lives in packages/shared/src/content (one code for app and admin):
+  cleanContent → lessonContentIssues / templateTextIssues / templateFieldsIssues before every write.
+  New card type or field: update shared types + validate.ts + labels.ts and lib/admin/cardSpecs.ts.
+- Every write logs to admin_audit_log (lib/admin/audit.ts): who, when, which fields — no texts.
+
 ## AI assistant (apps/web/src/lib/ai, routes in src/app/api/ai)
 - Vercel AI SDK + @ai-sdk/anthropic. Check current docs (ai-sdk.dev, Claude API) — APIs change often.
 - Model, limits, timeouts, max tokens — only in src/lib/ai/config.ts. System prompts — in

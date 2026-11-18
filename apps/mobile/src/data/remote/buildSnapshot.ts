@@ -1,4 +1,9 @@
-import type { Tables } from "@ai-navigator/shared";
+import {
+  isLessonContent,
+  isLessonLevel,
+  isToolList,
+  type Tables,
+} from "@ai-navigator/shared";
 
 import {
   CONTENT_FALLBACK_LOCALE,
@@ -9,11 +14,6 @@ import {
   type Locale,
   type Track,
 } from "@/data/lessons";
-import {
-  isLessonLevel,
-  isLessonContent,
-  isToolList,
-} from "@/data/remote/validate";
 import { isTemplateId, type PromptTemplate } from "@/data/templates";
 
 // Ответ базы: строки нужных таблиц только с нужными колонками.

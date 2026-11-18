@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_email: string | null
+          admin_id: string | null
+          created_at: string
+          details: Json
+          entity_id: string
+          id: number
+          locale: Database["public"]["Enums"]["app_locale"] | null
+        }
+        Insert: {
+          action: string
+          admin_email?: string | null
+          admin_id?: string | null
+          created_at?: string
+          details?: Json
+          entity_id: string
+          id?: never
+          locale?: Database["public"]["Enums"]["app_locale"] | null
+        }
+        Update: {
+          action?: string
+          admin_email?: string | null
+          admin_id?: string | null
+          created_at?: string
+          details?: Json
+          entity_id?: string
+          id?: never
+          locale?: Database["public"]["Enums"]["app_locale"] | null
+        }
+        Relationships: []
+      }
+      admins: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_usage: {
         Row: {
           count: number
@@ -430,6 +478,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_stats: {
+        Args: never
+        Returns: {
+          ai_requests_7d: number
+          ai_requests_today: number
+          ai_users_today: number
+          users: number
+        }[]
+      }
       consume_ai_request: {
         Args: { p_limit: number }
         Returns: {

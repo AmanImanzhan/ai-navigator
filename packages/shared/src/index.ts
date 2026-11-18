@@ -8,3 +8,6 @@ export type * from "./ai";
 
 // Поля шаблонов запросов.
 export { getTemplateFields } from "./templates";
+
+// Контент уроков: типы карточек и проверка (одна для приложения и админки).
+export * from "./content";

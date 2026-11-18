@@ -55,6 +55,24 @@
 - [ ] **Подписка:** больше запросов для подписчиков — лимит на сервере (`FREE_DAILY_LIMIT`) и
       кнопка «Больше запросов» в `LimitReachedText` (`apps/mobile/src/components/ai/AiUsageNote.tsx`).
 
+## Админка (apps/web/src/app/admin)
+
+- [ ] **Миграция** `20261118120000_admin.sql` применена (`npm run db:push`), типы обновлены
+      (`npm run db:types`).
+- [ ] **Supabase → Authentication → URL Configuration:** Site URL — адрес сайта (сейчас
+      `https://ai-navigator-omega-dusky.vercel.app`); в Redirect URLs есть
+      `https://<домен>/admin/auth/callback`. Перед релизом убрать `http://localhost:3000/**`.
+      При смене домена — обновить оба поля.
+- [ ] **`SUPABASE_SECRET_KEY` на Vercel** (Production) с пометкой **Sensitive**, затем Redeploy.
+      Только сервер; в приложении и в `NEXT_PUBLIC_` — никогда.
+- [ ] **Список админов** проверен: `select a.user_id, u.email from public.admins a join auth.users u on u.id = a.user_id;`
+      Лишних удалить: `delete from public.admins where user_id = '…';` (действует сразу).
+- [ ] **Google Cloud → OAuth consent screen:** если приложение в статусе Testing, войти могут только
+      тестовые пользователи — добавить почты команды (или опубликовать, вместе с приложением).
+- [ ] **Журнал изменений** (`admin_audit_log`) растёт без ограничений — раз в год проверить размер.
+- [ ] **Одновременная правка:** если двое правят один урок, сохранится последнее — договориться
+      в команде или добавить проверку версии.
+
 ## Сборка и окружение
 
 - [ ] **EAS environment variables** для `preview` и `production`
