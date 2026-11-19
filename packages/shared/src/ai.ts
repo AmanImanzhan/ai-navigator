@@ -33,7 +33,10 @@ export type AiErrorResponse = {
 
 // Сколько запросов осталось сегодня.
 export type AiUsage = {
+  // Дневной лимит: 3 без подписки, 30 с подпиской (AI_DAILY_LIMITS в subscription.ts).
   limit: number;
+  // Есть ли подписка — по данным сервера (таблица subscriptions).
+  premium: boolean;
   used: number;
   remaining: number;
   // Когда счётчик обнулится (ISO, полночь UTC).

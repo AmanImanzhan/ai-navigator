@@ -112,14 +112,25 @@ async function readError(response: FetchResponse): Promise<AiClientError> {
   );
 }
 
-function isAiUsage(value: unknown): value is AiUsage {
-  return (
-    isObject(value) &&
-    typeof value.limit === "number" &&
-    typeof value.used === "number" &&
-    typeof value.remaining === "number" &&
-    typeof value.resetAt === "string"
-  );
+// Остаток запросов из ответа сервера. Не тот формат — null.
+// premium мог не прийти от старой версии сервера — тогда считаем, что подписки нет.
+function toAiUsage(value: unknown): AiUsage | null {
+  if (
+    !isObject(value) ||
+    typeof value.limit !== "number" ||
+    typeof value.used !== "number" ||
+    typeof value.remaining !== "number" ||
+    typeof value.resetAt !== "string"
+  ) {
+    return null;
+  }
+  return {
+    limit: value.limit,
+    premium: value.premium === true,
+    used: value.used,
+    remaining: value.remaining,
+    resetAt: value.resetAt,
+  };
 }
 
 // ---------- Сколько запросов осталось сегодня: GET /api/ai/usage ----------
@@ -132,8 +143,9 @@ export async function fetchAiUsage(signal?: AbortSignal): Promise<AiUsage> {
     const response = await send("/api/ai/usage", token, guard.signal);
     if (!response.ok) throw await readError(response);
     const body: unknown = await response.json();
-    if (!isAiUsage(body)) throw new AiClientError("ai_unavailable");
-    return body;
+    const usage = toAiUsage(body);
+    if (!usage) throw new AiClientError("ai_unavailable");
+    return usage;
   } catch (error) {
     throw guard.explain(error);
   } finally {
@@ -154,11 +166,12 @@ export async function requestAiFill(
     const response = await send("/api/ai/fill", token, guard.signal, request);
     if (!response.ok) throw await readError(response);
     const body: unknown = await response.json();
+    const usage = isObject(body) ? toAiUsage(body.usage) : null;
     if (
       !isObject(body) ||
       !isObject(body.values) ||
       typeof body.tip !== "string" ||
-      !isAiUsage(body.usage)
+      !usage
     ) {
       throw new AiClientError("ai_unavailable");
     }
@@ -167,7 +180,7 @@ export async function requestAiFill(
     for (const [field, value] of Object.entries(body.values)) {
       if (typeof value === "string") values[field] = value;
     }
-    return { values, tip: body.tip, usage: body.usage };
+    return { values, tip: body.tip, usage };
   } catch (error) {
     throw guard.explain(error);
   } finally {
@@ -182,9 +195,12 @@ function parseTryEvent(line: string): AiTryEvent | null {
   if (!line.trim()) return null;
   try {
     const value: unknown = JSON.parse(line);
-    return isObject(value) && typeof value.type === "string"
-      ? (value as AiTryEvent)
-      : null;
+    if (!isObject(value) || typeof value.type !== "string") return null;
+    if (value.type === "meta") {
+      const usage = toAiUsage(value.usage);
+      return usage ? { type: "meta", usage } : null;
+    }
+    return value as AiTryEvent;
   } catch {
     return null;
   }

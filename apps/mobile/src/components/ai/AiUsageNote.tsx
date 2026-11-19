@@ -30,8 +30,8 @@ export function LimitReachedText({ resetAt }: { resetAt?: string }) {
           ? t("ai.errors.limit_reached", { when })
           : t("ai.errors.limit_reached_soon")}
       </Text>
-      {/* Подписка (позже): здесь появится кнопка «Больше запросов» — экран подписки и лимит
-          для подписчиков на сервере (FREE_DAILY_LIMIT в apps/web/src/lib/ai/config.ts). */}
+      {/* Задача 31: здесь появится кнопка «Больше запросов» — экран подписки (paywall).
+          Лимиты — AI_DAILY_LIMITS в packages/shared/src/subscription.ts. */}
     </View>
   );
 }
@@ -40,7 +40,8 @@ type AiUsageNoteProps = {
   usage: AiUsage | null;
 };
 
-// Ненавязчиво: «Осталось 3 из 5 сегодня». Запросы кончились — когда появятся новые.
+// Ненавязчиво: «Осталось 2 из 3 сегодня» (с подпиской — «из 30»; лимит присылает сервер).
+// Запросы кончились — когда появятся новые.
 export function AiUsageNote({ usage }: AiUsageNoteProps) {
   const { t } = useTranslation();
   if (!usage) return null;

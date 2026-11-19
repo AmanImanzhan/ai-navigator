@@ -1,3 +1,5 @@
+import { AI_DAILY_LIMITS } from "@ai-navigator/shared";
+
 // Настройки ИИ-помощника — всё в одном месте.
 
 // Модель: Claude Haiku 5.5 — самая быстрая и недорогая модель Claude текущего поколения
@@ -17,9 +19,11 @@ export const AI_PROVIDER_OPTIONS = {
 
 // ---------- Лимиты ----------
 
-// Запросов к помощнику в день на одного пользователя (бесплатно).
-// Позже для подписчиков будет больше — значение будет зависеть от подписки.
-export const FREE_DAILY_LIMIT = 5;
+// Запросов к помощнику в день: без подписки и с подпиской AI Navigator Premium.
+// Сами числа — в packages/shared/src/subscription.ts (их видит и приложение).
+// Какой лимит применить, решает база (consume_ai_request) по таблице subscriptions.
+export const FREE_DAILY_LIMIT = AI_DAILY_LIMITS.free;
+export const PREMIUM_DAILY_LIMIT = AI_DAILY_LIMITS.premium;
 
 // Самый длинный текст, который человек может прислать (в символах).
 export const MAX_PROMPT_CHARS = 2000;

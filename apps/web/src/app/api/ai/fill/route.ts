@@ -1,7 +1,7 @@
 import type { AiFillResponse } from "@ai-navigator/shared";
 import { z } from "zod";
 
-import { FREE_DAILY_LIMIT, MAX_SITUATION_CHARS } from "@/lib/ai/config";
+import { MAX_SITUATION_CHARS } from "@/lib/ai/config";
 import { loadTemplateForAi } from "@/lib/ai/content";
 import { runFill } from "@/lib/ai/fill";
 import { getAiModel } from "@/lib/ai/model";
@@ -54,7 +54,7 @@ async function handle(request: Request): Promise<Response> {
     return aiErrorResponse("not_found", 404);
   }
 
-  const consumed = await consumeAiRequest(user.supabase, FREE_DAILY_LIMIT);
+  const consumed = await consumeAiRequest(user.supabase);
   if (!consumed.allowed) return limitReachedResponse(consumed.usage);
   const refund = () => refundAiRequest(user.supabase, consumed.reservationId);
 

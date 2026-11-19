@@ -33,3 +33,9 @@ export function getSupabaseSecretKey(): string {
 export function getAnthropicApiKey(): string {
   return read("ANTHROPIC_API_KEY");
 }
+
+// Секрет webhook RevenueCat: RevenueCat присылает его в заголовке Authorization.
+// Только сервер; на Vercel — с пометкой Sensitive.
+export function getRevenueCatWebhookSecret(): string {
+  return read("REVENUECAT_WEBHOOK_SECRET");
+}

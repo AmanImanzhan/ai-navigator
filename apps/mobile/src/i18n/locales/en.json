@@ -72,8 +72,7 @@
     "a11yMeta": "Level {{level}}, {{minutes}} minutes",
     "status": {
       "completed": "Done",
-      "soon": "Soon",
-      "premium": "Premium"
+      "soon": "Soon"
     }
   },
   "lesson": {
@@ -131,8 +130,6 @@
     "lockedMessage": "It unlocks after lesson {{lesson}}, “{{title}}”. Take the lesson now?",
     "lockedGo": "Take the lesson",
     "lockedLater": "Later",
-    "premiumMessage": "Lesson {{lesson}}, “{{title}}”, is part of the subscription. The template unlocks after it.",
-    "ok": "Got it",
     "emptyTitle": "Your prompts will live here",
     "emptyText": "Open a template, fill in the blanks and tap “Save to mine”.",
     "emptyAction": "Go to templates",
@@ -169,8 +166,6 @@
     "example": "Example",
     "checkedAt": "Information as of {{month}} {{year}}",
     "notFound": "Page not found",
-    "premiumTitle": "Subscription lesson",
-    "premiumMessage": "Lesson {{lesson}}, “{{title}}”, is part of the subscription.",
     "months": {
       "1": "January",
       "2": "February",

@@ -53,10 +53,19 @@ export const PRIVACY_EN: LegalDocument = {
       ],
     },
     {
+      heading: "Subscription (AI Navigator Premium)",
+      paragraphs: [
+        "You can buy the AI Navigator Premium subscription in the app (it raises the AI assistant's daily limit). The subscription is bought through the App Store: payment is handled by Apple — we never see your card details or your Apple ID.",
+        "To check the subscription, the app uses RevenueCat (RevenueCat, Inc., USA). The app sends RevenueCat your AI Navigator account identifier (a random code, without your name or email) and the App Store purchase information from your device. RevenueCat also receives technical data about the device and the app, such as the system version and the App Store country. [TODO: check against RevenueCat's privacy guide]",
+        "From RevenueCat we receive and store only: the subscription status (trial, active, cancelled, expired), the plan (monthly or yearly), the end date and whether it was a test purchase. We use this only to apply the AI assistant's daily limit.",
+      ],
+    },
+    {
       heading: "Planned features",
-      paragraphs: ["We'll update this policy before launching:"],
+      paragraphs: [
+        "We'll update this policy before launching:",
+      ],
       items: [
-        "Subscriptions through the App Store: we'll receive the status of your subscription (active, expired). Payments are handled by Apple — we never see your card details. [TODO: RevenueCat, if used]",
         "Analytics: [TODO: currently none; describe the tool if added].",
       ],
     },
@@ -78,13 +87,14 @@ export const PRIVACY_EN: LegalDocument = {
         "Apple and Google — when you sign in with them, according to their policies.",
         "Vercel — hosting of this website.",
         "Anthropic — generates the AI assistant's answers (servers in the USA).",
+        "RevenueCat — checks the App Store subscription (servers in the USA).",
       ],
       afterItems: ["[TODO: check the list of service providers before launch]"],
     },
     {
       heading: "How long we keep it and how to delete it",
       paragraphs: [
-        "We keep your account data until you delete your account. In the app: Profile → Settings → Delete account. Your account, progress, saved prompts and settings are deleted from our servers right away; if you signed in with Apple, we also revoke the app's access to your Apple ID.",
+        "We keep your account data until you delete your account. In the app: Profile → Settings → Delete account. Your account, progress, saved prompts and settings are deleted from our servers right away; if you signed in with Apple, we also revoke the app's access to your Apple ID. The subscription record is deleted too, but the App Store subscription itself is not cancelled — cancel it in iPhone Settings → your name → Subscriptions. RevenueCat keeps the purchase history linked to the random account code; write to us if you want it deleted.",
         "Server backups may keep data for up to [TODO: number of days] days after deletion.",
         "Data stored only on your phone is removed when you delete it in the app (Settings → Reset data) or uninstall the app.",
       ],

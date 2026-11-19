@@ -8,6 +8,7 @@ import { BackHeader } from "@/components/BackHeader";
 import { Button } from "@/components/Button";
 import { ChoiceCard } from "@/components/ChoiceCard";
 import { InfoCard } from "@/components/InfoCard";
+import { PremiumDevPanel } from "@/components/settings/PremiumDevPanel";
 import { ReminderSettings } from "@/components/settings/ReminderSettings";
 import { DAILY_MINUTES, LANGUAGES } from "@/data/onboarding";
 import { useAuth, useAvailableProviders } from "@/hooks/useAuth";
@@ -137,6 +138,9 @@ export default function Settings() {
         ) : providers && providers.length > 0 ? (
           <SignInCard />
         ) : null}
+
+        {/* Временно, только в разработке: проверить покупку в Sandbox (до экрана подписки). */}
+        {__DEV__ ? <PremiumDevPanel /> : null}
 
         <View style={styles.actions}>
           <Button

@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  FREE_DAILY_LIMIT,
-  MAX_PROMPT_CHARS,
-  REVIEW_MARKER,
-} from "@/lib/ai/config";
+import { MAX_PROMPT_CHARS, REVIEW_MARKER } from "@/lib/ai/config";
 import { loadLessonForAi } from "@/lib/ai/content";
 import { getAiModel } from "@/lib/ai/model";
 import { buildTryPrompt, wrapUserText } from "@/lib/ai/prompts";
@@ -59,7 +55,7 @@ async function handle(request: Request): Promise<Response> {
   if (!lesson) return aiErrorResponse("not_found", 404);
 
   // 4. Списываем попытку до вызова ИИ.
-  const consumed = await consumeAiRequest(user.supabase, FREE_DAILY_LIMIT);
+  const consumed = await consumeAiRequest(user.supabase);
   if (!consumed.allowed) return limitReachedResponse(consumed.usage);
   const refund = () => refundAiRequest(user.supabase, consumed.reservationId);
 

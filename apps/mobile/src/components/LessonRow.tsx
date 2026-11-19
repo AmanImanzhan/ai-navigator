@@ -138,17 +138,15 @@ const styles = StyleSheet.create({
   },
 });
 
-// Цвет метки: «Пройден» зелёная, «Скоро» серая, «Подписка» жёлтая.
+// Цвет метки: «Пройден» зелёная, «Скоро» серая.
 const tagStyles = StyleSheet.create({
   available: {},
   completed: { backgroundColor: theme.colors.successBg },
   soon: { backgroundColor: theme.colors.track },
-  premium: { backgroundColor: theme.colors.warningBg },
 });
 
 const tagTextStyles = StyleSheet.create({
   available: {},
   completed: { color: theme.colors.success },
   soon: { color: theme.colors.textSecondary },
-  premium: { color: theme.colors.warning },
 });

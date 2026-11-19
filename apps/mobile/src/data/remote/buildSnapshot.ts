@@ -18,7 +18,7 @@ import { isTemplateId, type PromptTemplate } from "@/data/templates";
 
 // Ответ базы: строки нужных таблиц только с нужными колонками.
 export type ContentRows = {
-  tracks: Pick<Tables<"tracks">, "id" | "sort" | "premium">[];
+  tracks: Pick<Tables<"tracks">, "id" | "sort">[];
   trackTranslations: Pick<
     Tables<"track_translations">,
     "track_id" | "locale" | "title"
@@ -128,7 +128,7 @@ export function buildSnapshot(
 
     // Направление без опубликованных уроков не показываем.
     if (lessons.length === 0) return [];
-    return { id: track.id, title, premium: track.premium, lessons };
+    return { id: track.id, title, lessons };
   });
 
   // ---------- Шаблоны ----------

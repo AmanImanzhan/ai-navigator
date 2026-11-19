@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { LessonId } from "@/data/lessons";
 import { useTracks } from "@/hooks/useLessons";
@@ -10,7 +10,7 @@ type LessonChipsProps = {
   lessonIds: LessonId[];
 };
 
-// Метки «Урок N». Нажатие открывает урок; платный урок — только объясняем, что он по подписке.
+// Метки «Урок N». Нажатие открывает урок.
 export function LessonChips({ lessonIds }: LessonChipsProps) {
   const { t } = useTranslation();
   const tracks = useTracks();
@@ -20,23 +20,6 @@ export function LessonChips({ lessonIds }: LessonChipsProps) {
   }
 
   function handlePress(lessonId: LessonId) {
-    const track = tracks.find((item) =>
-      item.lessons.some((lesson) => lesson.id === lessonId),
-    );
-    const lesson = track?.lessons.find((item) => item.id === lessonId);
-
-    if (track?.premium) {
-      Alert.alert(
-        t("library.premiumTitle"),
-        t("library.premiumMessage", {
-          lesson: lessonId,
-          title: lesson?.title ?? "",
-        }),
-        [{ text: t("prompts.ok") }],
-      );
-      return;
-    }
-
     router.push({ pathname: "/lesson/[id]", params: { id: lessonId } });
   }
 

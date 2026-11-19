@@ -11,3 +11,6 @@ export { getTemplateFields } from "./templates";
 
 // Контент уроков: типы карточек и проверка (одна для приложения и админки).
 export * from "./content";
+
+// Подписка: entitlement, id товаров, дневные лимиты ИИ.
+export * from "./subscription";

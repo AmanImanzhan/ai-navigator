@@ -13,7 +13,7 @@ After changes, explain what each new file/function does. Keep tasks small.
   - apps/web — Next.js 16 (App Router, TypeScript): public site (en/ru/es) + API for the app, deployed on Vercel
   - packages/shared — shared types and theme tokens (later)
 - Backend (later): Supabase (Postgres, Auth with Apple/Google), Next.js API, Vercel AI SDK
-- Payments (later): RevenueCat. Languages: English (default), Russian, Spanish
+- Payments: RevenueCat (iOS subscription, see below). Languages: English (default), Russian, Spanish
 
 ## Expo rules
 Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on memory.
@@ -35,7 +35,8 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   src/proxy.ts refreshes the session for /admin (lib/supabase/proxy.ts). Check users only with getClaims().
 - Admins = table public.admins (service role only). Every page calls requireAdminPage(), every Server
   Action calls getAdminForAction() — UI checks are not security. The secret-key client comes only from
-  AdminContext (lib/admin/auth.ts); data loaders take AdminContext.
+  AdminContext (lib/admin/auth.ts) — or lib/revenuecat/apply.ts after the webhook secret check;
+  data loaders take AdminContext.
 - Content validation lives in packages/shared/src/content (one code for app and admin):
   cleanContent → lessonContentIssues / templateTextIssues / templateFieldsIssues before every write.
   New card type or field: update shared types + validate.ts + labels.ts and lib/admin/cardSpecs.ts.
@@ -43,9 +44,11 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 
 ## AI assistant (apps/web/src/lib/ai, routes in src/app/api/ai)
 - Vercel AI SDK + @ai-sdk/anthropic. Check current docs (ai-sdk.dev, Claude API) — APIs change often.
-- Model, limits, timeouts, max tokens — only in src/lib/ai/config.ts. System prompts — in
+- Model, timeouts, max tokens — only in src/lib/ai/config.ts; daily limits (free 3 / premium 30) —
+  AI_DAILY_LIMITS in packages/shared/src/subscription.ts. System prompts — in
   src/lib/ai/prompts (one file per scenario and language).
-- Daily limit: Postgres functions consume_ai_request / refund_ai_request (by auth.uid(), no secret key).
+- Daily limit: Postgres functions consume_ai_request / refund_ai_request / ai_usage_status (by auth.uid(),
+  no secret key). The server passes both limits; the DB picks one by public.subscriptions (has_premium).
   Consume before calling the model; refund if the model fails.
 - Lesson/template context is loaded from the database, never taken from the request.
 - Never log user prompts or model answers — only error types and codes.
@@ -54,6 +57,18 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   (needs Email sign-in temporarily enabled in Supabase — it's off in the project; see the script header).
 - Mobile client: apps/mobile/src/lib/ai (API_URL from EXPO_PUBLIC_API_URL, streaming via `expo/fetch`
   + NDJSON, AiClientError codes), hooks useAiTry / useAiFill / useAiUsage, UI in src/components/ai.
+
+## Subscription (RevenueCat, iOS only)
+- Business rules in packages/shared/src/subscription.ts: entitlement `premium`, product ids, AI limits.
+  All lessons and templates are free; Premium only raises the AI limit (tracks.premium is unused).
+- App: apps/mobile/src/lib/purchases (configure, logIn/logOut, purchase, restore), hooks/usePremium.ts
+  (usePurchasesSetup in the root layout, usePremium for screens), key EXPO_PUBLIC_REVENUECAT_IOS_KEY.
+  appUserID = Supabase user id; buying/restoring only when signed in. Needs a dev build (not Expo Go).
+- Server: POST /api/revenuecat/webhook checks `Authorization: Bearer REVENUECAT_WEBHOOK_SECRET`,
+  maps events in src/lib/revenuecat/events.ts (pure), writes via apply_subscription_event /
+  apply_subscription_transfer (service role only; idempotent by event id, ordered by event time).
+  Only the server writes public.subscriptions. RevenueCat transfer behavior: Transfer to new App User ID.
+- PremiumDevPanel in Settings is temporary (__DEV__ only) until the paywall (Task 31).
 
 ## Design system
 - Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,

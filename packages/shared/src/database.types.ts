@@ -274,6 +274,24 @@ export type Database = {
         }
         Relationships: []
       }
+      revenuecat_events: {
+        Row: {
+          id: string
+          processed_at: string
+          type: string
+        }
+        Insert: {
+          id: string
+          processed_at?: string
+          type: string
+        }
+        Update: {
+          id?: string
+          processed_at?: string
+          type?: string
+        }
+        Relationships: []
+      }
       saved_prompts: {
         Row: {
           created_at: string
@@ -314,21 +332,27 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          environment: string | null
           expires_at: string | null
+          last_event_at: string | null
           product_id: string
           status: Database["public"]["Enums"]["subscription_status"]
           updated_at: string
           user_id: string
         }
         Insert: {
+          environment?: string | null
           expires_at?: string | null
+          last_event_at?: string | null
           product_id: string
           status: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
           user_id: string
         }
         Update: {
+          environment?: string | null
           expires_at?: string | null
+          last_event_at?: string | null
           product_id?: string
           status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string
@@ -487,16 +511,51 @@ export type Database = {
           users: number
         }[]
       }
+      ai_usage_status: {
+        Args: { p_free_limit: number; p_premium_limit: number }
+        Returns: {
+          daily_limit: number
+          premium: boolean
+          remaining: number
+          reset_at: string
+          used: number
+        }[]
+      }
+      apply_subscription_event: {
+        Args: {
+          p_environment: string
+          p_event_at: string
+          p_event_id: string
+          p_event_type: string
+          p_expires_at: string
+          p_product_id: string
+          p_status: Database["public"]["Enums"]["subscription_status"]
+          p_user: string
+        }
+        Returns: string
+      }
+      apply_subscription_transfer: {
+        Args: {
+          p_event_at: string
+          p_event_id: string
+          p_from: string[]
+          p_to?: string
+        }
+        Returns: string
+      }
       consume_ai_request: {
-        Args: { p_limit: number }
+        Args: { p_free_limit: number; p_premium_limit: number }
         Returns: {
           allowed: boolean
+          daily_limit: number
+          premium: boolean
           remaining: number
           reservation_id: string
           reset_at: string
           used: number
         }[]
       }
+      has_premium: { Args: { p_user: string }; Returns: boolean }
       refund_ai_request: { Args: { p_reservation: string }; Returns: boolean }
       reset_my_data: { Args: never; Returns: undefined }
     }

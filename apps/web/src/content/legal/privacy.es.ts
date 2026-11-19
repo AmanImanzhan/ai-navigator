@@ -53,10 +53,19 @@ export const PRIVACY_ES: LegalDocument = {
       ],
     },
     {
+      heading: "Suscripción (AI Navigator Premium)",
+      paragraphs: [
+        "En la app puedes contratar la suscripción AI Navigator Premium, que aumenta el límite diario del asistente de IA. La suscripción se compra a través del App Store: el pago lo gestiona Apple y nunca vemos los datos de tu tarjeta ni tu Apple ID.",
+        "Para comprobar la suscripción, la app usa RevenueCat (RevenueCat, Inc., EE. UU.). La app envía a RevenueCat el identificador de tu cuenta de AI Navigator (un código aleatorio, sin tu nombre ni tu correo) y la información de compra del App Store de tu teléfono. RevenueCat también recibe datos técnicos del dispositivo y de la app, como la versión del sistema y el país del App Store. [TODO: comprobar con la guía de privacidad de RevenueCat]",
+        "De RevenueCat recibimos y guardamos solo: el estado de la suscripción (prueba, activa, cancelada, caducada), el plan (mensual o anual), la fecha de fin y si fue una compra de prueba. Lo usamos solo para aplicar el límite diario del asistente de IA.",
+      ],
+    },
+    {
       heading: "Funciones previstas",
-      paragraphs: ["Actualizaremos esta política antes de lanzar:"],
+      paragraphs: [
+        "Actualizaremos esta política antes de lanzar:",
+      ],
       items: [
-        "Suscripciones a través del App Store: recibiremos el estado de tu suscripción (activa, caducada). Los pagos los gestiona Apple: nunca vemos los datos de tu tarjeta. [TODO: RevenueCat, si se usa]",
         "Analítica: [TODO: ahora no hay ninguna; describir la herramienta si se añade].",
       ],
     },
@@ -78,6 +87,7 @@ export const PRIVACY_ES: LegalDocument = {
         "Apple y Google: cuando inicias sesión con ellos, según sus políticas.",
         "Vercel: alojamiento de este sitio web.",
         "Anthropic: genera las respuestas del asistente de IA (servidores en EE. UU.).",
+        "RevenueCat: comprueba la suscripción del App Store (servidores en EE. UU.).",
       ],
       afterItems: [
         "[TODO: revisar la lista de proveedores antes del lanzamiento]",
@@ -86,7 +96,7 @@ export const PRIVACY_ES: LegalDocument = {
     {
       heading: "Cuánto tiempo los guardamos y cómo eliminarlos",
       paragraphs: [
-        "Guardamos los datos de tu cuenta hasta que la eliminas. En la app: Perfil → Ajustes → Eliminar cuenta. Tu cuenta, tu progreso, tus peticiones guardadas y tus ajustes se eliminan de nuestros servidores al momento; si iniciaste sesión con Apple, también revocamos el acceso de la app a tu Apple ID.",
+        "Guardamos los datos de tu cuenta hasta que la eliminas. En la app: Perfil → Ajustes → Eliminar cuenta. Tu cuenta, tu progreso, tus peticiones guardadas y tus ajustes se eliminan de nuestros servidores al momento; si iniciaste sesión con Apple, también revocamos el acceso de la app a tu Apple ID. También se elimina el registro de la suscripción, pero la suscripción del App Store no se cancela: cancélala en Ajustes del iPhone → tu nombre → Suscripciones. RevenueCat conserva el historial de compras vinculado al código aleatorio de la cuenta; escríbenos si quieres eliminarlo también.",
         "Las copias de seguridad del servidor pueden conservar datos hasta [TODO: número] días después de eliminarlos.",
         "Los datos que se guardan solo en tu teléfono se eliminan desde la app (Ajustes → Borrar datos) o al desinstalarla.",
       ],

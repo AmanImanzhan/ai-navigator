@@ -59,7 +59,8 @@ const supabase = createClient<Database>(
 const tracks: TablesInsert<"tracks">[] = TRACKS.map((track, index) => ({
   id: track.id,
   sort: index,
-  premium: track.premium,
+  // Все уроки бесплатные: платный только ИИ-помощник.
+  premium: false,
 }));
 
 const trackTranslations: TablesInsert<"track_translations">[] =

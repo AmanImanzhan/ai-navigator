@@ -72,8 +72,7 @@
     "a11yMeta": "Nivel {{level}}, {{minutes}} minutos",
     "status": {
       "completed": "Hecha",
-      "soon": "Pronto",
-      "premium": "Premium"
+      "soon": "Pronto"
     }
   },
   "lesson": {
@@ -131,8 +130,6 @@
     "lockedMessage": "Se desbloquea después de la lección {{lesson}}, «{{title}}». ¿Quieres hacer la lección ahora?",
     "lockedGo": "Hacer la lección",
     "lockedLater": "Más tarde",
-    "premiumMessage": "La lección {{lesson}}, «{{title}}», forma parte de la suscripción. La plantilla se desbloquea después de ella.",
-    "ok": "Entendido",
     "emptyTitle": "Aquí aparecerán tus peticiones",
     "emptyText": "Abre una plantilla, completa los campos y toca «Guardar en mías».",
     "emptyAction": "Ir a plantillas",
@@ -169,8 +166,6 @@
     "example": "Ejemplo",
     "checkedAt": "Datos de {{month}} de {{year}}",
     "notFound": "No encontramos esta página",
-    "premiumTitle": "Lección con suscripción",
-    "premiumMessage": "La lección {{lesson}}, «{{title}}», forma parte de la suscripción.",
     "months": {
       "1": "enero",
       "2": "febrero",

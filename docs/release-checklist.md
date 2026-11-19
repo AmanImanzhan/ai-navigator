@@ -44,16 +44,59 @@
       затем Redeploy. Ключ — только в `.env.local` и в Vercel, никогда в git и в приложении.
 - [ ] **Лимит расходов в Anthropic Console** (Settings → Limits): месячный потолок, чтобы ошибка
       или злоупотребление не обошлись дорого. Включить уведомление о расходах.
-- [ ] **Дневной лимит** `FREE_DAILY_LIMIT` (`apps/web/src/lib/ai/config.ts`) — проверить значение;
-      для подписчиков — больше (после подключения подписки).
+- [x] **Дневной лимит:** 3 запроса без подписки, 30 с подпиской — `AI_DAILY_LIMITS` в
+      `packages/shared/src/subscription.ts`. Какой применить, решает база (`consume_ai_request`).
 - [x] **Тестовый пользователь** `ai-smoke@example.com` удалён. Вход по почте в Supabase выключен
       (только Apple и Google), поэтому `npm run ai:smoke` больше не может создать пользователя и
       получить токен. Для ручной проверки: временно включить Email (Authentication → Sign In /
       Providers), прогнать скрипт, затем `npm run ai:smoke -- --delete` и снова выключить Email.
 - [ ] **Политика конфиденциальности:** заполнить `[TODO]` про срок хранения данных у Anthropic.
 - [x] **Подключение в приложении** — Задача 28 (`apps/mobile/src/lib/ai`, `components/ai`).
-- [ ] **Подписка:** больше запросов для подписчиков — лимит на сервере (`FREE_DAILY_LIMIT`) и
-      кнопка «Больше запросов» в `LimitReachedText` (`apps/mobile/src/components/ai/AiUsageNote.tsx`).
+- [x] **Подписка:** больше запросов для подписчиков — Задача 30 (см. «Подписка»).
+- [ ] **Кнопка «Больше запросов»** в `LimitReachedText` (`apps/mobile/src/components/ai/AiUsageNote.tsx`)
+      и экран подписки (paywall) — Задача 31.
+
+## Подписка (RevenueCat, App Store)
+
+- [ ] **Миграция** `20261119120000_subscriptions.sql` применена (`npm run db:push`), типы обновлены
+      (`npm run db:types`). Сразу после неё — деплой сайта: старый сервер вызывает старую
+      `consume_ai_request(p_limit)`, которой больше нет (пока не задеплоено, помощник отвечает ошибкой).
+- [ ] **App Store Connect:** группа подписок «AI Navigator Premium», товары
+      `ainavigator_premium_monthly` ($2.99) и `ainavigator_premium_yearly` ($19.99), пробный период
+      3 дня (Introductory Offer → Free) у обоих, названия на en/ru/es, скриншот для проверки,
+      статус Ready to Submit. Paid Apps Agreement — Active, банк и налоги заполнены.
+- [ ] **Первую подписку отправить на проверку вместе с версией приложения** (App Store Connect →
+      версия → In-App Purchases and Subscriptions → выбрать оба товара). Отдельно Apple первую
+      подписку не принимает.
+- [ ] **RevenueCat:** iOS-приложение с In-App Purchase Key (.p8), entitlement `premium` с обоими
+      товарами, offering `default` (Monthly + Annual) — текущий. Project settings → Transfer behavior:
+      **Transfer to new App User ID** (по умолчанию).
+- [ ] **App Store Server Notifications** (App Store Connect → приложение → App Information):
+      URL из RevenueCat (Apps → iOS-приложение → Apple Server to Server notification settings) для
+      Production и Sandbox — так RevenueCat узнаёт об отменах и возвратах сразу.
+- [ ] **Webhook RevenueCat** → `https://<домен>/api/revenuecat/webhook`, Authorization header =
+      `Bearer <REVENUECAT_WEBHOOK_SECRET>`, окружение — Both. Кнопка Send test event → 200
+      (в журнале Vercel: `revenuecat webhook: TEST → ignore:…`).
+- [ ] **`REVENUECAT_WEBHOOK_SECRET` на Vercel** (Production) с пометкой **Sensitive**, затем Redeploy.
+      Секрет — длинная случайная строка (`openssl rand -hex 32`), только в Vercel, RevenueCat и
+      `.env.local`; в git, чат и приложение — никогда.
+- [ ] **Webhook работает:** покупка в Sandbox → строка в `subscriptions`
+      (`select status, product_id, expires_at, environment from public.subscriptions;`), в приложении
+      «Осталось N из 30». Выключение автопродления → `cancelled`, истечение → `expired` и снова «из 3».
+- [ ] **Тестовые покупки в проде:** события из Sandbox (TestFlight, ревью Apple) тоже дают Premium —
+      так задумано, чтобы ревьюер мог проверить подписку. Колонка `environment` показывает, какая это покупка.
+- [ ] **Временная панель «Подписка (тест)»** в Настройках видна только в разработке (`__DEV__`).
+      После экрана подписки (Задача 31) — удалить `components/settings/PremiumDevPanel.tsx`.
+- [ ] **App Store → App Privacy:** добавить «Покупки» (Purchase History) — их видит RevenueCat.
+- [ ] **Тариф Vercel Pro** перед запуском подписки (см. «Сайт»).
+- [ ] **Скриншот для проверки товаров.** App Store Connect → оба товара (`ainavigator_premium_yearly`
+      и `ainavigator_premium_monthly`) → «Информация для проверки»: сейчас стоит временный скриншот
+      онбординга. После Задачи 31 заменить на скриншот экрана оплаты (paywall) с ценой и кнопкой
+      покупки, без кнопки dev-меню.
+- [ ] **Срок пробного периода.** Вводные предложения (3 дня бесплатно) созданы с датой окончания —
+      до этой даты создать новое предложение, иначе пробный период пропадёт.
+- [ ] **Декларация AIGC** (контент, созданный ИИ) в App Store Connect — заполнить перед отправкой
+      на проверку.
 
 ## Админка (apps/web/src/app/admin)
 
@@ -81,21 +124,28 @@
       npx eas-cli@latest env:set --name EXPO_PUBLIC_SUPABASE_URL --value "https://<ref>.supabase.co" --environment preview --environment production --visibility plaintext
       npx eas-cli@latest env:set --name EXPO_PUBLIC_SUPABASE_KEY --value "sb_publishable_…" --environment preview --environment production --visibility sensitive
       npx eas-cli@latest env:set --name EXPO_PUBLIC_API_URL --value "https://ai-navigator-omega-dusky.vercel.app" --environment preview --environment production --visibility plaintext
+      npx eas-cli@latest env:set --name EXPO_PUBLIC_REVENUECAT_IOS_KEY --value "appl_…" --environment preview --environment production --visibility plaintext
       ```
       `EXPO_PUBLIC_API_URL` — адрес сайта с API ИИ-помощника, без `/` в конце. Если подключите
       свой домен — указать его и пересобрать (переменные `EXPO_PUBLIC_` вшиваются при сборке).
-      Secret key в EAS не добавлять никогда.
+      `EXPO_PUBLIC_REVENUECAT_IOS_KEY` — публичный iOS-ключ RevenueCat (`appl_…`), его можно
+      вшивать в приложение. Secret key Supabase и секреты RevenueCat в EAS не добавлять никогда.
 - [ ] **Заставка:** сейчас синяя `#208AEF` из шаблона (`app.json` → плагин `expo-splash-screen`) —
       заменить на цвета приложения и свою картинку.
 - [ ] **Иконка приложения:** сейчас иконка из шаблона (`assets/images/icon.png`, `assets/expo.icon`).
 
 ## Данные и безопасность
 
-- [ ] **Платный контент читается всеми.** RLS для `lessons` и `lesson_translations` проверяет
-      только `published`, а не подписку. Перед запуском подписки: отдавать содержимое платных
-      направлений только подписчикам (RLS по таблице `subscriptions` или выдача через сервер).
+- [x] **Платного контента нет.** Все уроки и шаблоны бесплатные (`tracks.premium = false`, приложение
+      флаг не читает), поэтому RLS по подписке для уроков не нужна. По подписке — только лимит
+      ИИ-помощника, его проверяет сервер (`consume_ai_request` по таблице `subscriptions`).
+- [x] **Подписки пишет только сервер:** у `subscriptions` нет политик на запись, функции
+      `apply_subscription_*` доступны только `service_role`; при удалении аккаунта строка удаляется
+      каскадом. Подписку в App Store удаление не отменяет — приложение предупреждает.
 - [x] **Политика конфиденциальности** — черновик на сайте (`/privacy`, `/ru/privacy`, `/es/privacy`):
-      имя, почта, прогресс, сохранённые запросы, локальные уведомления, планы (ИИ-помощник,
-      подписка, аналитика). Осталось заполнить `[TODO: …]` (см. «Сайт»).
+      имя, почта, прогресс, сохранённые запросы, локальные уведомления, ИИ-помощник, подписка
+      (Apple и RevenueCat), планы (аналитика). Осталось заполнить `[TODO: …]` (см. «Сайт»).
+- [x] **Условия использования** (`/terms`): подписка, цены, пробный период, автопродление, как
+      отменить — по требованиям Apple. При смене цен — обновить текст.
 - [ ] **App Store → App Privacy:** заполнить, какие данные собираются (контактная информация,
-      идентификатор пользователя, контент пользователя).
+      идентификатор пользователя, контент пользователя, покупки).

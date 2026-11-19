@@ -79,19 +79,11 @@ export default function Prompts() {
       return;
     }
 
-    // Шаблон закрыт: предлагаем пройти урок. Платный урок открыть нельзя — просто объясняем.
-    const track = tracks.find((item) =>
-      item.lessons.some((lesson) => lesson.id === template.lessonId),
-    );
-    const lesson = track?.lessons.find((item) => item.id === template.lessonId);
+    // Шаблон закрыт: предлагаем пройти урок.
+    const lesson = tracks
+      .flatMap((track) => track.lessons)
+      .find((item) => item.id === template.lessonId);
     const params = { lesson: template.lessonId, title: lesson?.title ?? "" };
-
-    if (track?.premium) {
-      Alert.alert(t("prompts.lockedTitle"), t("prompts.premiumMessage", params), [
-        { text: t("prompts.ok") },
-      ]);
-      return;
-    }
 
     Alert.alert(t("prompts.lockedTitle"), t("prompts.lockedMessage", params), [
       { text: t("prompts.lockedLater"), style: "cancel" },

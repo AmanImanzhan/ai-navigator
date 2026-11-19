@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import "@/i18n";
 import { useAppleRevocation } from "@/hooks/useAppleRevocation";
 import { useContentSync } from "@/hooks/useContentSync";
+import { usePurchasesSetup } from "@/hooks/usePremium";
 import { useReminders } from "@/hooks/useReminders";
 import { useSync } from "@/hooks/useSync";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
@@ -29,6 +30,9 @@ export default function RootLayout() {
 
   // Прогресс и запросы вошедшего — в аккаунт и обратно.
   useSync(appHydrated);
+
+  // Подписка (RevenueCat): покупатель = вошедший аккаунт Supabase.
+  usePurchasesSetup();
 
   // Напоминания: расписание и открытие Главной по нажатию.
   useReminders(hydrated);

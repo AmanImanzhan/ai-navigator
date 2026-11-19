@@ -68,7 +68,6 @@ export type LessonData = {
 
 export type TrackData = {
   id: TrackId;
-  premium: boolean;
   lessons: LessonData[];
 };
 
@@ -98,13 +97,13 @@ export type Lesson = {
   content?: LessonContent;
 };
 
-// Направление: тексты, картинки, видео… Платное — только по подписке.
+// Направление: тексты, картинки, видео…
 export type Track = {
   id: TrackId;
   title: string;
-  premium: boolean;
   lessons: Lesson[];
 };
 
-// available — можно открыть; completed — пройден; soon — ещё нет содержимого; premium — по подписке.
-export type LessonStatus = "available" | "completed" | "soon" | "premium";
+// available — можно открыть; completed — пройден; soon — ещё нет содержимого.
+// Все уроки бесплатные — платный только ИИ-помощник.
+export type LessonStatus = "available" | "completed" | "soon";

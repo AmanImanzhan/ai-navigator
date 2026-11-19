@@ -38,9 +38,15 @@ export const TERMS_ES: LegalDocument = {
       ],
     },
     {
-      heading: "Funciones de pago",
+      heading: "Suscripción (AI Navigator Premium)",
       paragraphs: [
-        "Algunos itinerarios podrían estar disponibles solo con suscripción. Las suscripciones se compran y gestionan a través del App Store según las condiciones de Apple; puedes cancelarlas en Ajustes del iPhone → tu nombre → Suscripciones. [TODO: precios, prueba gratuita y qué incluye, antes de lanzar las suscripciones]",
+        "Todas las lecciones y plantillas de peticiones son gratuitas. La suscripción AI Navigator Premium solo aumenta el límite diario del asistente de IA: 3 peticiones al día sin suscripción y 30 con ella. Para contratarla tienes que iniciar sesión: la suscripción queda vinculada a la cuenta de AI Navigator con la que iniciaste sesión.",
+        "Planes: mensual — 2,99 US$ al mes; anual — 19,99 US$ al año. En otros países, el App Store muestra el precio en moneda local antes de la compra.",
+        "Prueba gratuita: 3 días para nuevos suscriptores (Apple decide quién puede usarla). Si no cancelas al menos 24 horas antes de que termine la prueba, la suscripción de pago empieza automáticamente.",
+        "El pago se carga en tu cuenta de Apple ID al confirmar la compra (con prueba, cuando esta termina). La suscripción se renueva automáticamente por el mismo periodo y al mismo precio salvo que desactives la renovación automática al menos 24 horas antes del final del periodo actual. La renovación se cobra en las 24 horas anteriores al final del periodo actual.",
+        "Cómo cancelar: Ajustes del iPhone → tu nombre → Suscripciones → AI Navigator Premium → Cancelar suscripción. Premium se mantiene hasta el final del periodo pagado. Eliminar la app o tu cuenta de AI Navigator no cancela la suscripción.",
+        "Los reembolsos los gestiona Apple (reportaproblem.apple.com). Si Apple reembolsa un pago, Premium termina.",
+        "«Restaurar compras» pasa la suscripción del Apple ID actual a la cuenta con la que iniciaste sesión; en la cuenta anterior deja de funcionar.",
       ],
     },
     {

@@ -34,37 +34,30 @@ function lesson(id: LessonId, level: LessonLevel, minutes: number): LessonData {
 export const TRACKS: TrackData[] = [
   {
     id: "texts",
-    premium: false,
     lessons: [lesson("1", 1, 5), lesson("2", 1, 5), lesson("3", 2, 7)],
   },
   {
     id: "images",
-    premium: false,
     lessons: [lesson("4", 1, 7), lesson("5", 1, 7), lesson("6", 2, 10)],
   },
   {
     id: "video",
-    premium: false,
     lessons: [lesson("7", 1, 8), lesson("8", 2, 10), lesson("9", 2, 10)],
   },
   {
     id: "voice",
-    premium: false,
     lessons: [lesson("10", 1, 7), lesson("11", 2, 8), lesson("12", 2, 8)],
   },
   {
     id: "safety",
-    premium: false,
     lessons: [lesson("13", 1, 7), lesson("14", 2, 8), lesson("15", 1, 6)],
   },
   {
     id: "work-admin",
-    premium: true,
     lessons: [lesson("16", 2, 10), lesson("17", 2, 10), lesson("18", 2, 8)],
   },
   {
     id: "work-management",
-    premium: true,
     lessons: [lesson("19", 3, 10), lesson("20", 3, 10), lesson("21", 3, 10)],
   },
 ];
@@ -104,7 +97,6 @@ export function getTracks(locale: Locale): Track[] {
   return TRACKS.map((track) => ({
     id: track.id,
     title: LOCALES[locale].tracks[track.id],
-    premium: track.premium,
     lessons: track.lessons.map((item) => localizeLesson(item, locale)),
   }));
 }
@@ -117,15 +109,13 @@ export function getLesson(id: string, locale: Locale): Lesson | undefined {
   return data ? localizeLesson(data, locale) : undefined;
 }
 
-// Пройденный урок важнее всего: его можно открыть снова.
-// «Подписка» важнее «Скоро»: пусть человек сразу видит, что направление платное.
+// Пройденный урок важнее всего: его можно открыть снова. Все уроки бесплатные.
 export function getLessonStatus(
   lesson: Lesson,
   track: Track,
   completed: boolean,
 ): LessonStatus {
   if (completed) return "completed";
-  if (track.premium) return "premium";
   if (!lesson.content) return "soon";
   return "available";
 }

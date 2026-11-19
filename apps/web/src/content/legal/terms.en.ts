@@ -38,9 +38,15 @@ export const TERMS_EN: LegalDocument = {
       ],
     },
     {
-      heading: "Paid features",
+      heading: "Subscription (AI Navigator Premium)",
       paragraphs: [
-        "Some tracks may become available only with a subscription. Subscriptions are bought and managed through the App Store under Apple's terms; you can cancel them in iPhone Settings → your name → Subscriptions. [TODO: prices, trial, what's included — before launching subscriptions]",
+        "All lessons and prompt templates are free. The AI Navigator Premium subscription only raises the AI assistant's daily limit: 3 requests per day without a subscription, 30 with it. You need to sign in to buy a subscription; it is linked to the AI Navigator account you're signed in with.",
+        "Plans: monthly — $2.99 per month, yearly — $19.99 per year. In other countries the App Store shows the price in local currency before you buy.",
+        "Free trial: 3 days for new subscribers (Apple decides who is eligible). If you don't cancel at least 24 hours before the trial ends, the paid subscription starts automatically.",
+        "Payment is charged to your Apple ID account when you confirm the purchase (with a trial — when the trial ends). The subscription renews automatically for the same period at the same price unless auto-renewal is turned off at least 24 hours before the end of the current period. Your account is charged for renewal within 24 hours before the end of the current period.",
+        "How to cancel: iPhone Settings → your name → Subscriptions → AI Navigator Premium → Cancel Subscription. Premium stays until the end of the paid period. Deleting the app or your AI Navigator account does not cancel the subscription.",
+        "Refunds are handled by Apple (reportaproblem.apple.com). If Apple refunds a payment, Premium ends.",
+        "“Restore purchases” moves the subscription of the current Apple ID to the account you're signed in with; in the previous account it stops working.",
       ],
     },
     {

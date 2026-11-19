@@ -31,7 +31,7 @@ export async function fetchContent(
       templates,
       templateTranslations,
     ] = await Promise.all([
-      supabase.from("tracks").select("id, sort, premium").abortSignal(signal),
+      supabase.from("tracks").select("id, sort").abortSignal(signal),
       supabase
         .from("track_translations")
         .select("track_id, locale, title")
