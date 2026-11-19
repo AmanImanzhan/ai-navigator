@@ -1,8 +1,12 @@
 import type { AiUsage } from "@ai-navigator/shared";
+import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, Text, View } from "react-native";
 
+import { Button } from "@/components/Button";
+import { usePremium } from "@/hooks/usePremium";
 import { getResetTime } from "@/lib/ai/format";
+import { purchasesAvailable } from "@/lib/purchases";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -19,9 +23,12 @@ export function useResetText(resetAt: string | undefined): string | null {
 }
 
 // Текст «лимит исчерпан» — спокойно, без давления: когда появятся новые запросы.
+// Без подписки — ещё и кнопка «Больше запросов с Premium» (только на iPhone с покупками).
 export function LimitReachedText({ resetAt }: { resetAt?: string }) {
   const { t } = useTranslation();
   const when = useResetText(resetAt);
+  const { premium, checked } = usePremium();
+  const showUpgrade = purchasesAvailable && checked && !premium;
 
   return (
     <View style={styles.reached}>
@@ -30,8 +37,13 @@ export function LimitReachedText({ resetAt }: { resetAt?: string }) {
           ? t("ai.errors.limit_reached", { when })
           : t("ai.errors.limit_reached_soon")}
       </Text>
-      {/* Задача 31: здесь появится кнопка «Больше запросов» — экран подписки (paywall).
-          Лимиты — AI_DAILY_LIMITS в packages/shared/src/subscription.ts. */}
+      {showUpgrade ? (
+        <Button
+          title={t("premium.moreRequests")}
+          variant="secondary"
+          onPress={() => router.push("/paywall")}
+        />
+      ) : null}
     </View>
   );
 }
@@ -62,6 +74,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   reached: {
+    gap: theme.spacing.sm,
     padding: theme.spacing.sm,
     borderRadius: theme.radius.sm,
     backgroundColor: theme.colors.track,

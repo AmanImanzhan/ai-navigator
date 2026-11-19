@@ -8,7 +8,11 @@ import {
   refreshPremium,
   setPurchasesUser,
 } from "@/lib/purchases";
-import { usePremiumStore } from "@/store/usePremiumStore";
+import {
+  NO_PREMIUM,
+  usePremiumStore,
+  type PremiumInfo,
+} from "@/store/usePremiumStore";
 
 // Подключает RevenueCat и следит за входом: вошёл — logIn(id), вышел — logOut.
 // Подключается один раз в корневом layout.
@@ -26,9 +30,7 @@ export function usePurchasesSetup(): void {
 
 // Есть ли подписка Premium у вошедшего. Сначала — ответ из кэша RevenueCat, свежий — в фоне.
 // Обновляется, когда экран снова на виду. checked: false — RevenueCat ещё не ответил.
-export function usePremium(): {
-  premium: boolean;
-  expiresAt: string | null;
+export function usePremium(): PremiumInfo & {
   checked: boolean;
   refresh: () => Promise<void>;
 } {
@@ -45,9 +47,12 @@ export function usePremium(): {
     }, []),
   );
 
+  const info = mine && state.premium ? state : NO_PREMIUM;
   return {
-    premium: mine && state.premium,
-    expiresAt: mine ? state.expiresAt : null,
+    premium: info.premium,
+    expiresAt: info.expiresAt,
+    willRenew: info.willRenew,
+    trial: info.trial,
     checked: mine,
     refresh: refreshPremium,
   };

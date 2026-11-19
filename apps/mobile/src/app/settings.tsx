@@ -8,11 +8,12 @@ import { BackHeader } from "@/components/BackHeader";
 import { Button } from "@/components/Button";
 import { ChoiceCard } from "@/components/ChoiceCard";
 import { InfoCard } from "@/components/InfoCard";
-import { PremiumDevPanel } from "@/components/settings/PremiumDevPanel";
+import { PremiumSettings } from "@/components/settings/PremiumSettings";
 import { ReminderSettings } from "@/components/settings/ReminderSettings";
 import { DAILY_MINUTES, LANGUAGES } from "@/data/onboarding";
 import { useAuth, useAvailableProviders } from "@/hooks/useAuth";
 import { getDisplayName, isNetworkError } from "@/lib/auth";
+import { purchasesAvailable } from "@/lib/purchases";
 import { resetReminders } from "@/lib/reminders";
 import { resetAllData } from "@/lib/sync";
 import { useAppStore } from "@/store/useAppStore";
@@ -113,6 +114,14 @@ export default function Settings() {
           <ReminderSettings />
         </View>
 
+        {/* Подписка: только на iPhone с настроенным RevenueCat. */}
+        {purchasesAvailable ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t("premium.rowLabel")}</Text>
+            <PremiumSettings />
+          </View>
+        ) : null}
+
         {user ? (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t("profile.account")}</Text>
@@ -138,9 +147,6 @@ export default function Settings() {
         ) : providers && providers.length > 0 ? (
           <SignInCard />
         ) : null}
-
-        {/* Временно, только в разработке: проверить покупку в Sandbox (до экрана подписки). */}
-        {__DEV__ ? <PremiumDevPanel /> : null}
 
         <View style={styles.actions}>
           <Button

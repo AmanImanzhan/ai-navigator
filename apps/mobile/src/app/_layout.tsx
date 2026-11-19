@@ -81,6 +81,8 @@ export default function RootLayout() {
         <Stack.Screen name="library/concept/[id]" />
         <Stack.Screen name="settings" />
         <Stack.Screen name="delete-account" />
+        {/* Экран подписки — модальный, закрывается крестиком или жестом вниз. */}
+        <Stack.Screen name="paywall" options={{ presentation: "modal" }} />
         {/* Выбор языка из Профиля — шторка снизу высотой по содержимому. */}
         <Stack.Screen
           name="language-picker"

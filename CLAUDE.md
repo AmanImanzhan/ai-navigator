@@ -68,7 +68,13 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   maps events in src/lib/revenuecat/events.ts (pure), writes via apply_subscription_event /
   apply_subscription_transfer (service role only; idempotent by event id, ordered by event time).
   Only the server writes public.subscriptions. RevenueCat transfer behavior: Transfer to new App User ID.
-- PremiumDevPanel in Settings is temporary (__DEV__ only) until the paywall (Task 31).
+- Paywall: src/app/paywall.tsx (modal), parts in src/components/premium. Opened only by user action:
+  «More requests with Premium» in LimitReachedText and Settings → AI Navigator Premium
+  (components/settings/PremiumSettings.tsx: status, manage via showManageSubscriptions, restore).
+  Prices, currency and trial come only from RevenueCat/StoreKit (loadPaywallOffer); the trial text
+  shows only when checkTrialOrIntroductoryPriceEligibility says ELIGIBLE. Keep the Apple-required
+  auto-renew text and Terms/Privacy links (lib/site.ts). After purchase waitForServerPremium polls
+  /api/ai/usage until the webhook arrives.
 
 ## Design system
 - Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,

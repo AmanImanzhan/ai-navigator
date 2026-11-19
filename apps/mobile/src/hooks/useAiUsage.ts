@@ -17,6 +17,21 @@ export async function refreshAiUsage(userId: string): Promise<void> {
   }
 }
 
+// После покупки: сервер узнаёт о подписке из webhook RevenueCat, обычно за 5–60 секунд.
+// Спрашиваем лимит несколько раз, пока сервер не ответит «premium» (или не кончатся попытки —
+// тогда лимит обновится сам, когда человек откроет помощник).
+const PREMIUM_WAIT_DELAYS_MS = [0, 3_000, 5_000, 10_000, 15_000, 30_000];
+
+export async function waitForServerPremium(userId: string): Promise<boolean> {
+  for (const delay of PREMIUM_WAIT_DELAYS_MS) {
+    if (delay > 0) await new Promise((resolve) => setTimeout(resolve, delay));
+    await refreshAiUsage(userId);
+    const { userId: owner, usage } = useAiUsageStore.getState();
+    if (owner === userId && usage?.premium) return true;
+  }
+  return false;
+}
+
 // Остаток запросов на сегодня для вошедшего. null — не вошёл или ещё не знаем.
 // Обновляется каждый раз, когда экран снова на виду (например, вернулись на него на следующий день).
 export function useAiUsage(): AiUsage | null {
