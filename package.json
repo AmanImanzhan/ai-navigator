@@ -1,6 +1,7 @@
 {
   "name": "ai-navigator",
   "private": true,
+  "packageManager": "npm@11.20.0",
   "version": "0.0.0",
   "workspaces": [
     "apps/*",

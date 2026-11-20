@@ -34,6 +34,9 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   America/Los_Angeles time zone (jest.config.js) to catch local-day vs UTC bugs.
 - CI: .github/workflows/ci.yml on every push and PR — `npm ci`, typecheck, lint, test, `next build`
   with placeholder env. No EAS builds and no real secrets in CI.
+- npm version is pinned (`packageManager` in root package.json; CI installs it). Change
+  package-lock.json only with that npm (`npx npm@<version> install …`): other npm versions write
+  the lock differently and `npm ci` in CI fails ("Missing … from lock file").
 
 ## Web rules (apps/web)
 - Check current Next.js docs (nextjs.org/docs), don't rely on memory. Run from apps/web:
