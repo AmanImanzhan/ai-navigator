@@ -67,6 +67,14 @@ const LESSON_IDS: string[] = TRACKS.flatMap((track) =>
   track.lessons.map((item) => item.id),
 );
 
+// Направление урока (для статистики). Нет такого урока — null.
+export function getTrackIdForLesson(lessonId: string): TrackId | null {
+  return (
+    TRACKS.find((track) => track.lessons.some((item) => item.id === lessonId))
+      ?.id ?? null
+  );
+}
+
 // id из базы — обычные строки. Приложение знает только свои направления и уроки:
 // новый урок в базе появится в приложении после его обновления.
 export function isTrackId(id: string): id is TrackId {

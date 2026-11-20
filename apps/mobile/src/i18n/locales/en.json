@@ -240,7 +240,13 @@
     "reminderSubtitle": "One notification at the time you choose. If you've already done a lesson that day, we won't remind you.",
     "reminderTime": "Time",
     "reminderBlocked": "Notifications for AI Navigator are turned off in iPhone Settings, so reminders won't arrive.",
-    "testReminder": "Test reminder in 5 seconds"
+    "testReminder": "Test reminder in 5 seconds",
+    "privacy": "Privacy",
+    "telemetryTitle": "Help improve the app",
+    "telemetryText": "Anonymous usage statistics (which lessons are opened) and error reports. No texts you write, no email or name. You can turn it off at any time.",
+    "testSentry": "Test Sentry",
+    "testSentrySent": "Test error sent — check Issues in Sentry.",
+    "testSentryOff": "Sentry is off: no EXPO_PUBLIC_SENTRY_DSN or the switch is off."
   },
   "reminders": {
     "channelName": "Reminders",

@@ -2,6 +2,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 
 import { getRevenueCatWebhookSecret, MissingEnvError } from "@/lib/env";
 import { applySubscriptionChange } from "@/lib/revenuecat/apply";
+import { reportServerError } from "@/lib/sentry/report";
 import { toSubscriptionChange, webhookBodySchema } from "@/lib/revenuecat/events";
 
 // POST /api/revenuecat/webhook — RevenueCat сообщает о покупке, продлении, отмене,
@@ -62,6 +63,7 @@ export async function POST(request: Request) {
     console.info(`revenuecat webhook: ${event.type} → ${result}`);
     return json({ result }, 200);
   } catch (error) {
+    reportServerError("revenuecat webhook", error);
     if (error instanceof MissingEnvError) {
       console.error(`revenuecat webhook: ${error.message}`);
       return json({ error: "server_not_configured" }, 500);

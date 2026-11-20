@@ -76,6 +76,21 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   auto-renew text and Terms/Privacy links (lib/site.ts). After purchase waitForServerPremium polls
   /api/ai/usage until the webhook arrives.
 
+## Errors and analytics (privacy first, EU users)
+- Mobile errors: Sentry only via src/lib/monitoring (init, scrubbing, user = Supabase id only).
+  Mobile analytics: PostHog only via src/lib/analytics (track/screen/identify/reset) — never import
+  posthog-react-native or @sentry/react-native elsewhere. New event: add it to AnalyticsEvents first.
+- Events carry only names and safe ids (lesson/track/template id, language, plan). Never send user
+  texts, AI prompts/answers, notes, email, names, tokens. No session replay, no autocapture, no IDFA/ATT.
+- Consent: useTelemetryStore (AsyncStorage, default on) — the Settings switch turns off both
+  PostHog (optOut) and Sentry (beforeSend drops). Keys: EXPO_PUBLIC_SENTRY_DSN, EXPO_PUBLIC_POSTHOG_KEY;
+  empty = off. Sentry env = EAS profile (app.config.ts extra.appEnv); source maps upload only for
+  preview/production with SENTRY_AUTH_TOKEN.
+- Web: Sentry only (src/instrumentation*.ts, src/lib/sentry): dataCollection turns off user, cookies,
+  headers, bodies, query, genAI inputs/outputs, local variables. AI provider errors → reportAiError
+  (type + status only). No PostHog/analytics on the website (no cookie banner).
+- Changing what is collected → update /privacy (en/ru/es) and App Privacy in the release checklist.
+
 ## Design system
 - Colors: bg #F8F5F0, card #FFFFFF, accent #D85A30, accent-pressed #BF4E28, accent-subtle #FBEAE3,
   on-accent #FFFFFF (text on accent),

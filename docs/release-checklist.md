@@ -147,6 +147,35 @@
 - [ ] **Icon Composer (по желанию):** для «стеклянного» вида iOS 26 и своих вариантов для тёмной и
       тонированной темы — собрать `.icon` в Icon Composer из слоёв (фон + робот) и указать в `ios.icon`.
 
+## Ошибки и статистика (Sentry, PostHog)
+
+- [ ] **Sentry: организация в регионе ЕС** (при регистрации — Data Storage Location: EU, адрес
+      `de.sentry.io`). Два проекта: React Native (приложение) и Next.js (сайт).
+- [ ] **Sentry → проекты → Settings → Security & Privacy:** включены Data Scrubber и
+      «Prevent Storing of IP Addresses». Срок хранения совпадает с текстом в `/privacy`.
+- [ ] **PostHog: проект в EU Cloud** (`eu.posthog.com`). Project settings: Autocapture — off,
+      Session replay — off, Web analytics — off, «Discard client IP data» — on.
+- [ ] **EAS environment variables** (из `apps/mobile`, preview и production):
+      ```bash
+      npx eas-cli@latest env:set --name EXPO_PUBLIC_SENTRY_DSN --value "https://…ingest.de.sentry.io/…" --environment preview --environment production --visibility plaintext
+      npx eas-cli@latest env:set --name EXPO_PUBLIC_POSTHOG_KEY --value "phc_…" --environment preview --environment production --visibility plaintext
+      npx eas-cli@latest env:set --name SENTRY_ORG --value "<slug организации>" --environment preview --environment production --visibility plaintext
+      npx eas-cli@latest env:set --name SENTRY_PROJECT --value "<slug проекта приложения>" --environment preview --environment production --visibility plaintext
+      ```
+- [ ] **Source maps приложения (Задача 35):** секрет `SENTRY_AUTH_TOKEN` (Sentry → Settings →
+      Auth Tokens → Organization token) в EAS только для preview и production, visibility **secret**:
+      `npx eas-cli@latest env:set --name SENTRY_AUTH_TOKEN --value "sntrys_…" --environment preview --environment production --visibility secret`.
+      Для development не нужен (`app.config.ts` выключает загрузку). Без токена сборка не падает,
+      но в отчётах будут непонятные строки кода. В git и в чат токен не попадает.
+- [ ] **Vercel → Environment Variables (Production):** `SENTRY_DSN` и `NEXT_PUBLIC_SENTRY_DSN`
+      (DSN проекта Next.js). По желанию для source maps: `SENTRY_ORG`, `SENTRY_PROJECT`,
+      `SENTRY_AUTH_TOKEN` (Sensitive). Затем Redeploy.
+- [ ] **Проверка:** в development-сборке Настройки → Конфиденциальность → «Тест Sentry» → ошибка в
+      Sentry (Issues, environment development). В PostHog → Activity появляются `app_opened`,
+      `lesson_started` и просмотры экранов. Переключатель выключен — новых событий нет.
+- [ ] **На сайте PostHog нет** (нет cookie-баннера). Добавлять аналитику на сайт — только с баннером
+      согласия и обновлением `/privacy`.
+
 ## Данные и безопасность
 
 - [x] **Платного контента нет.** Все уроки и шаблоны бесплатные (`tracks.premium = false`, приложение
@@ -157,8 +186,13 @@
       каскадом. Подписку в App Store удаление не отменяет — приложение предупреждает.
 - [x] **Политика конфиденциальности** — черновик на сайте (`/privacy`, `/ru/privacy`, `/es/privacy`):
       имя, почта, прогресс, сохранённые запросы, локальные уведомления, ИИ-помощник, подписка
-      (Apple и RevenueCat), планы (аналитика). Осталось заполнить `[TODO: …]` (см. «Сайт»).
+      (Apple и RevenueCat), отчёты об ошибках (Sentry) и статистика (PostHog) — регион ЕС, что
+      собираем и чего нет, как отключить. Осталось заполнить `[TODO: …]` (см. «Сайт»), в том числе
+      срок хранения отчётов и статистики (как в настройках Sentry и PostHog).
 - [x] **Условия использования** (`/terms`): подписка, цены, пробный период, автопродление, как
       отменить — по требованиям Apple. При смене цен — обновить текст.
 - [ ] **App Store → App Privacy:** заполнить, какие данные собираются (контактная информация,
-      идентификатор пользователя, контент пользователя, покупки).
+      идентификатор пользователя, контент пользователя, покупки), а также:
+      **Diagnostics** — Crash Data и Performance Data (Sentry); **Usage Data** — Product Interaction
+      (PostHog). Для обоих: используется для App Functionality / Analytics, **связано с пользователем**
+      (id аккаунта), **не используется для трекинга** (Tracking — No; IDFA и ATT не используем).

@@ -10,6 +10,7 @@ import { LessonHighlight } from "@/components/lesson/LessonHighlight";
 import { OpenToolButton } from "@/components/lesson/OpenToolButton";
 import { HighlightedPrompt } from "@/components/templates/HighlightedPrompt";
 import { useTemplate } from "@/hooks/useTemplates";
+import { track } from "@/lib/analytics";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -74,7 +75,12 @@ export default function TemplateScreen() {
               })
             }
           />
-          <CopyButton text={template.prompt} />
+          <CopyButton
+            text={template.prompt}
+            onCopied={() =>
+              track("template_copied", { template_id: template.id })
+            }
+          />
           {template.tools.map((tool) => (
             <OpenToolButton key={tool.url} tool={tool} variant="secondary" />
           ))}

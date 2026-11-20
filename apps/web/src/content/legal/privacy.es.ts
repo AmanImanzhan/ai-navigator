@@ -61,19 +61,26 @@ export const PRIVACY_ES: LegalDocument = {
       ],
     },
     {
-      heading: "Funciones previstas",
+      heading: "Informes de errores y estadísticas de uso",
       paragraphs: [
-        "Actualizaremos esta política antes de lanzar:",
+        "Para encontrar errores y entender qué partes de la app son útiles, la app envía informes de errores (Sentry) y estadísticas de uso anónimas (PostHog). Ambos servicios guardan estos datos en la UE (Fráncfort, Alemania).",
       ],
       items: [
-        "Analítica: [TODO: ahora no hay ninguna; describir la herramienta si se añade].",
+        "Informes de errores: qué falló y en qué pantalla, el modelo del dispositivo, la versión del sistema y de la app y, si has iniciado sesión, el identificador aleatorio de tu cuenta.",
+        "Estadísticas de uso: eventos como «lección abierta», «lección completada», «plantilla copiada», «petición al asistente de IA» o «pantalla de suscripción abierta», con el número de la lección o plantilla, el idioma de la app y el plan de suscripción. Antes de iniciar sesión, los eventos se vinculan a un identificador aleatorio del teléfono; después, al identificador aleatorio de tu cuenta.",
+      ],
+      afterItems: [
+        "Nunca enviamos: los textos que escribes, tus peticiones al asistente de IA ni sus respuestas, tus peticiones guardadas, tu nombre, correo, contraseñas ni tokens de inicio de sesión. No grabamos la pantalla, no usamos el identificador de publicidad (IDFA), no te rastreamos en otras apps y sitios web y no determinamos tu ubicación por la dirección IP.",
+        "Puedes desactivarlo cuando quieras: Perfil → Ajustes → Privacidad → «Ayudar a mejorar la app». A partir de ese momento la app no envía ni estadísticas ni informes de errores.",
+        "El sitio web no tiene analítica ni cookies publicitarias. Los errores del sitio se envían a Sentry sin datos personales.",
+        "Los informes de errores y las estadísticas se guardan hasta [TODO: número] días.",
       ],
     },
     {
       heading: "Para qué usamos tus datos",
       items: [
         "Para ofrecerte la app y conservar tu progreso en tus dispositivos (ejecución de nuestro acuerdo contigo).",
-        "Para mantener el servicio seguro y corregir errores (nuestro interés legítimo).",
+        "Para mantener el servicio seguro, encontrar y corregir errores y entender qué funciones son útiles (nuestro interés legítimo; puedes oponerte desactivando «Ayudar a mejorar la app»).",
         "Para responder a tus solicitudes de soporte.",
       ],
       afterItems: [
@@ -88,6 +95,8 @@ export const PRIVACY_ES: LegalDocument = {
         "Vercel: alojamiento de este sitio web.",
         "Anthropic: genera las respuestas del asistente de IA (servidores en EE. UU.).",
         "RevenueCat: comprueba la suscripción del App Store (servidores en EE. UU.).",
+        "Sentry: informes de errores (Functional Software, Inc.; datos guardados en la UE, Fráncfort).",
+        "PostHog: estadísticas de uso anónimas (PostHog, Inc.; EU Cloud, Fráncfort).",
       ],
       afterItems: [
         "[TODO: revisar la lista de proveedores antes del lanzamiento]",

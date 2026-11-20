@@ -2,6 +2,7 @@ import type { AiUsage } from "@ai-navigator/shared";
 
 import { aiErrorResponse } from "@/lib/api/responses";
 import { MissingEnvError } from "@/lib/env";
+import { reportServerError } from "@/lib/sentry/report";
 
 // Общие ответы маршрутов API.
 
@@ -21,6 +22,7 @@ export function limitReachedResponse(usage: AiUsage): Response {
 
 // Неожиданная ошибка маршрута. В журнал — только тип ошибки, без данных запроса.
 export function handleRouteError(error: unknown, route: string): Response {
+  reportServerError(route, error);
   if (error instanceof MissingEnvError) {
     console.error(`${route}: ${error.message}`);
     return aiErrorResponse("server_not_configured", 500);

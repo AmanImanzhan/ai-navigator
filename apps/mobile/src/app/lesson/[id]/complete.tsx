@@ -28,8 +28,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { Confetti } from "@/components/Confetti";
 import { StatCard } from "@/components/StatCard";
+import { getTrackIdForLesson } from "@/data/lessons";
 import { useLesson } from "@/hooks/useLessons";
 import { useLessonTemplates } from "@/hooks/useTemplates";
+import { track } from "@/lib/analytics";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -58,7 +60,9 @@ export default function LessonComplete() {
   // Зависим от id, а не от объекта урока: объект собирается заново при каждой отрисовке.
   const hasContent = Boolean(lesson?.content);
   useEffect(() => {
-    if (hasContent) markLessonCompleted(id);
+    if (!hasContent) return;
+    markLessonCompleted(id);
+    track("lesson_completed", { lesson_id: id, track_id: getTrackIdForLesson(id) });
   }, [id, hasContent, markLessonCompleted]);
 
   // При «Уменьшении движения» значок сразу в конечном виде.

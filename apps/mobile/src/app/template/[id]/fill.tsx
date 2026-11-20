@@ -18,6 +18,7 @@ import { CopyButton } from "@/components/CopyButton";
 import { HighlightedPrompt } from "@/components/templates/HighlightedPrompt";
 import { fillTemplate, getTemplateFields } from "@/data/templates";
 import { useTemplate } from "@/hooks/useTemplates";
+import { track } from "@/lib/analytics";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -121,7 +122,13 @@ export default function FillTemplateScreen() {
 
           {/* Кнопки внутри прокрутки — клавиатура их не закроет. */}
           <View style={styles.actions}>
-            <CopyButton text={filled} variant="primary" />
+            <CopyButton
+              text={filled}
+              variant="primary"
+              onCopied={() =>
+                track("template_copied", { template_id: template.id })
+              }
+            />
             <Button
               title={saved ? t("template.saved") : t("template.save")}
               variant="secondary"

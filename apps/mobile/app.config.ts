@@ -1,6 +1,6 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
 
-// Основные настройки — в app.json. Этот файл добавляет к ним вход через Google.
+// Основные настройки — в app.json. Этот файл добавляет к ним вход через Google и Sentry.
 
 // ---------- Google Client ID: вставьте сюда ----------
 // Это не секреты: они всё равно попадают в приложение. Client Secret сюда НЕ вставлять —
@@ -28,6 +28,19 @@ function googleIosUrlScheme(iosClientId: string): string {
   return GOOGLE_SCHEME_PREFIX + iosClientId.slice(0, -GOOGLE_ID_SUFFIX.length);
 }
 
+// ---------- Sentry: загрузка source maps ----------
+// Профиль EAS (development / preview / production). EAS задаёт EAS_BUILD_PROFILE при сборке;
+// при `expo start` его нет — значит, разработка.
+const APP_ENV = process.env.EAS_BUILD_PROFILE ?? "development";
+// Организация и проект Sentry — из переменных окружения EAS (не секреты, но и не в коде).
+// Source maps (чтобы в отчёте была понятная строка кода) загружаются только для preview и
+// production и только если в EAS есть секрет SENTRY_AUTH_TOKEN. Нет токена — сборка не падает.
+const SENTRY_UPLOAD =
+  APP_ENV !== "development" &&
+  Boolean(process.env.SENTRY_AUTH_TOKEN) &&
+  Boolean(process.env.SENTRY_ORG) &&
+  Boolean(process.env.SENTRY_PROJECT);
+
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: config.name ?? "AI Navigator",
@@ -38,9 +51,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "@react-native-google-signin/google-signin",
       { iosUrlScheme: googleIosUrlScheme(GOOGLE_IOS_CLIENT_ID) },
     ],
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        organization: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        // Токен читается из SENTRY_AUTH_TOKEN во время сборки — в конфиг его не пишем.
+        disableAutoUpload: !SENTRY_UPLOAD,
+      },
+    ],
   ],
   extra: {
     ...config.extra,
+    // Окружение для Sentry (lib/monitoring): development / preview / production.
+    appEnv: APP_ENV,
     // Приложение читает их через expo-constants (lib/auth/google.ts).
     googleAuth: {
       iosClientId: GOOGLE_IOS_CLIENT_ID,

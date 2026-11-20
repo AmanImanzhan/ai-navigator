@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { refreshAiUsage } from "@/hooks/useAiUsage";
 import { requestAiFill } from "@/lib/ai/client";
 import { toAiClientError, type AiClientError } from "@/lib/ai/errors";
+import { track } from "@/lib/analytics";
 import { useAiUsageStore } from "@/store/useAiUsageStore";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -42,6 +43,8 @@ export function useAiFill(templateId: string, fields: string[]) {
       const controller = new AbortController();
       controllerRef.current = controller;
       setState({ ...INITIAL, status: "loading" });
+      // Только факт запроса и шаблон — без описания ситуации.
+      track("ai_request_sent", { feature: "fill", template_id: templateId });
 
       try {
         const result = await requestAiFill(
@@ -69,6 +72,12 @@ export function useAiFill(templateId: string, fields: string[]) {
           return null;
         }
         setState({ ...INITIAL, status: "error", error });
+        if (error.code === "limit_reached") {
+          track("ai_limit_reached", {
+            feature: "fill",
+            premium: useAiUsageStore.getState().usage?.premium ?? false,
+          });
+        }
         if (userId) refreshAiUsage(userId);
         return null;
       }

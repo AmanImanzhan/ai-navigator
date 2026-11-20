@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { refreshAiUsage } from "@/hooks/useAiUsage";
 import { streamAiTry } from "@/lib/ai/client";
 import { toAiClientError, type AiClientError } from "@/lib/ai/errors";
+import { track } from "@/lib/analytics";
 import { useAiUsageStore } from "@/store/useAiUsageStore";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -41,6 +42,8 @@ export function useAiTry(lessonId: string) {
       const controller = new AbortController();
       controllerRef.current = controller;
       setState({ ...INITIAL, status: "streaming" });
+      // Только факт запроса и урок — без текста.
+      track("ai_request_sent", { feature: "try", lesson_id: lessonId });
 
       try {
         await streamAiTry(
@@ -77,6 +80,12 @@ export function useAiTry(lessonId: string) {
           return;
         }
         setState((current) => ({ ...current, status: "error", error }));
+        if (error.code === "limit_reached") {
+          track("ai_limit_reached", {
+            feature: "try",
+            premium: useAiUsageStore.getState().usage?.premium ?? false,
+          });
+        }
         // Сервер мог вернуть попытку (сбой ИИ) или сказать, что лимит исчерпан, — обновим остаток.
         if (userId) refreshAiUsage(userId);
       }

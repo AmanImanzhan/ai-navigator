@@ -240,7 +240,13 @@
     "reminderSubtitle": "Una notificación a la hora que elijas. Si ese día ya hiciste una lección, no te lo recordaremos.",
     "reminderTime": "Hora",
     "reminderBlocked": "Las notificaciones de AI Navigator están desactivadas en los Ajustes del iPhone, así que no recibirás recordatorios.",
-    "testReminder": "Recordatorio de prueba en 5 segundos"
+    "testReminder": "Recordatorio de prueba en 5 segundos",
+    "privacy": "Privacidad",
+    "telemetryTitle": "Ayudar a mejorar la app",
+    "telemetryText": "Estadísticas de uso anónimas (qué lecciones se abren) e informes de errores. Sin tus textos, correo ni nombre. Puedes desactivarlo cuando quieras.",
+    "testSentry": "Probar Sentry",
+    "testSentrySent": "Error de prueba enviado: revisa Issues en Sentry.",
+    "testSentryOff": "Sentry está desactivado: falta EXPO_PUBLIC_SENTRY_DSN o el interruptor está apagado."
   },
   "reminders": {
     "channelName": "Recordatorios",

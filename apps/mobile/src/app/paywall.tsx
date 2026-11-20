@@ -1,6 +1,6 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { SymbolView } from "expo-symbols";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
@@ -20,6 +20,7 @@ import { waitForServerPremium } from "@/hooks/useAiUsage";
 import { useAuth } from "@/hooks/useAuth";
 import { usePaywallOffer } from "@/hooks/usePaywallOffer";
 import { usePremium } from "@/hooks/usePremium";
+import { track } from "@/lib/analytics";
 import { purchasePlan, restorePurchases, type PaywallPlan } from "@/lib/purchases";
 import { openSitePage } from "@/lib/site";
 import { useAppStore } from "@/store/useAppStore";
@@ -46,6 +47,12 @@ export default function Paywall() {
   const [busy, setBusy] = useState(false);
   // После покупки: «Спасибо» и ожидание, пока сервер узнает о подписке.
   const [thanks, setThanks] = useState<"waiting" | "ready" | null>(null);
+  // Откуда открыли экран (limit — кончились запросы, settings — Настройки). Для статистики.
+  const { source } = useLocalSearchParams<{ source?: string }>();
+
+  useEffect(() => {
+    track("paywall_viewed", { source: source ?? "unknown" });
+  }, [source]);
 
   const plans = offer.status === "ready" ? offer.offer.plans : [];
   const selected =
@@ -64,10 +71,14 @@ export default function Paywall() {
 
   async function handleBuy() {
     if (!selected || busy) return;
+    const plan = selected.period;
     setBusy(true);
+    track("purchase_started", { plan });
     const result = await purchasePlan(selected);
     setBusy(false);
+    if (result.status === "cancelled") track("purchase_cancelled", { plan });
     if (result.status === "purchased") {
+      track("purchase_completed", { plan });
       setThanks("waiting");
       waitForServer();
       return;
@@ -80,6 +91,14 @@ export default function Paywall() {
     setBusy(true);
     const result = await restorePurchases();
     setBusy(false);
+    track("restore_purchases", {
+      result:
+        result.status === "restored"
+          ? result.premium
+            ? "restored"
+            : "nothing"
+          : "error",
+    });
     if (result.status === "restored" && result.premium) {
       setThanks("waiting");
       waitForServer();

@@ -9,6 +9,7 @@ import { showPurchaseMessage } from "@/components/premium/purchaseMessage";
 import { refreshAiUsage } from "@/hooks/useAiUsage";
 import { useAuth } from "@/hooks/useAuth";
 import { usePremium } from "@/hooks/usePremium";
+import { track } from "@/lib/analytics";
 import { formatDate } from "@/lib/date";
 import { openManageSubscriptions, restorePurchases } from "@/lib/purchases";
 import { useAppStore } from "@/store/useAppStore";
@@ -29,7 +30,7 @@ export function PremiumSettings() {
       <InfoCard
         label={t("premium.rowLabel")}
         value={t("premium.rowInactive")}
-        onPress={() => router.push("/paywall")}
+        onPress={() => router.push({ pathname: "/paywall", params: { source: "settings" } })}
       />
     );
   }
@@ -46,6 +47,14 @@ export function PremiumSettings() {
     setBusy(true);
     const result = await restorePurchases();
     setBusy(false);
+    track("restore_purchases", {
+      result:
+        result.status === "restored"
+          ? result.premium
+            ? "restored"
+            : "nothing"
+          : "error",
+    });
     if (result.status === "restored" && result.premium) {
       Alert.alert(t("premium.restoredTitle"), t("premium.restoredText"));
       if (user) refreshAiUsage(user.id);

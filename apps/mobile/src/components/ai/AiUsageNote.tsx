@@ -41,7 +41,7 @@ export function LimitReachedText({ resetAt }: { resetAt?: string }) {
         <Button
           title={t("premium.moreRequests")}
           variant="secondary"
-          onPress={() => router.push("/paywall")}
+          onPress={() => router.push({ pathname: "/paywall", params: { source: "limit" } })}
         />
       ) : null}
     </View>

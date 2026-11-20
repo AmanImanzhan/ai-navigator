@@ -8,6 +8,7 @@ import { ChoiceCard } from "@/components/ChoiceCard";
 import { ProgressHeader } from "@/components/ProgressHeader";
 import { DAILY_MINUTES, type DailyMinutes } from "@/data/onboarding";
 import { useReminderSwitch } from "@/hooks/useReminderSwitch";
+import { track } from "@/lib/analytics";
 import { useAppStore } from "@/store/useAppStore";
 import { theme } from "@/theme";
 
@@ -69,7 +70,13 @@ export default function OnboardingTime() {
         {/* Переход на /home делает _layout: после onboardingDone онбординг закрыт. */}
         <Button
           title={t("common.done")}
-          onPress={() => completeOnboarding(minutes)}
+          onPress={() => {
+            completeOnboarding(minutes);
+            track("onboarding_completed", {
+              language: useAppStore.getState().language,
+              minutes_per_day: minutes,
+            });
+          }}
         />
       </View>
     </SafeAreaView>

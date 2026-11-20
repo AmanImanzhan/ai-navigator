@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   KeyboardAvoidingView,
@@ -13,8 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@/components/Button";
 import { LessonCardView } from "@/components/lesson/LessonCardView";
 import { ProgressHeader } from "@/components/ProgressHeader";
-import { getLessonTool } from "@/data/lessons";
+import { getLessonTool, getTrackIdForLesson } from "@/data/lessons";
 import { useLesson } from "@/hooks/useLessons";
+import { track } from "@/lib/analytics";
 import { theme } from "@/theme";
 
 // Экран урока: по одной карточке за раз. Адрес /lesson/4 → id = "4".
@@ -27,6 +28,14 @@ export default function LessonScreen() {
   const [index, setIndex] = useState(0);
   // Ответил ли пользователь на вопрос текущей карточки quiz.
   const [quizAnswered, setQuizAnswered] = useState(false);
+
+  // Статистика: урок открыт (только id урока и направления).
+  const hasContent = Boolean(content);
+  useEffect(() => {
+    if (hasContent) {
+      track("lesson_started", { lesson_id: id, track_id: getTrackIdForLesson(id) });
+    }
+  }, [id, hasContent]);
 
   if (!content) {
     return (

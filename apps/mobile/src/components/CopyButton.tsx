@@ -9,6 +9,8 @@ type CopyButtonProps = {
   // Подпись кнопки; по умолчанию «Скопировать».
   title?: string;
   variant?: "primary" | "secondary";
+  // После копирования (например, для статистики). Необязательно.
+  onCopied?: () => void;
 };
 
 const COPIED_DURATION_MS = 2000;
@@ -18,6 +20,7 @@ export function CopyButton({
   text,
   title,
   variant = "secondary",
+  onCopied,
 }: CopyButtonProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -31,6 +34,7 @@ export function CopyButton({
   async function handleCopy() {
     await Clipboard.setStringAsync(text);
     setCopied(true);
+    onCopied?.();
   }
 
   return (

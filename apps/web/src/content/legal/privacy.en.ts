@@ -61,19 +61,26 @@ export const PRIVACY_EN: LegalDocument = {
       ],
     },
     {
-      heading: "Planned features",
+      heading: "Error reports and usage statistics",
       paragraphs: [
-        "We'll update this policy before launching:",
+        "To find bugs and understand which parts of the app are useful, the app sends error reports (Sentry) and anonymous usage statistics (PostHog). Both services store this data in the EU (Frankfurt, Germany).",
       ],
       items: [
-        "Analytics: [TODO: currently none; describe the tool if added].",
+        "Error reports: what went wrong and on which screen, the device model, system and app version, and — if you're signed in — the random identifier of your account.",
+        "Usage statistics: events such as “lesson opened”, “lesson completed”, “template copied”, “AI assistant used”, “subscription screen opened”, with lesson or template numbers, the app language and the subscription plan. Before you sign in, events are linked to a random identifier on your device; after you sign in — to the random identifier of your account.",
+      ],
+      afterItems: [
+        "We never send: the texts you write, your requests to the AI assistant or its answers, your saved prompts, name, email, passwords or sign-in tokens. We don't record the screen, don't use the advertising identifier (IDFA), don't track you across other apps and websites, and don't determine your location from your IP address.",
+        "You can turn this off at any time: Profile → Settings → Privacy → “Help improve the app”. After that, the app sends neither statistics nor error reports.",
+        "The website has no analytics and no advertising cookies. Website errors are reported to Sentry without personal data.",
+        "Error reports and statistics are kept for up to [TODO: number] days.",
       ],
     },
     {
       heading: "Why we use your data",
       items: [
         "To provide the app and keep your progress across devices (performance of our agreement with you).",
-        "To keep the service secure and fix errors (our legitimate interest).",
+        "To keep the service secure, find and fix errors and understand which features are useful (our legitimate interest; you can object by turning off “Help improve the app”).",
         "To answer your support requests.",
       ],
       afterItems: [
@@ -88,6 +95,8 @@ export const PRIVACY_EN: LegalDocument = {
         "Vercel — hosting of this website.",
         "Anthropic — generates the AI assistant's answers (servers in the USA).",
         "RevenueCat — checks the App Store subscription (servers in the USA).",
+        "Sentry — error reports (Functional Software, Inc.; data stored in the EU, Frankfurt).",
+        "PostHog — anonymous usage statistics (PostHog, Inc.; EU Cloud, Frankfurt).",
       ],
       afterItems: ["[TODO: check the list of service providers before launch]"],
     },

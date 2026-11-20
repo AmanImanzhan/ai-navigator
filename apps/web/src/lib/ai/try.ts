@@ -15,6 +15,7 @@ import {
 } from "@/lib/ai/config";
 import { ReviewSplitter, type SplitPart } from "@/lib/ai/splitter";
 import { aiErrorResponse } from "@/lib/api/responses";
+import { reportAiError } from "@/lib/sentry/report";
 
 // «Попробуй сам»: ответ ИИ потоком в формате NDJSON (по одному JSON-событию на строку):
 //   meta → answer… → review… → done   (или error вместо done при сбое посреди ответа).
@@ -91,6 +92,7 @@ export async function runTryStream({
       console.error(
         `ai try stream error: ${error instanceof Error ? error.name : "unknown"}`,
       );
+      reportAiError("ai try", error);
     },
   });
 

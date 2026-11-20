@@ -11,6 +11,7 @@ import type {
   AuthProviderId,
   SignInResult,
 } from "@/lib/auth/types";
+import { track } from "@/lib/analytics";
 import { resetReminders } from "@/lib/reminders";
 import { supabase } from "@/lib/supabase";
 import { forgetMergedAccount, syncBeforeSignOut } from "@/lib/sync";
@@ -41,7 +42,10 @@ export function getAvailableProviders(): Promise<AuthProviderId[]> {
 
 export async function signIn(provider: AuthProviderId): Promise<SignInResult> {
   try {
-    return await AUTH_PROVIDERS[provider].signIn();
+    const result = await AUTH_PROVIDERS[provider].signIn();
+    // Статистика: только способ входа, без почты и имени.
+    if (result.status === "signedIn") track("sign_in", { method: provider });
+    return result;
   } catch (error) {
     return { status: "error", error };
   }
@@ -144,6 +148,7 @@ export async function deleteAccount(): Promise<DeleteAccountResult> {
       AUTH_PROVIDERS[id].afterAccountDeletion?.().catch(() => {}),
     ),
   );
+  track("account_deleted", {});
   await clearPhoneAfterDeletion();
   return { status: "deleted" };
 }

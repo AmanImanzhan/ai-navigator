@@ -9,6 +9,8 @@ import { useContentSync } from "@/hooks/useContentSync";
 import { usePurchasesSetup } from "@/hooks/usePremium";
 import { useReminders } from "@/hooks/useReminders";
 import { useSync } from "@/hooks/useSync";
+import { useTelemetrySetup } from "@/hooks/useTelemetry";
+import { wrapRoot } from "@/lib/monitoring";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
 import { listenToAuthChanges } from "@/store/useAuthStore";
 import { useContentStore } from "@/store/useContentStore";
@@ -19,7 +21,7 @@ SplashScreen.preventAutoHideAsync();
 // Заставка плавно растворяется (iOS): под ней уже первый экран того же кремового цвета.
 SplashScreen.setOptions({ duration: 300, fade: true });
 
-export default function RootLayout() {
+function RootLayout() {
   const appHydrated = useHasHydrated();
   const contentHydrated = useContentStore((state) => state.hydrated);
   const hydrated = appHydrated && contentHydrated;
@@ -36,6 +38,9 @@ export default function RootLayout() {
 
   // Подписка (RevenueCat): покупатель = вошедший аккаунт Supabase.
   usePurchasesSetup();
+
+  // Отчёты об ошибках (Sentry) и анонимная статистика (PostHog) — если человек не против.
+  useTelemetrySetup();
 
   // Напоминания: расписание и открытие Главной по нажатию.
   useReminders(hydrated);
@@ -105,3 +110,6 @@ export default function RootLayout() {
     </Stack>
   );
 }
+
+// Sentry ловит ошибки отрисовки всего приложения (ничего не делает, если Sentry выключен).
+export default wrapRoot(RootLayout);

@@ -7,6 +7,7 @@ import {
   FILL_TIMEOUT_MS,
   MAX_OUTPUT_TOKENS_FILL,
 } from "@/lib/ai/config";
+import { reportAiError } from "@/lib/sentry/report";
 
 // «Заполнить с помощником»: ИИ возвращает объект строго по схеме — приложение просто
 // подставит значения в поля. Имена полей в схеме — список из шаблона (enum): выдумать
@@ -77,6 +78,7 @@ export async function runFill({
     console.error(
       `ai fill error: ${error instanceof Error ? error.name : "unknown"}`,
     );
+    reportAiError("ai fill", error);
     return { ok: false, error: "ai_unavailable" };
   }
 }

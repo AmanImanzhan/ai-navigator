@@ -10,6 +10,7 @@ import { ChoiceCard } from "@/components/ChoiceCard";
 import { InfoCard } from "@/components/InfoCard";
 import { PremiumSettings } from "@/components/settings/PremiumSettings";
 import { ReminderSettings } from "@/components/settings/ReminderSettings";
+import { TelemetrySettings } from "@/components/settings/TelemetrySettings";
 import { DAILY_MINUTES, LANGUAGES } from "@/data/onboarding";
 import { useAuth, useAvailableProviders } from "@/hooks/useAuth";
 import { getDisplayName, isNetworkError } from "@/lib/auth";
@@ -112,6 +113,11 @@ export default function Settings() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t("settings.reminders")}</Text>
           <ReminderSettings />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t("settings.privacy")}</Text>
+          <TelemetrySettings />
         </View>
 
         {/* Подписка: только на iPhone с настроенным RevenueCat. */}

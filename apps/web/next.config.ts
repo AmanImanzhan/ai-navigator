@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs/config";
 import type { NextConfig } from "next";
 
 // Корень монорепо Next.js находит сам — по package-lock.json в корне репозитория.
@@ -18,4 +19,19 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Sentry: загрузка source maps (понятные строки кода в отчётах об ошибках) — только если на Vercel
+// заданы SENTRY_AUTH_TOKEN, SENTRY_ORG и SENTRY_PROJECT. Без них сборка проходит как обычно.
+const uploadSourceMaps = Boolean(
+  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_ORG && process.env.SENTRY_PROJECT,
+);
+
+export default withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  // Не отправлять Sentry статистику о самой сборке.
+  telemetry: false,
+  sourcemaps: { disable: !uploadSourceMaps },
+  widenClientFileUpload: true,
+});
