@@ -86,6 +86,9 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   Body 17, Callout 15, Label 13 medium, Caption 13
 - Spacing: 4 / 8 / 12 / 16 / 20 / 24 / 32. Radius: 12 / 14 / 16 / full
 - Never hardcode colors or sizes in screens — use the theme.
+- App icon, splash, site icons and OG images: sources in apps/mobile/assets/brand (never edit generated
+  files by hand) → `npm run brand:assets` (scripts/generate-brand-assets.mts, sharp). App is light-only
+  (userInterfaceStyle light); splash and root background = bg #F8F5F0.
 
 ## Rules
 - TypeScript strict, functional components, no `any`

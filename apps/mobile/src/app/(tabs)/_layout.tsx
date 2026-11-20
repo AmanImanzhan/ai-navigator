@@ -26,6 +26,8 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        // Фон под вкладками — как у приложения (без белого при переключении).
+        sceneStyle: { backgroundColor: theme.colors.bg },
         tabBarActiveTintColor: theme.colors.accent,
         tabBarInactiveTintColor: theme.colors.textSecondary,
         tabBarStyle: {

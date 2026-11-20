@@ -40,6 +40,15 @@ export function pageMetadata(
       siteName: "AI Navigator",
       locale: lang,
       type: "website",
+      // Картинка для ссылок: робот, название и слоган на языке страницы
+      // (public/og, создаёт npm run brand:assets из корня).
+      images: [
+        { url: `/og/og-${lang}.png`, width: 1200, height: 630, alt: "AI Navigator" },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: [`/og/og-${lang}.png`],
     },
   };
 }

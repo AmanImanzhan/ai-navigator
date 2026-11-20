@@ -12,9 +12,12 @@ import { useSync } from "@/hooks/useSync";
 import { useAppStore, useHasHydrated } from "@/store/useAppStore";
 import { listenToAuthChanges } from "@/store/useAuthStore";
 import { useContentStore } from "@/store/useContentStore";
+import { theme } from "@/theme";
 
 // Не убираем заставку сами — уберём, когда загрузятся сохранённые данные.
 SplashScreen.preventAutoHideAsync();
+// Заставка плавно растворяется (iOS): под ней уже первый экран того же кремового цвета.
+SplashScreen.setOptions({ duration: 300, fade: true });
 
 export default function RootLayout() {
   const appHydrated = useHasHydrated();
@@ -51,7 +54,13 @@ export default function RootLayout() {
   // Если guard ложный — отправляем на "/", а распределитель в index.tsx решает, куда дальше.
   // Сам "/" не защищён, поэтому он есть всегда.
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        // Фон под экранами — как у приложения: при переходах не мелькает белое.
+        contentStyle: { backgroundColor: theme.colors.bg },
+      }}
+    >
       <Stack.Screen name="index" />
       {/* Вход: «Сохраните прогресс» после первого урока и «У меня уже есть аккаунт».
           Вне Protected — доступен и до онбординга, и после. */}

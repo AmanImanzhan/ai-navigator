@@ -32,7 +32,8 @@
       Marketing URL — главная.
 - [ ] **Значок App Store** на главной вместо «Скоро в App Store» — после выхода приложения,
       по правилам Apple Marketing Guidelines.
-- [ ] **Иконка сайта:** сейчас заглушка `apps/web/src/app/icon.svg`.
+- [x] **Иконка сайта:** `src/app/icon.png`, `favicon.ico`, `apple-icon.png` и картинки для ссылок
+      `public/og/og-{en,ru,es}.png` — из рисунка робота (`npm run brand:assets`).
 - [ ] **Свой домен** (по желанию) — затем `NEXT_PUBLIC_SITE_URL` на Vercel.
 - [ ] **Тариф Vercel.** Hobby разрешён только для некоммерческих проектов. Перед запуском платной
       подписки перейти на Vercel Pro (или на другой хостинг).
@@ -137,9 +138,14 @@
       свой домен — указать его и пересобрать (переменные `EXPO_PUBLIC_` вшиваются при сборке).
       `EXPO_PUBLIC_REVENUECAT_IOS_KEY` — публичный iOS-ключ RevenueCat (`appl_…`), его можно
       вшивать в приложение. Secret key Supabase и секреты RevenueCat в EAS не добавлять никогда.
-- [ ] **Заставка:** сейчас синяя `#208AEF` из шаблона (`app.json` → плагин `expo-splash-screen`) —
-      заменить на цвета приложения и свою картинку.
-- [ ] **Иконка приложения:** сейчас иконка из шаблона (`assets/images/icon.png`, `assets/expo.icon`).
+- [x] **Заставка:** фон `#F8F5F0` (как у первого экрана), по центру иконка 160 pt, плавное исчезновение
+      (`app.json` → `expo-splash-screen`, `SplashScreen.setOptions` в `_layout.tsx`). Окончательно проверить
+      на release-сборке (TestFlight) — в development-сборке заставка может отличаться.
+- [x] **Иконка приложения:** робот на оранжевом фоне. Исходники — `apps/mobile/assets/brand`
+      (не менять руками), размеры генерирует `npm run brand:assets`. iOS — `icon.png` 1024×1024 без
+      прозрачности; Android — адаптивная (фон, робот, одноцветная). Иконка шаблона (`assets/expo.icon`) удалена.
+- [ ] **Icon Composer (по желанию):** для «стеклянного» вида iOS 26 и своих вариантов для тёмной и
+      тонированной темы — собрать `.icon` в Icon Composer из слоёв (фон + робот) и указать в `ios.icon`.
 
 ## Данные и безопасность
 
