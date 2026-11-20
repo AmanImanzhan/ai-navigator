@@ -1,0 +1,60 @@
+# Проверки на каждый push и pull request: типы, линтер, тесты, сборка сайта.
+# Никаких настоящих ключей: Supabase, Anthropic, RevenueCat, Sentry и PostHog в тестах подменены,
+# а сборке сайта ключи не нужны (ниже — заведомо ненастоящие заглушки).
+# EAS-сборок приложения здесь нет — они запускаются вручную (см. docs/release-checklist.md).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Новый push в ту же ветку отменяет ещё идущую проверку старого.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+  EXPO_NO_TELEMETRY: "1"
+
+jobs:
+  checks:
+    name: Typecheck, lint, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck (shared, web, mobile)
+        run: npm run typecheck
+
+      - name: Lint (web, mobile)
+        run: npm run lint
+
+      - name: Tests (shared, web, mobile)
+        run: npm test
+
+      - name: Build web (next build)
+        run: npm run build --workspace web
+        env:
+          # Ненастоящие значения: сборка их не использует, но так видно, что настоящие не нужны.
+          SUPABASE_URL: http://localhost:54321
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_placeholder
+          SUPABASE_SECRET_KEY: sb_secret_ci_placeholder
+          ANTHROPIC_API_KEY: sk-ant-ci-placeholder
+          REVENUECAT_WEBHOOK_SECRET: ci-placeholder
+          # Пусто — Sentry выключен, source maps не загружаются.
+          SENTRY_DSN: ""
+          NEXT_PUBLIC_SENTRY_DSN: ""
+          SENTRY_AUTH_TOKEN: ""

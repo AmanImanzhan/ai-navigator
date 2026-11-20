@@ -14,7 +14,17 @@ import { isTelemetryAllowed } from "@/store/useTelemetryStore";
 //   слежки между приложениями;
 // - нет ключа или человек выключил «Помогать улучшать приложение» — ничего не отправляем.
 
-const KEY = process.env.EXPO_PUBLIC_POSTHOG_KEY?.trim() ?? "";
+// Публичный ключ проекта PostHog всегда начинается с phc_. Другое значение (например,
+// личный ключ phx_ — он секретный и в приложение попадать не должен) — статистику не включаем.
+export function isPostHogKey(value: string): boolean {
+  return /^phc_\S+$/.test(value);
+}
+
+const RAW_KEY = process.env.EXPO_PUBLIC_POSTHOG_KEY?.trim() ?? "";
+const KEY = isPostHogKey(RAW_KEY) ? RAW_KEY : "";
+if (RAW_KEY && !KEY && __DEV__) {
+  console.warn("EXPO_PUBLIC_POSTHOG_KEY должен начинаться с phc_ — статистика выключена.");
+}
 const HOST = "https://eu.i.posthog.com";
 
 // Все события и их свойства. Новое событие — сначала сюда.

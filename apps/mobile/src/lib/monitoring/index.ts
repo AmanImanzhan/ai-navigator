@@ -12,7 +12,19 @@ import { isTelemetryAllowed } from "@/store/useTelemetryStore";
 //   тексты человека и ИИ; пользователь — только id Supabase;
 // - нет DSN или человек выключил «Помогать улучшать приложение» — ничего не отправляем.
 
-const DSN = process.env.EXPO_PUBLIC_SENTRY_DSN?.trim() ?? "";
+// DSN проекта: https://<ключ>@<адрес Sentry>/<номер проекта>. Опечатка или не то значение —
+// Sentry не включаем (иначе он молча ничего не отправит, а «Тест Sentry» скажет «отправлено»).
+const DSN_PATTERN = /^https?:\/\/[0-9a-z]+@[^\s/@]+\/\d+$/i;
+
+export function isSentryDsn(value: string): boolean {
+  return DSN_PATTERN.test(value);
+}
+
+const RAW_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN?.trim() ?? "";
+const DSN = isSentryDsn(RAW_DSN) ? RAW_DSN : "";
+if (RAW_DSN && !DSN && __DEV__) {
+  console.warn("EXPO_PUBLIC_SENTRY_DSN не похож на DSN Sentry — отчёты об ошибках выключены.");
+}
 
 // development / preview / production — профиль EAS, с которым собрано приложение
 // (app.config.ts → extra.appEnv). При запуске через `expo start` — development.
@@ -36,7 +48,7 @@ function stripQuery(url: unknown): unknown {
 }
 
 // Всё, что может содержать данные человека, из отчёта убираем.
-function scrubEvent(event: ErrorEvent): ErrorEvent | null {
+export function scrubEvent(event: ErrorEvent): ErrorEvent | null {
   if (!isTelemetryAllowed()) return null;
   if (event.request) {
     delete event.request.data;
@@ -53,7 +65,7 @@ function scrubEvent(event: ErrorEvent): ErrorEvent | null {
   return event;
 }
 
-function scrubBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
+export function scrubBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
   // Логи консоли могут содержать что угодно — не отправляем.
   if (breadcrumb.category === "console") return null;
   // Сетевые запросы: только метод, адрес без параметров и код ответа. Без тел и заголовков.

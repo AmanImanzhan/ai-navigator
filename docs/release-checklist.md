@@ -2,6 +2,15 @@
 
 Что сделать до публикации в App Store. Отмечайте `[x]`, когда готово.
 
+## Проверки (CI)
+
+- [ ] **CI зелёный** на коммите, из которого собирается релиз: GitHub → вкладка **Actions** →
+  workflow **CI** → последний запуск на `main` с зелёной галочкой (typecheck, lint, тесты,
+  `next build`). Красный — сначала починить, потом `eas build` и деплой.
+- [ ] **Перед EAS-сборкой локально:** `npm test` в корне — все тесты проходят.
+- [ ] **Защита ветки `main`** (по желанию, GitHub → Settings → Branches → Add rule): «Require status
+  checks to pass» → `Typecheck, lint, test, build`. Тогда в `main` не попадёт код с красным CI.
+
 ## Аккаунты и вход
 
 - [ ] **Google Auth Platform → Branding:** Application home page — `https://<проект>.vercel.app/`,

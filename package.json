@@ -11,7 +11,10 @@
     "db:types": "supabase gen types typescript --remote --schema public > packages/shared/src/database.types.ts",
     "seed:content": "tsx --tsconfig scripts/tsconfig.json scripts/seed-content.ts",
     "ai:smoke": "tsx --tsconfig scripts/tsconfig.json scripts/ai-smoke.ts",
-    "brand:assets": "tsx --tsconfig scripts/tsconfig.json scripts/generate-brand-assets.mts"
+    "brand:assets": "tsx --tsconfig scripts/tsconfig.json scripts/generate-brand-assets.mts",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
   },
   "devDependencies": {
     "@supabase/supabase-js": "^2.119.0",

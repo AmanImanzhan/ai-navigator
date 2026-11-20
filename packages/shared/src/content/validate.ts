@@ -77,10 +77,16 @@ class Issues {
   }
 }
 
+// Приложение открывает ссылку во встроенном браузере — он понимает только http(s).
+const WEB_URL = /^https?:\/\//;
+
 function checkToolLink(issues: Issues, value: unknown, path: string[]) {
   issues.object(path, value, (tool) => {
     issues.required(path, tool, "name");
     issues.required(path, tool, "url");
+    if (isString(tool.url) && !WEB_URL.test(tool.url)) {
+      issues.add(path, "ссылка должна начинаться с https://");
+    }
   });
 }
 
@@ -210,7 +216,12 @@ export function isLessonContent(value: unknown): value is LessonContent {
 // ---------- Инструменты (в карточках и шаблонах) ----------
 
 export function isToolLink(value: unknown): value is ToolLink {
-  return isRecord(value) && isString(value.name) && isString(value.url);
+  return (
+    isRecord(value) &&
+    isString(value.name) &&
+    isString(value.url) &&
+    WEB_URL.test(value.url)
+  );
 }
 
 // Непустой список инструментов.
@@ -235,12 +246,9 @@ export function templateTextIssues(text: TemplateTextInput): string[] {
   for (const key of ["title", "purpose", "prompt", "example"]) {
     issues.required([], record, key);
   }
-  issues.list([], record, "tools", (item, itemPath) => {
-    checkToolLink(issues, item, itemPath);
-    if (isToolLink(item) && !/^https?:\/\//.test(item.url)) {
-      issues.add(itemPath, "ссылка должна начинаться с https://");
-    }
-  });
+  issues.list([], record, "tools", (item, itemPath) =>
+    checkToolLink(issues, item, itemPath),
+  );
   if (isString(text.prompt) && getTemplateFields(text.prompt).length === 0) {
     issues.add([], "в запросе нет ни одного поля в [квадратных скобках]");
   }

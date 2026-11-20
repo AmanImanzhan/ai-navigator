@@ -11,12 +11,29 @@ After changes, explain what each new file/function does. Keep tasks small.
 - Monorepo with npm workspaces:
   - apps/mobile — Expo SDK 58 + React Native + TypeScript + Expo Router
   - apps/web — Next.js 16 (App Router, TypeScript): public site (en/ru/es) + API for the app, deployed on Vercel
-  - packages/shared — shared types and theme tokens (later)
+  - packages/shared — shared types, AI protocol, subscription rules, content validation
 - Backend (later): Supabase (Postgres, Auth with Apple/Google), Next.js API, Vercel AI SDK
 - Payments: RevenueCat (iOS subscription, see below). Languages: English (default), Russian, Spanish
 
 ## Expo rules
 Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on memory.
+
+## Tests and CI
+- Run from the root: `npm test`, `npm run typecheck`, `npm run lint` (all workspaces); or inside one
+  workspace (`npm test` in apps/web, apps/mobile, packages/shared).
+- Rule: new logic comes with a test (limits, payments, sync, privacy, validation, dates). A bug fix
+  starts with a test that reproduces it. No full-screen snapshot tests. Tests never use the network
+  or real keys.
+- packages/shared and apps/web: Vitest, files `*.test.ts` next to the code.
+- apps/web: Supabase is replaced by PGlite with our real migrations (src/test/db.ts,
+  src/test/supabase.ts — rpc/from run as `authenticated`/`service_role`, so grants and RLS apply);
+  Claude by `MockLanguageModelV4` from `ai/test` (src/test/ai.ts); Sentry via `vi.mock`.
+  New migration → it must apply in PGlite (tests fail otherwise).
+- apps/mobile: Jest + jest-expo + @testing-library/react-native (v14: `render`/`fireEvent` are
+  async), files `src/**/*.test.ts(x)`, never inside src/app (routes). Tests run in the
+  America/Los_Angeles time zone (jest.config.js) to catch local-day vs UTC bugs.
+- CI: .github/workflows/ci.yml on every push and PR — `npm ci`, typecheck, lint, test, `next build`
+  with placeholder env. No EAS builds and no real secrets in CI.
 
 ## Web rules (apps/web)
 - Check current Next.js docs (nextjs.org/docs), don't rely on memory. Run from apps/web:
