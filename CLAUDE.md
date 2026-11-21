@@ -18,6 +18,20 @@ After changes, explain what each new file/function does. Keep tasks small.
 ## Expo rules
 Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on memory.
 
+## Builds (EAS, TestFlight)
+- apps/mobile/.env is local only (gitignored, not uploaded to EAS). EAS builds take every
+  EXPO_PUBLIC_* from EAS environment variables (preview / production) — a new variable must be
+  added there too (`npx eas-cli@latest env:set …`), see docs/release-checklist.md → TestFlight.
+- Version in app.json (1.0.0); build numbers are remote (eas.json appVersionSource + autoIncrement).
+  `submit.production.ios.ascAppId` in eas.json = Apple ID of the app in App Store Connect.
+- Privacy Manifest: `ios.privacyManifests` in app.json. New native library → copy the reasons
+  from its ios/PrivacyInfo.xcprivacy there.
+- Sentry org is in the EU: SENTRY_URL=https://de.sentry.io/ must be an EAS variable next to
+  SENTRY_AUTH_TOKEN (sentry-cli 3 takes the URL from the same source as the token).
+- Build environment (development/preview/production) → `APP_ENV` (src/lib/appEnv.ts): Sentry
+  `environment` and PostHog super property `environment`.
+- iOS system dialogs language: `locales` (languages/en|ru|es.json).
+
 ## Tests and CI
 - Run from the root: `npm test`, `npm run typecheck`, `npm run lint` (all workspaces); or inside one
   workspace (`npm test` in apps/web, apps/mobile, packages/shared).

@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/react-native";
 import type { Breadcrumb, ErrorEvent } from "@sentry/react-native";
-import Constants from "expo-constants";
 
+import { APP_ENV } from "@/lib/appEnv";
 import { isTelemetryAllowed } from "@/store/useTelemetryStore";
 
 // Отчёты об ошибках (Sentry). Единственное место, где приложение настраивает Sentry.
@@ -26,16 +26,6 @@ if (RAW_DSN && !DSN && __DEV__) {
   console.warn("EXPO_PUBLIC_SENTRY_DSN не похож на DSN Sentry — отчёты об ошибках выключены.");
 }
 
-// development / preview / production — профиль EAS, с которым собрано приложение
-// (app.config.ts → extra.appEnv). При запуске через `expo start` — development.
-const extra: unknown = Constants.expoConfig?.extra;
-const APP_ENV =
-  typeof extra === "object" &&
-  extra !== null &&
-  "appEnv" in extra &&
-  typeof extra.appEnv === "string"
-    ? extra.appEnv
-    : "development";
 
 // Навигация Expo Router: в отчёте видно, на каком экране случилась ошибка.
 export const navigationIntegration = Sentry.reactNavigationIntegration();

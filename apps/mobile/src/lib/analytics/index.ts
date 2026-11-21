@@ -1,5 +1,6 @@
 import PostHog from "posthog-react-native";
 
+import { APP_ENV } from "@/lib/appEnv";
 import { isTelemetryAllowed } from "@/store/useTelemetryStore";
 
 // Анонимная статистика использования (PostHog, серверы в ЕС).
@@ -63,7 +64,14 @@ function getClient(): PostHog | null {
     preloadFeatureFlags: false,
     disableSurveys: true,
   });
+  registerEnvironment(client);
   return client;
+}
+
+// Каждое событие помечаем окружением (production / preview / development), чтобы в PostHog
+// отделять настоящие события от тестовых. PostHog.reset() эту пометку стирает — ставим снова.
+function registerEnvironment(posthog: PostHog): void {
+  void posthog.register({ environment: APP_ENV });
 }
 
 export function track<E extends keyof AnalyticsEvents>(
@@ -85,9 +93,11 @@ export function identify(userId: string): void {
 
 // После выхода: новый анонимный id, чтобы следующие события не попали в чужой профиль.
 export function reset(): void {
-  client?.reset();
+  if (!client) return;
+  client.reset();
+  registerEnvironment(client);
   // reset() в PostHog снимает и отказ от сбора — возвращаем его, если человек против.
-  if (!isTelemetryAllowed()) client?.optOut();
+  if (!isTelemetryAllowed()) client.optOut();
 }
 
 // Переключатель «Помогать улучшать приложение».

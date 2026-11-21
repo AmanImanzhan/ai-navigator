@@ -11,6 +11,35 @@
 - [ ] **Защита ветки `main`** (по желанию, GitHub → Settings → Branches → Add rule): «Require status
   checks to pass» → `Typecheck, lint, test, build`. Тогда в `main` не попадёт код с красным CI.
 
+## TestFlight (Задача 35)
+
+Подготовлено в коде: версия 1.0.0, номер сборки ведёт EAS (`appVersionSource: remote`,
+`autoIncrement`), `ITSAppUsesNonExemptEncryption = false` (вопрос об экспорте шифрования не
+появится), Privacy Manifest (`ios.privacyManifests` в app.json — причины из манифестов библиотек),
+языки en/ru/es для системных окон (`locales` → `languages/*.json`), dev-кнопки только в `__DEV__`,
+в production-профиле нет dev-меню (`developmentClient` только у development). `.env` в сборку не
+попадает (в `.gitignore`; проверено `eas build:inspect`) — ключи берутся из переменных EAS.
+
+- [ ] **Переменные EAS** (из `apps/mobile`, окружения preview и production) — значения из
+      `apps/mobile/.env`; `SENTRY_AUTH_TOKEN` — visibility **secret**, вводить в терминале,
+      не в чат и не в git. Проверка: `npx eas-cli@latest env:list --environment production`.
+      `EXPO_PUBLIC_API_URL` — адрес Vercel по https (не адрес компьютера в сети).
+- [ ] **Приложение создано в App Store Connect** (Мои приложения → «+» → Новое приложение,
+      bundle id `com.amanimanzhan.ainavigator`, SKU любой). Apple ID приложения (число из
+      «Информация о приложении») вписан в `apps/mobile/eas.json` → `submit.production.ios.ascAppId`
+      вместо `REPLACE_WITH_APPLE_ID`.
+- [ ] **Сборка:** `npx eas-cli@latest build --profile production --platform ios` → в логе шага
+      «Bundle React Native code and images» — загрузка source maps в Sentry без ошибок.
+- [ ] **Отправка:** `npx eas-cli@latest submit --platform ios --latest` → через 5–30 минут сборка в
+      App Store Connect → TestFlight (статус «Обработка» → «Готово к тестированию»).
+- [ ] **TestFlight → Внутреннее тестирование:** группа с собой (и командой) как тестировщиками.
+- [ ] **RevenueCat → Integrations → Webhooks:** события для Sandbox **и** Production (в TestFlight
+      все покупки — Sandbox; сервер принимает оба, `environment` сохраняется в `subscriptions`).
+- [ ] **Письмо от Apple после загрузки** (ITMS-91053 и т.п. про Privacy Manifest) — если пришло,
+      добавить указанные причины в `ios.privacyManifests` и пересобрать.
+- [ ] **Проверка на iPhone по списку** из отчёта Задачи 35: вход Apple и Google, уроки и синхронизация,
+      ИИ (лимит 3), покупка в Sandbox без списания, отмена, Sentry и PostHog с `production`.
+
 ## Аккаунты и вход
 
 - [ ] **Google Auth Platform → Branding:** Application home page — `https://<проект>.vercel.app/`,
@@ -135,18 +164,9 @@
 
 ## Сборка и окружение
 
-- [ ] **EAS environment variables** для `preview` и `production`
-      (из `apps/mobile`):
-      ```bash
-      npx eas-cli@latest env:set --name EXPO_PUBLIC_SUPABASE_URL --value "https://<ref>.supabase.co" --environment preview --environment production --visibility plaintext
-      npx eas-cli@latest env:set --name EXPO_PUBLIC_SUPABASE_KEY --value "sb_publishable_…" --environment preview --environment production --visibility sensitive
-      npx eas-cli@latest env:set --name EXPO_PUBLIC_API_URL --value "https://ai-navigator-omega-dusky.vercel.app" --environment preview --environment production --visibility plaintext
-      npx eas-cli@latest env:set --name EXPO_PUBLIC_REVENUECAT_IOS_KEY --value "appl_…" --environment preview --environment production --visibility plaintext
-      ```
-      `EXPO_PUBLIC_API_URL` — адрес сайта с API ИИ-помощника, без `/` в конце. Если подключите
-      свой домен — указать его и пересобрать (переменные `EXPO_PUBLIC_` вшиваются при сборке).
-      `EXPO_PUBLIC_REVENUECAT_IOS_KEY` — публичный iOS-ключ RevenueCat (`appl_…`), его можно
-      вшивать в приложение. Secret key Supabase и секреты RevenueCat в EAS не добавлять никогда.
+- [ ] **EAS environment variables** — все команды в разделе «TestFlight» (и в отчёте Задачи 35).
+      Secret key Supabase и секреты RevenueCat в EAS не добавлять никогда. Если подключите свой
+      домен — поменять `EXPO_PUBLIC_API_URL` и пересобрать (`EXPO_PUBLIC_` вшиваются при сборке).
 - [x] **Заставка:** фон `#F8F5F0` (как у первого экрана), по центру иконка 160 pt, плавное исчезновение
       (`app.json` → `expo-splash-screen`, `SplashScreen.setOptions` в `_layout.tsx`). Окончательно проверить
       на release-сборке (TestFlight) — в development-сборке заставка может отличаться.
@@ -164,22 +184,15 @@
       «Prevent Storing of IP Addresses». Срок хранения совпадает с текстом в `/privacy`.
 - [ ] **PostHog: проект в EU Cloud** (`eu.posthog.com`). Project settings: Autocapture — off,
       Session replay — off, Web analytics — off, «Discard client IP data» — on.
-- [ ] **EAS environment variables** (из `apps/mobile`, preview и production):
-      ```bash
-      npx eas-cli@latest env:set --name EXPO_PUBLIC_SENTRY_DSN --value "https://…ingest.de.sentry.io/…" --environment preview --environment production --visibility plaintext
-      npx eas-cli@latest env:set --name EXPO_PUBLIC_POSTHOG_KEY --value "phc_…" --environment preview --environment production --visibility plaintext
-      npx eas-cli@latest env:set --name SENTRY_ORG --value "<slug организации>" --environment preview --environment production --visibility plaintext
-      npx eas-cli@latest env:set --name SENTRY_PROJECT --value "<slug проекта приложения>" --environment preview --environment production --visibility plaintext
-      ```
-- [ ] **Source maps приложения (Задача 35):** секрет `SENTRY_AUTH_TOKEN` (Sentry → Settings →
-      Auth Tokens → Organization token) в EAS только для preview и production, visibility **secret**:
-      `npx eas-cli@latest env:set --name SENTRY_AUTH_TOKEN --value "sntrys_…" --environment preview --environment production --visibility secret`.
-      Для development не нужен (`app.config.ts` выключает загрузку). Без токена сборка не падает,
-      но в отчётах будут непонятные строки кода. В git и в чат токен не попадает.
+- [ ] **EAS environment variables и source maps приложения** — см. раздел «TestFlight» выше
+      (все `EXPO_PUBLIC_*`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_URL` и секрет `SENTRY_AUTH_TOKEN`).
+      Организация в EU, поэтому `SENTRY_URL=https://de.sentry.io/` обязателен: sentry-cli берёт адрес
+      из того же места, что и токен (переменные EAS), иначе загрузка уходит на sentry.io.
 - [ ] **Vercel → Environment Variables (Production):** `SENTRY_DSN` и `NEXT_PUBLIC_SENTRY_DSN`
       (DSN проекта Next.js). По желанию для source maps: `SENTRY_ORG`, `SENTRY_PROJECT`,
       `SENTRY_AUTH_TOKEN` (Sensitive). Затем Redeploy.
-- [ ] **Проверка:** в development-сборке Настройки → Конфиденциальность → «Тест Sentry» → ошибка в
+- [ ] **Проверка:** в production-сборке (TestFlight) ошибки и события приходят с environment
+      `production` (Sentry → Issues; PostHog → свойство `environment` у событий). В development-сборке Настройки → Конфиденциальность → «Тест Sentry» → ошибка в
       Sentry (Issues, environment development). В PostHog → Activity появляются `app_opened`,
       `lesson_started` и просмотры экранов. Переключатель выключен — новых событий нет.
 - [ ] **На сайте PostHog нет** (нет cookie-баннера). Добавлять аналитику на сайт — только с баннером

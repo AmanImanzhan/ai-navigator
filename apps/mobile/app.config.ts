@@ -35,6 +35,10 @@ const APP_ENV = process.env.EAS_BUILD_PROFILE ?? "development";
 // Организация и проект Sentry — из переменных окружения EAS (не секреты, но и не в коде).
 // Source maps (чтобы в отчёте была понятная строка кода) загружаются только для preview и
 // production и только если в EAS есть секрет SENTRY_AUTH_TOKEN. Нет токена — сборка не падает.
+// Организация Sentry — в регионе EU (de.sentry.io). sentry-cli 3 берёт адрес сервера из того же
+// места, что и токен: токен приходит переменной окружения EAS, значит, и адрес нужен там же
+// (SENTRY_URL). Иначе адрес из sentry.properties игнорируется и запросы уходят на sentry.io.
+const SENTRY_URL = process.env.SENTRY_URL ?? "https://de.sentry.io/";
 const SENTRY_UPLOAD =
   APP_ENV !== "development" &&
   Boolean(process.env.SENTRY_AUTH_TOKEN) &&
@@ -54,7 +58,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       "@sentry/react-native/expo",
       {
-        url: "https://sentry.io/",
+        url: SENTRY_URL,
         organization: process.env.SENTRY_ORG,
         project: process.env.SENTRY_PROJECT,
         // Токен читается из SENTRY_AUTH_TOKEN во время сборки — в конфиг его не пишем.

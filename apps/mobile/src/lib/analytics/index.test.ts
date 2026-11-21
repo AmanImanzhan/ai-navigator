@@ -7,7 +7,7 @@ import type * as TelemetryModule from "@/store/useTelemetryStore";
 // PostHog подменён: проверяем, какие вызовы до него дошли.
 
 type FakePostHog = Record<
-  "capture" | "screen" | "identify" | "reset" | "optIn" | "optOut",
+  "capture" | "screen" | "identify" | "reset" | "optIn" | "optOut" | "register",
   jest.Mock
 > & { calls: string[] };
 
@@ -26,10 +26,17 @@ jest.mock("posthog-react-native", () => ({
       reset: method("reset"),
       optIn: method("optIn"),
       optOut: method("optOut"),
+      // Пометка окружения — отдельно от calls, чтобы не мешать проверкам порядка.
+      register: jest.fn(async () => {}),
     };
     mockInstances.push(instance);
     return instance;
   }),
+}));
+
+jest.mock("expo-constants", () => ({
+  __esModule: true,
+  default: { expoConfig: { extra: { appEnv: "production" } } },
 }));
 
 const ORIGINAL_KEY = process.env.EXPO_PUBLIC_POSTHOG_KEY;
@@ -76,6 +83,14 @@ describe("analytics", () => {
       track_id: "basics",
     });
     expect(mockInstances[0]?.screen).toHaveBeenCalledWith("/lesson/4");
+  });
+
+  it("every event is marked with the build environment, also after reset()", async () => {
+    const { analytics } = await load(KEY, true);
+    analytics.track("app_opened", { language: "en" });
+    expect(mockInstances[0]?.register).toHaveBeenCalledWith({ environment: "production" });
+    analytics.reset();
+    expect(mockInstances[0]?.register).toHaveBeenCalledTimes(2);
   });
 
   it("identify sends only the Supabase id", async () => {
