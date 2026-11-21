@@ -16,12 +16,18 @@ import {
   TRY_START_TIMEOUT_MS,
   USAGE_TIMEOUT_MS,
 } from "@/lib/ai/config";
-import { AiClientError, isServerErrorCode } from "@/lib/ai/errors";
+import {
+  AiClientError,
+  isFetchFailure,
+  isServerErrorCode,
+} from "@/lib/ai/errors";
+import { reportAiError, type AiOperation } from "@/lib/ai/report";
 import { supabase } from "@/lib/supabase";
 
 // Клиент API ИИ-помощника (apps/web/src/app/api/ai). Экраны ходят к помощнику только отсюда.
 // Протокол (запросы, события потока, коды ошибок) — в @ai-navigator/shared, ai.ts.
-// Любая неудача — AiClientError с понятным кодом.
+// Любая неудача — AiClientError с понятным кодом. «network» — только настоящий сбой связи;
+// всё неожиданное — «unexpected» и отчёт в Sentry (lib/ai/report.ts).
 
 type FetchResponse = Awaited<ReturnType<typeof fetch>>;
 
@@ -35,14 +41,17 @@ async function getAccessToken(): Promise<string> {
 }
 
 // Отмена запроса: по кнопке «Стоп» (внешний signal) или по таймауту.
-// Помнит причину, чтобы показать понятную ошибку.
+// Помнит причину, чтобы показать понятную ошибку, и сообщает о неожиданных сбоях.
 class RequestGuard {
   private readonly controller = new AbortController();
   private timer: ReturnType<typeof setTimeout> | undefined;
   private timedOut = false;
   private readonly onExternalAbort = () => this.controller.abort();
 
-  constructor(private readonly external?: AbortSignal) {
+  constructor(
+    private readonly operation: AiOperation,
+    private readonly external?: AbortSignal,
+  ) {
     if (external?.aborted) this.controller.abort();
     external?.addEventListener("abort", this.onExternalAbort);
   }
@@ -64,9 +73,12 @@ class RequestGuard {
   explain(error: unknown): AiClientError {
     if (this.timedOut) return new AiClientError("timeout");
     if (this.external?.aborted) return new AiClientError("cancelled");
-    if (error instanceof AiClientError) return error;
-    // fetch бросает ошибку, когда нет сети или связь оборвалась.
-    return new AiClientError("network");
+    const result =
+      error instanceof AiClientError
+        ? error
+        : new AiClientError("unexpected", { reason: error });
+    reportAiError(this.operation, result);
+    return result;
   }
 
   dispose() {
@@ -81,15 +93,23 @@ async function send(
   signal: AbortSignal,
   body?: unknown,
 ): Promise<FetchResponse> {
-  return fetch(`${API_URL}${path}`, {
-    method: body === undefined ? "GET" : "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      ...(body === undefined ? {} : { "Content-Type": "application/json" }),
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    signal,
-  });
+  try {
+    return await fetch(`${API_URL}${path}`, {
+      method: body === undefined ? "GET" : "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
+    });
+  } catch (error) {
+    // Запрос не ушёл или ответ не пришёл из-за связи — «нет сети». Другое — разберёт explain.
+    if (isFetchFailure(error)) {
+      throw new AiClientError("network", { reason: error });
+    }
+    throw error;
+  }
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -109,6 +129,7 @@ async function readError(response: FetchResponse): Promise<AiClientError> {
   }
   return new AiClientError(
     response.status === 401 ? "unauthorized" : "ai_unavailable",
+    { status: response.status },
   );
 }
 
@@ -136,7 +157,7 @@ function toAiUsage(value: unknown): AiUsage | null {
 // ---------- Сколько запросов осталось сегодня: GET /api/ai/usage ----------
 
 export async function fetchAiUsage(signal?: AbortSignal): Promise<AiUsage> {
-  const guard = new RequestGuard(signal);
+  const guard = new RequestGuard("usage", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(USAGE_TIMEOUT_MS);
@@ -159,7 +180,7 @@ export async function requestAiFill(
   request: AiFillRequest,
   signal?: AbortSignal,
 ): Promise<AiFillResponse> {
-  const guard = new RequestGuard(signal);
+  const guard = new RequestGuard("fill", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(FILL_TIMEOUT_MS);
@@ -206,6 +227,17 @@ function parseTryEvent(line: string): AiTryEvent | null {
   }
 }
 
+// Следующий кусочек ответа. Поток оборвался посреди ответа — это сбой связи.
+async function readChunk(
+  reader: ReadableStreamDefaultReader<Uint8Array>,
+): Promise<ReadableStreamReadResult<Uint8Array>> {
+  try {
+    return await reader.read();
+  } catch (error) {
+    throw new AiClientError("network", { reason: error });
+  }
+}
+
 // События потока, кроме ошибки: ошибка приходит как AiClientError.
 export type AiTryStreamEvent = Exclude<AiTryEvent, { type: "error" }>;
 
@@ -217,7 +249,7 @@ export async function streamAiTry(
   onEvent: (event: AiTryStreamEvent) => void,
   signal?: AbortSignal,
 ): Promise<void> {
-  const guard = new RequestGuard(signal);
+  const guard = new RequestGuard("try", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(TRY_START_TIMEOUT_MS);
@@ -231,7 +263,7 @@ export async function streamAiTry(
     let buffer = "";
     for (;;) {
       guard.restartTimer(TRY_IDLE_TIMEOUT_MS);
-      const { done, value } = await reader.read();
+      const { done, value } = await readChunk(reader);
       buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
       buffer = done ? "" : (lines.pop() ?? "");

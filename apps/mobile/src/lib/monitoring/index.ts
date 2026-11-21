@@ -103,10 +103,17 @@ export function setMonitoringUser(userId: string | null): void {
   Sentry.setUser(userId ? { id: userId } : null);
 }
 
+// Подробности к ошибке: метки для поиска и короткие безопасные поля.
+export type ErrorContext = {
+  level?: "warning" | "error";
+  tags?: Record<string, string>;
+  extra?: Record<string, string | number | undefined>;
+};
+
 // Отправить ошибку вручную (например, из перехвата). Без текстов человека в сообщении!
-export function captureError(error: unknown): void {
+export function captureError(error: unknown, context?: ErrorContext): void {
   if (!initialized) return;
-  Sentry.captureException(error);
+  Sentry.captureException(error, context);
 }
 
 // Обёртка корневого компонента: ловит ошибки отрисовки и замеряет запуск.

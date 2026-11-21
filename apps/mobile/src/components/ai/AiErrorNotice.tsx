@@ -14,6 +14,7 @@ const RETRYABLE: readonly AiClientErrorCode[] = [
   "not_configured",
   "network",
   "timeout",
+  "unexpected",
 ];
 
 type AiErrorNoticeProps = {

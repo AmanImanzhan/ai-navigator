@@ -357,6 +357,7 @@
       "not_configured": "The helper is temporarily unavailable. Please try later.",
       "network": "No internet connection. Check your network and try again.",
       "timeout": "The answer is taking too long — the connection may be weak. Please try again.",
+      "unexpected": "Something went wrong. Please try again.",
       "cancelled": "Request stopped.",
       "retry": "Try again"
     }

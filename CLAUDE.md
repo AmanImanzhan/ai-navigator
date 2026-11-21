@@ -96,6 +96,9 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   (needs Email sign-in temporarily enabled in Supabase — it's off in the project; see the script header).
 - Mobile client: apps/mobile/src/lib/ai (API_URL from EXPO_PUBLIC_API_URL, streaming via `expo/fetch`
   + NDJSON, AiClientError codes), hooks useAiTry / useAiFill / useAiUsage, UI in src/components/ai.
+  Error codes must be honest: `network` only for a real connection failure (expo/fetch «fetch failed»,
+  stream broken); anything else is `unexpected`. Unexpected failures go to Sentry via lib/ai/report.ts
+  (operation, code, error name/message, HTTP status — never prompts, answers or tokens).
 
 ## Subscription (RevenueCat, iOS only)
 - Business rules in packages/shared/src/subscription.ts: entitlement `premium`, product ids, AI limits.
