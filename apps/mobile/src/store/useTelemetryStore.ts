@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appStorage } from "@/lib/storage";
 import { useSyncExternalStore } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -20,7 +20,7 @@ export const useTelemetryStore = create<TelemetryState>()(
     }),
     {
       name: "telemetry",
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => appStorage),
     },
   ),
 );

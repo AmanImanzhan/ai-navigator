@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appStorage } from "@/lib/storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -26,7 +26,7 @@ export const useContentStore = create<ContentState>()(
     }),
     {
       name: "content-cache",
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => appStorage),
       version: CONTENT_CACHE_VERSION,
       // Кэш старой версии не переделываем — просто выбрасываем.
       migrate: () => ({ snapshot: null }),

@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appStorage } from "@/lib/storage";
 import * as Crypto from "expo-crypto";
 import { useSyncExternalStore } from "react";
 import { create } from "zustand";
@@ -202,7 +202,7 @@ export const useAppStore = create<AppData & AppActions>()(
     }),
     {
       name: "app-store",
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => appStorage),
       version: STORE_VERSION,
       migrate: (persisted, version) =>
         migrate(persisted, version) as AppData & AppActions,

@@ -1,5 +1,5 @@
 import type { Database } from "@ai-navigator/shared";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appStorage } from "@/lib/storage";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { AppState, Platform } from "react-native";
 
@@ -22,7 +22,7 @@ function createSupabase(): SupabaseClient<Database> | null {
   return createClient<Database>(url, key, {
     auth: {
       // Сессия входа хранится в памяти телефона и переживает перезапуск.
-      storage: AsyncStorage,
+      storage: appStorage,
       autoRefreshToken: true,
       persistSession: true,
       // В мобильном приложении нет адресной строки, из которой можно прочитать сессию.

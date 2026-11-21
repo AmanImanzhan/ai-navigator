@@ -31,6 +31,10 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - Build environment (development/preview/production) → `APP_ENV` (src/lib/appEnv.ts): Sentry
   `environment` and PostHog super property `environment`.
 - iOS system dialogs language: `locales` (languages/en|ru|es.json).
+- No web version: keep `web.output: "single"` in app.json. "server"/"static" (or +api files,
+  server functions) make `expo export:embed` run _layout.tsx in Node during the iOS build.
+  Persistent storage only via `appStorage` (src/lib/storage.ts), never AsyncStorage directly —
+  it doesn't crash without `window`.
 
 ## Tests and CI
 - Run from the root: `npm test`, `npm run typecheck`, `npm run lint` (all workspaces); or inside one
@@ -46,7 +50,8 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - apps/mobile: Jest + jest-expo + @testing-library/react-native (v14: `render`/`fireEvent` are
   async), files `src/**/*.test.ts(x)`, never inside src/app (routes). Tests run in the
   America/Los_Angeles time zone (jest.config.js) to catch local-day vs UTC bugs.
-- CI: .github/workflows/ci.yml on every push and PR — `npm ci`, typecheck, lint, test, `next build`
+- CI: .github/workflows/ci.yml on every push and PR — `npm ci`, typecheck, lint, test, iOS `expo export:embed`
+  (same command as EAS Bundle JavaScript), `next build`
   with placeholder env. No EAS builds and no real secrets in CI.
 - npm version is pinned (`packageManager` in root package.json; CI installs it). Change
   package-lock.json only with that npm (`npx npm@<version> install …`): other npm versions write

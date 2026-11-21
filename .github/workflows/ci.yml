@@ -51,6 +51,18 @@ jobs:
       - name: Tests (shared, web, mobile)
         run: npm test
 
+      # Та же команда, которой EAS собирает JS для iOS (фаза Bundle JavaScript). Ловит ошибки
+      # сборки бандла до EAS. Ключей нет — приложение собирается со встроенными данными.
+      - name: Bundle iOS JavaScript (expo export:embed, как в EAS)
+        working-directory: apps/mobile
+        run: |
+          mkdir -p "$RUNNER_TEMP/ios"
+          npx expo export:embed --eager --platform ios --dev false \
+            --bundle-output "$RUNNER_TEMP/ios/main.jsbundle" --assets-dest "$RUNNER_TEMP/ios"
+        env:
+          NODE_ENV: production
+          EAS_BUILD_PROFILE: production
+
       - name: Build web (next build)
         run: npm run build --workspace web
         env:
