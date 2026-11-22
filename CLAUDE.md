@@ -94,19 +94,20 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - API protocol types (requests, NDJSON events, error codes) live in packages/shared/src/ai.ts.
 - Manual check: `npm run ai:smoke` (root) prints a test user token and curl commands
   (needs Email sign-in temporarily enabled in Supabase — it's off in the project; see the script header).
-- Mobile client: apps/mobile/src/lib/ai (API_URL from EXPO_PUBLIC_API_URL, streaming via `expo/fetch`
-  + NDJSON, AiClientError codes), hooks useAiTry / useAiFill / useAiUsage, UI in src/components/ai.
-  Error codes must be honest: `network` only for a real connection failure (expo/fetch «fetch failed»,
-  stream broken); anything else is `unexpected`. Unexpected failures go to Sentry via lib/ai/report.ts
-  (operation, code, error name/message, HTTP status — never prompts, answers or tokens).
+- Mobile client: apps/mobile/src/lib/ai (API_URL from EXPO_PUBLIC_API_URL, NDJSON stream, AiClientError
+  codes), hooks useAiTry / useAiFill / useAiUsage, UI in src/components/ai.
+  Transport: React Native XMLHttpRequest (lib/ai/xhr.ts → RCTNetworking), stream read incrementally via
+  onprogress, withCredentials=false, abort via AbortSignal. NOT expo/fetch: in iOS production builds
+  expo/fetch failed to reach *.vercel.app ("fetch failed: Protocol error") while dev builds worked.
+  Tests use src/test/fakeXhr.ts (no network).
+  Error codes must be honest: `network` only for a real connection failure (XHR error, stream broken);
+  anything else is `unexpected`. Unexpected failures go to Sentry via lib/ai/report.ts (operation,
+  transport, code, error name/message/code and cause, HTTP status — never prompts, answers or tokens).
   Request headers are validated (buildRequestHeaders: RFC token names, printable ASCII values).
-  All AI requests use `credentials: "omit"` (Bearer token only). Transport: try/fill — expo/fetch
-  (streaming), usage — globalThis.fetch (diagnostics; Sentry tags transport / global_fetch).
   Dev builds route every NSURLSession request through the expo-dev-client network interceptor —
   networking that works in dev can still fail in TestFlight; test network changes in a preview build.
-- Sentry `tracePropagationTargets: []` (lib/monitoring) — keep it: the native iOS SDK otherwise
-  injects sentry-trace/baggage into every NSURLSession request, which broke expo/fetch AI requests
-  in production ("fetch failed: Protocol error").
+- Sentry `tracePropagationTargets: []` (lib/monitoring): no sentry-trace/baggage on any request
+  (the native iOS SDK would inject them into every NSURLSession request).
 
 ## Subscription (RevenueCat, iOS only)
 - Business rules in packages/shared/src/subscription.ts: entitlement `premium`, product ids, AI limits.

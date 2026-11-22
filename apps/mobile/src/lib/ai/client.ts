@@ -6,9 +6,6 @@ import type {
   AiTryRequest,
   AiUsage,
 } from "@ai-navigator/shared";
-// fetch из Expo умеет читать ответ по кусочкам (response.body.getReader()) — для потока ответа ИИ.
-import { fetch as expoFetch } from "expo/fetch";
-
 import {
   API_URL,
   FILL_TIMEOUT_MS,
@@ -16,28 +13,16 @@ import {
   TRY_START_TIMEOUT_MS,
   USAGE_TIMEOUT_MS,
 } from "@/lib/ai/config";
-import {
-  AiClientError,
-  isFetchFailure,
-  isServerErrorCode,
-} from "@/lib/ai/errors";
-import {
-  reportAiError,
-  type AiOperation,
-  type AiTransport,
-} from "@/lib/ai/report";
+import { AiClientError, isServerErrorCode } from "@/lib/ai/errors";
+import { reportAiError, type AiOperation } from "@/lib/ai/report";
+import { XhrNetworkError, xhrRequest, type XhrResponse } from "@/lib/ai/xhr";
 import { supabase } from "@/lib/supabase";
 
 // Клиент API ИИ-помощника (apps/web/src/app/api/ai). Экраны ходят к помощнику только отсюда.
 // Протокол (запросы, события потока, коды ошибок) — в @ai-navigator/shared, ai.ts.
 // Любая неудача — AiClientError с понятным кодом. «network» — только настоящий сбой связи;
 // всё неожиданное — «unexpected» и отчёт в Sentry (lib/ai/report.ts).
-//
-// Транспорт: поток «Попробуй сам» и «Заполнить» — expo/fetch; «сколько осталось» — глобальный
-// fetch, тот же, что у Supabase (диагностика сбоя в production-сборке: метка transport в Sentry).
-
-// Ответ, из которого читаем ошибку: годится и expo/fetch, и глобальный fetch.
-type ApiResponse = { status: number; json: () => Promise<unknown> };
+// Транспорт — XMLHttpRequest React Native (lib/ai/xhr.ts), поток читаем по кусочкам.
 
 // Токен текущей сессии входа. getSession сам продлит его, если срок вышел.
 async function getAccessToken(): Promise<string> {
@@ -58,7 +43,6 @@ class RequestGuard {
 
   constructor(
     private readonly operation: AiOperation,
-    private readonly transport: AiTransport,
     private readonly external?: AbortSignal,
   ) {
     if (external?.aborted) this.controller.abort();
@@ -86,7 +70,7 @@ class RequestGuard {
       error instanceof AiClientError
         ? error
         : new AiClientError("unexpected", { reason: error });
-    reportAiError(this.operation, this.transport, result);
+    reportAiError(this.operation, "xhr", result);
     return result;
   }
 
@@ -124,39 +108,39 @@ export function buildRequestHeaders(
   return headers;
 }
 
-// Параметры запроса. Cookie нашему API не нужны (вход — по токену), поэтому credentials: "omit":
-// iOS не подставит в запрос cookie из общего хранилища приложения.
-function requestInit(token: string, signal: AbortSignal, body?: unknown) {
-  return {
-    method: body === undefined ? "GET" : "POST",
-    headers: buildRequestHeaders(token, body !== undefined),
-    body: body === undefined ? undefined : JSON.stringify(body),
-    credentials: "omit" as const,
-    signal,
-  };
-}
-
-// Запрос не ушёл или ответ не пришёл из-за связи — «нет сети». Другое — разберёт explain.
-async function withNetworkErrors<T>(request: () => Promise<T>): Promise<T> {
+// Запрос к API. Cookie не отправляем (withCredentials = false в xhr.ts): вход — по токену.
+// Сбой связи — «network»; остальное разберёт explain.
+async function send(
+  path: string,
+  token: string,
+  signal: AbortSignal,
+  options: { body?: unknown; onChunk?: (text: string) => void } = {},
+): Promise<XhrResponse> {
+  const { body, onChunk } = options;
   try {
-    return await request();
+    return await xhrRequest({
+      url: `${API_URL}${path}`,
+      method: body === undefined ? "GET" : "POST",
+      headers: buildRequestHeaders(token, body !== undefined),
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
+      onChunk,
+    });
   } catch (error) {
-    if (isFetchFailure(error)) {
+    if (error instanceof XhrNetworkError) {
       throw new AiClientError("network", { reason: error });
     }
     throw error;
   }
 }
 
-function send(path: string, token: string, signal: AbortSignal, body?: unknown) {
-  const init = requestInit(token, signal, body);
-  return withNetworkErrors(() => expoFetch(`${API_URL}${path}`, init));
+function isOk(response: XhrResponse): boolean {
+  return response.status >= 200 && response.status < 300;
 }
 
-// Тот же fetch, что у Supabase-клиента (globalThis.fetch, обёрнутый Sentry).
-function sendGlobal(path: string, token: string, signal: AbortSignal) {
-  const init = requestInit(token, signal);
-  return withNetworkErrors(() => globalThis.fetch(`${API_URL}${path}`, init));
+// Тело успешного ответа → JSON. Не JSON — исключение (SyntaxError), его разберёт explain.
+function parseJson(response: XhrResponse): unknown {
+  return JSON.parse(response.text);
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -165,8 +149,13 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 // Ответ с ошибкой → AiClientError с кодом сервера. Не JSON (например, страница ошибки Vercel) —
 // «ИИ недоступен».
-async function readError(response: ApiResponse): Promise<AiClientError> {
-  const body: unknown = await response.json().catch(() => null);
+function readError(response: XhrResponse): AiClientError {
+  let body: unknown = null;
+  try {
+    body = JSON.parse(response.text);
+  } catch {
+    // Не JSON — ниже ответим по статусу.
+  }
   if (isObject(body) && isServerErrorCode(body.error)) {
     const { resetAt, maxLength } = body as Partial<AiErrorResponse>;
     return new AiClientError(body.error, {
@@ -204,13 +193,13 @@ function toAiUsage(value: unknown): AiUsage | null {
 // ---------- Сколько запросов осталось сегодня: GET /api/ai/usage ----------
 
 export async function fetchAiUsage(signal?: AbortSignal): Promise<AiUsage> {
-  const guard = new RequestGuard("usage", "global", signal);
+  const guard = new RequestGuard("usage", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(USAGE_TIMEOUT_MS);
-    const response = await sendGlobal("/api/ai/usage", token, guard.signal);
-    if (!response.ok) throw await readError(response);
-    const body: unknown = await response.json();
+    const response = await send("/api/ai/usage", token, guard.signal);
+    if (!isOk(response)) throw readError(response);
+    const body = parseJson(response);
     const usage = toAiUsage(body);
     if (!usage) throw new AiClientError("ai_unavailable");
     return usage;
@@ -227,13 +216,15 @@ export async function requestAiFill(
   request: AiFillRequest,
   signal?: AbortSignal,
 ): Promise<AiFillResponse> {
-  const guard = new RequestGuard("fill", "expo", signal);
+  const guard = new RequestGuard("fill", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(FILL_TIMEOUT_MS);
-    const response = await send("/api/ai/fill", token, guard.signal, request);
-    if (!response.ok) throw await readError(response);
-    const body: unknown = await response.json();
+    const response = await send("/api/ai/fill", token, guard.signal, {
+      body: request,
+    });
+    if (!isOk(response)) throw readError(response);
+    const body = parseJson(response);
     const usage = isObject(body) ? toAiUsage(body.usage) : null;
     if (
       !isObject(body) ||
@@ -274,17 +265,6 @@ function parseTryEvent(line: string): AiTryEvent | null {
   }
 }
 
-// Следующий кусочек ответа. Поток оборвался посреди ответа — это сбой связи.
-async function readChunk(
-  reader: ReadableStreamDefaultReader<Uint8Array>,
-): Promise<ReadableStreamReadResult<Uint8Array>> {
-  try {
-    return await reader.read();
-  } catch (error) {
-    throw new AiClientError("network", { reason: error });
-  }
-}
-
 // События потока, кроме ошибки: ошибка приходит как AiClientError.
 export type AiTryStreamEvent = Exclude<AiTryEvent, { type: "error" }>;
 
@@ -296,35 +276,42 @@ export async function streamAiTry(
   onEvent: (event: AiTryStreamEvent) => void,
   signal?: AbortSignal,
 ): Promise<void> {
-  const guard = new RequestGuard("try", "expo", signal);
+  const guard = new RequestGuard("try", signal);
+  // Кусочки приходят как попало: строка может оборваться посередине — храним хвост.
+  let buffer = "";
+  let finished = false;
+
+  // Разобрать готовые строки. Ошибка из потока — исключение: xhr.ts прервёт запрос.
+  const handleLines = (lines: string[]) => {
+    for (const line of lines) {
+      if (finished) return;
+      const event = parseTryEvent(line);
+      if (!event) continue;
+      if (event.type === "error") throw new AiClientError(event.error);
+      onEvent(event);
+      if (event.type === "done") finished = true;
+    }
+  };
+
   try {
     const token = await getAccessToken();
     guard.restartTimer(TRY_START_TIMEOUT_MS);
-    const response = await send("/api/ai/try", token, guard.signal, request);
-    if (!response.ok) throw await readError(response);
-    if (!response.body) throw new AiClientError("ai_unavailable");
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    // Кусочки приходят как попало: строка может оборваться посередине — храним хвост.
-    let buffer = "";
-    for (;;) {
-      guard.restartTimer(TRY_IDLE_TIMEOUT_MS);
-      const { done, value } = await readChunk(reader);
-      buffer += done ? decoder.decode() : decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = done ? "" : (lines.pop() ?? "");
-
-      for (const line of lines) {
-        const event = parseTryEvent(line);
-        if (!event) continue;
-        if (event.type === "error") throw new AiClientError(event.error);
-        onEvent(event);
-        if (event.type === "done") return;
-      }
-      // Поток закончился без done — связь оборвалась.
-      if (done) throw new AiClientError("network");
-    }
+    const response = await send("/api/ai/try", token, guard.signal, {
+      body: request,
+      onChunk: (chunk) => {
+        // Пришёл кусочек — связь жива, ждём следующий не дольше TRY_IDLE_TIMEOUT_MS.
+        guard.restartTimer(TRY_IDLE_TIMEOUT_MS);
+        const lines = (buffer + chunk).split("\n");
+        buffer = lines.pop() ?? "";
+        handleLines(lines);
+      },
+    });
+    if (!isOk(response)) throw readError(response);
+    // Последняя строка могла прийти без перевода строки.
+    handleLines([buffer]);
+    buffer = "";
+    // Поток закончился без done — связь оборвалась.
+    if (!finished) throw new AiClientError("network");
   } catch (error) {
     throw guard.explain(error);
   } finally {

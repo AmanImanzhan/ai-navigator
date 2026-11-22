@@ -5,11 +5,10 @@ import { captureError } from "@/lib/monitoring";
 // не отличить от ошибки в коде или в сборке.
 // В отчёте только запрос (try/fill/usage), транспорт, код, имя/сообщение/код исходной ошибки
 // и её cause, HTTP-статус. Никогда — текст человека, ответ ИИ, токен или заголовки.
-// Нативные domain и числовой код ошибки iOS до JS не доходят: expo/fetch передаёт только текст.
 
 export type AiOperation = "try" | "fill" | "usage";
-// expo — fetch из модуля expo/fetch; global — globalThis.fetch (им ходит Supabase).
-export type AiTransport = "expo" | "global";
+// xhr — XMLHttpRequest React Native (lib/ai/xhr.ts). Если транспорт сменится — новое значение.
+export type AiTransport = "xhr";
 
 const MAX_MESSAGE_LENGTH = 200;
 
@@ -47,20 +46,6 @@ function errorName(error: unknown): string | undefined {
   return error instanceof Error ? error.name : typeof error;
 }
 
-// Что на самом деле лежит в globalThis.fetch: fetch из Expo (помечен expo.builtin) или другой.
-// Sentry оборачивает глобальный fetch — смотрим на исходную функцию под обёрткой.
-export function globalFetchKind(): "expo" | "other" {
-  const current: unknown = globalThis.fetch;
-  const original: unknown =
-    typeof current === "function" && "__sentry_original__" in current
-      ? current.__sentry_original__
-      : current;
-  if (typeof original !== "function") return "other";
-  return Object.getOwnPropertyDescriptor(original, Symbol.for("expo.builtin"))?.value === true
-    ? "expo"
-    : "other";
-}
-
 export function buildAiErrorReport(
   operation: AiOperation,
   transport: AiTransport,
@@ -79,7 +64,6 @@ export function buildAiErrorReport(
       ai_operation: operation,
       ai_error_code: error.code,
       transport,
-      global_fetch: globalFetchKind(),
     },
     extra: {
       reasonName: reason instanceof Error ? reason.name : typeof reason,

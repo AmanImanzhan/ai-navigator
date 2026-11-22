@@ -1,26 +1,23 @@
-import { afterAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, it, jest } from "@jest/globals";
 
-import { fetchAiUsage, isValidHeader, streamAiTry } from "@/lib/ai/client";
+import {
+  fetchAiUsage,
+  isValidHeader,
+  requestAiFill,
+  streamAiTry,
+  type AiTryStreamEvent,
+} from "@/lib/ai/client";
 import { AiClientError } from "@/lib/ai/errors";
 import { captureError } from "@/lib/monitoring";
+import { FakeXhr, sentXhr } from "@/test/fakeXhr";
 
-// Клиент ИИ: «нет сети» — только при настоящем сбое связи, остальное — «unexpected»
-// и отчёт в Sentry с причиной, но без текста человека и токена.
-// fetch из Expo (поток «Попробуй сам»), глобальный fetch («сколько осталось»), Supabase и Sentry
-// подменены — без сети и ключей.
+// Клиент ИИ поверх XMLHttpRequest: поток по кусочкам, честные коды ошибок, отчёт в Sentry
+// без текста человека и токена. XHR, Supabase и Sentry подменены — без сети и ключей.
 
 const TOKEN = "secret-access-token";
 const PROMPT = "Напиши письмо начальнику про отпуск";
 
-const mockFetch = jest.fn<(url: string, init: unknown) => Promise<unknown>>();
-// Глобальный fetch — им ходит Supabase; им же теперь идёт GET /api/ai/usage.
-const mockGlobalFetch = jest.fn<(url: string, init: unknown) => Promise<unknown>>();
-const ORIGINAL_GLOBAL_FETCH = globalThis.fetch;
 const mockGetSession = jest.fn<() => Promise<unknown>>();
-
-jest.mock("expo/fetch", () => ({
-  fetch: (url: string, init: unknown) => mockFetch(url, init),
-}));
 
 jest.mock("@/lib/supabase", () => ({
   supabase: { auth: { getSession: () => mockGetSession() } },
@@ -38,31 +35,6 @@ jest.mock("@/lib/monitoring", () => ({ captureError: jest.fn() }));
 
 const mockCapture = jest.mocked(captureError);
 
-// Ответ с потоком: кусочки по очереди, затем конец (или обрыв, если передана ошибка).
-function streamResponse(chunks: string[], breakWith?: Error) {
-  const encoder = new TextEncoder();
-  let index = 0;
-  return {
-    ok: true,
-    status: 200,
-    body: {
-      getReader: () => ({
-        read: async () => {
-          if (index < chunks.length) {
-            return { done: false, value: encoder.encode(chunks[index++]) };
-          }
-          if (breakWith) throw breakWith;
-          return { done: true, value: undefined };
-        },
-      }),
-    },
-  };
-}
-
-function jsonResponse(status: number, body: unknown) {
-  return { ok: status < 400, status, json: async () => body };
-}
-
 const USAGE = {
   limit: 3,
   used: 1,
@@ -71,14 +43,23 @@ const USAGE = {
   premium: false,
 };
 
-async function askTry(): Promise<AiClientError> {
-  try {
-    await streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, () => {});
-  } catch (error) {
-    if (error instanceof AiClientError) return error;
-    throw error;
-  }
-  throw new Error("expected an error");
+const line = (value: unknown) => `${JSON.stringify(value)}\n`;
+
+// Запустить «Попробуй сам»: события копятся в events, результат — в outcome.
+function startTry(signal?: AbortSignal) {
+  const events: AiTryStreamEvent[] = [];
+  const outcome = streamAiTry(
+    { lessonId: "t1", locale: "ru", prompt: PROMPT },
+    (event) => events.push(event),
+    signal,
+  ).then(
+    () => null,
+    (error: unknown) => {
+      if (error instanceof AiClientError) return error;
+      throw error;
+    },
+  );
+  return { events, outcome };
 }
 
 // Всё, что ушло в Sentry, одной строкой — проверить, что текстов и токена там нет.
@@ -92,67 +73,53 @@ function reportedText(): string {
 }
 
 beforeEach(() => {
-  mockFetch.mockReset();
-  mockGlobalFetch.mockReset();
-  globalThis.fetch = mockGlobalFetch as unknown as typeof globalThis.fetch;
+  FakeXhr.install();
   mockCapture.mockReset();
   mockGetSession.mockReset();
-  mockGetSession.mockResolvedValue({
-    data: { session: { access_token: TOKEN } },
-  });
+  mockGetSession.mockResolvedValue({ data: { session: { access_token: TOKEN } } });
 });
 
-afterAll(() => {
-  globalThis.fetch = ORIGINAL_GLOBAL_FETCH;
+afterEach(() => {
+  jest.useRealTimers();
 });
 
-describe("AI client errors", () => {
-  it("streams the answer when everything works, nothing is reported", async () => {
-    mockFetch.mockResolvedValue(
-      streamResponse([
-        `${JSON.stringify({ type: "meta", usage: USAGE })}\n{"type":"answer","te`,
-        'xt":"Hi"}\n{"type":"done"}\n',
-      ]),
-    );
-    const events: unknown[] = [];
-    await streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, (event) =>
-      events.push(event),
-    );
+describe("streamAiTry over XHR", () => {
+  it("streams events as chunks arrive, lines may be split between chunks", async () => {
+    const { events, outcome } = startTry();
+    const xhr = await sentXhr();
 
+    expect(xhr.method).toBe("POST");
+    expect(xhr.url).toBe("https://api.example.test/api/ai/try");
+    expect(xhr.withCredentials).toBe(false);
+    expect(JSON.parse(String(xhr.body))).toEqual({ lessonId: "t1", locale: "ru", prompt: PROMPT });
+
+    xhr.respond(200).push(`${line({ type: "meta", usage: USAGE })}{"type":"answer","te`);
+    expect(events).toEqual([{ type: "meta", usage: USAGE }]);
+
+    xhr.push('xt":"Hi"}\n');
+    expect(events).toHaveLength(2);
+
+    xhr.finish('{"type":"done"}');
+    expect(await outcome).toBeNull();
     expect(events).toEqual([
       { type: "meta", usage: USAGE },
       { type: "answer", text: "Hi" },
       { type: "done" },
     ]);
-    const [url, init] = mockFetch.mock.calls[0] ?? [];
-    expect(url).toBe("https://api.example.test/api/ai/try");
-    expect(init).toMatchObject({
-      method: "POST",
-      headers: { Authorization: `Bearer ${TOKEN}` },
-      credentials: "omit",
-    });
-    expect(mockGlobalFetch).not.toHaveBeenCalled();
     expect(mockCapture).not.toHaveBeenCalled();
   });
 
-  it("real connection failure (fetch failed) → network, reported as a warning", async () => {
-    mockFetch.mockRejectedValue(
-      new Error("fetch failed: The Internet connection appears to be offline."),
-    );
+  it("connection fails before an answer → network, reported as a warning with transport xhr", async () => {
+    const { outcome } = startTry();
+    (await sentXhr()).fail();
 
-    expect((await askTry()).code).toBe("network");
-    expect(mockCapture).toHaveBeenCalledTimes(1);
+    expect((await outcome)?.code).toBe("network");
     expect(mockCapture.mock.calls[0]?.[1]).toEqual({
       level: "warning",
-      tags: {
-        ai_operation: "try",
-        ai_error_code: "network",
-        transport: "expo",
-        global_fetch: "other",
-      },
+      tags: { ai_operation: "try", ai_error_code: "network", transport: "xhr" },
       extra: {
-        reasonName: "Error",
-        reasonMessage: "fetch failed: The Internet connection appears to be offline.",
+        reasonName: "XhrNetworkError",
+        reasonMessage: "xhr network error",
         reasonCode: undefined,
         causeName: undefined,
         causeMessage: undefined,
@@ -162,199 +129,197 @@ describe("AI client errors", () => {
     });
   });
 
-  it("any other error before the request → unexpected (not «no internet»), reported", async () => {
-    mockFetch.mockRejectedValue(new TypeError("undefined is not a function"));
+  it("connection lost in the middle → network, what came before is kept", async () => {
+    const { events, outcome } = startTry();
+    (await sentXhr()).respond(200).push(line({ type: "answer", text: "Hi" })).fail();
 
-    const error = await askTry();
-    expect(error.code).toBe("unexpected");
+    expect((await outcome)?.code).toBe("network");
+    expect(events).toEqual([{ type: "answer", text: "Hi" }]);
+  });
+
+  it("stream ended without done → network", async () => {
+    const { outcome } = startTry();
+    (await sentXhr()).respond(200).finish(line({ type: "answer", text: "Hi" }));
+
+    expect((await outcome)?.code).toBe("network");
+  });
+
+  it("error event from the server stops the request with that code", async () => {
+    const { events, outcome } = startTry();
+    const xhr = await sentXhr();
+    xhr
+      .respond(200)
+      .push(line({ type: "answer", text: "Hi" }) + line({ type: "error", error: "ai_unavailable" }));
+
+    expect((await outcome)?.code).toBe("ai_unavailable");
+    expect(events).toEqual([{ type: "answer", text: "Hi" }]);
+    expect(xhr.done).toBe(true);
+    expect(mockCapture).not.toHaveBeenCalled();
+  });
+
+  it("limit reached (429 with our JSON) → limit_reached with resetAt, not reported", async () => {
+    const { outcome } = startTry();
+    (await sentXhr())
+      .respond(429)
+      .finish(JSON.stringify({ error: "limit_reached", resetAt: USAGE.resetAt }));
+
+    const error = await outcome;
+    expect(error?.code).toBe("limit_reached");
+    expect(error?.resetAt).toBe(USAGE.resetAt);
+    expect(mockCapture).not.toHaveBeenCalled();
+  });
+
+  it("not our format (e.g. Vercel error page) → ai_unavailable, reported with HTTP status", async () => {
+    const { outcome } = startTry();
+    (await sentXhr()).respond(403).finish("<html>Forbidden</html>");
+
+    expect((await outcome)?.code).toBe("ai_unavailable");
     expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
       level: "error",
-      tags: { ai_operation: "try", ai_error_code: "unexpected" },
-      extra: { reasonName: "TypeError", reasonMessage: "undefined is not a function" },
+      tags: { ai_error_code: "ai_unavailable", transport: "xhr" },
+      extra: { status: 403 },
     });
+  });
+
+  it("401 without our JSON → unauthorized", async () => {
+    const { outcome } = startTry();
+    (await sentXhr()).respond(401).finish("");
+
+    expect((await outcome)?.code).toBe("unauthorized");
+  });
+
+  it("«Stop» → cancelled, the request is aborted, nothing reported", async () => {
+    const controller = new AbortController();
+    const { outcome } = startTry(controller.signal);
+    const xhr = await sentXhr();
+
+    controller.abort();
+
+    expect((await outcome)?.code).toBe("cancelled");
+    expect(xhr.done).toBe(true);
+    expect(mockCapture).not.toHaveBeenCalled();
+  });
+
+  it("no answer in time → timeout, the request is aborted", async () => {
+    jest.useFakeTimers();
+    const { outcome } = startTry();
+    const xhr = await sentXhr();
+
+    jest.advanceTimersByTime(40_000);
+
+    expect((await outcome)?.code).toBe("timeout");
+    expect(xhr.done).toBe(true);
+  });
+
+  it("silence between chunks longer than the idle timeout → timeout", async () => {
+    jest.useFakeTimers();
+    const { outcome } = startTry();
+    const xhr = await sentXhr();
+
+    xhr.respond(200).push(line({ type: "answer", text: "Hi" }));
+    jest.advanceTimersByTime(24_000);
+    expect(xhr.done).toBe(false);
+    jest.advanceTimersByTime(1_000);
+
+    expect((await outcome)?.code).toBe("timeout");
   });
 
   it("a crash in our own code (session read) → unexpected, the request is never sent", async () => {
     mockGetSession.mockRejectedValue(new ReferenceError("window is not defined"));
+    const { outcome } = startTry();
 
-    expect((await askTry()).code).toBe("unexpected");
-    expect(mockFetch).not.toHaveBeenCalled();
+    expect((await outcome)?.code).toBe("unexpected");
+    expect(FakeXhr.instances).toHaveLength(0);
     expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
       extra: { reasonName: "ReferenceError", reasonMessage: "window is not defined" },
     });
   });
 
-  it("stream broken in the middle → network", async () => {
-    mockFetch.mockResolvedValue(
-      streamResponse(['{"type":"answer","text":"Hi"}\n'], new Error("connection lost")),
-    );
-
-    expect((await askTry()).code).toBe("network");
-    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
-      tags: { ai_error_code: "network" },
-      extra: { reasonMessage: "connection lost" },
-    });
-  });
-
-  it("server answers with our error code (limit) → that code, not reported", async () => {
-    mockFetch.mockResolvedValue(
-      jsonResponse(429, { error: "limit_reached", resetAt: USAGE.resetAt }),
-    );
-
-    const error = await askTry();
-    expect(error.code).toBe("limit_reached");
-    expect(error.resetAt).toBe(USAGE.resetAt);
-    expect(mockCapture).not.toHaveBeenCalled();
-  });
-
-  it("not our format (e.g. Vercel error page) → ai_unavailable, reported with HTTP status", async () => {
-    mockFetch.mockResolvedValue({
-      ok: false,
-      status: 403,
-      json: async () => {
-        throw new SyntaxError(`JSON Parse error: ${PROMPT}`);
-      },
-    });
-
-    const error = await askTry();
-    expect(error.code).toBe("ai_unavailable");
-    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
-      level: "error",
-      tags: { ai_operation: "try", ai_error_code: "ai_unavailable" },
-      extra: { status: 403 },
-    });
-  });
-
-  it("broken JSON in a response: only the error name goes to Sentry", async () => {
-    mockGlobalFetch.mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: async () => {
-        throw new SyntaxError(`JSON Parse error: Unexpected identifier "${PROMPT}"`);
-      },
-    });
-
-    await expect(fetchAiUsage()).rejects.toMatchObject({ code: "unexpected" });
-    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
-      tags: { ai_operation: "usage", transport: "global" },
-      extra: { reasonName: "SyntaxError", reasonMessage: undefined },
-    });
-  });
-
   it("reports never contain the prompt or the token", async () => {
-    mockFetch.mockRejectedValue(new Error("fetch failed: offline"));
-    await askTry();
-    mockFetch.mockRejectedValue(new TypeError("boom"));
-    await askTry();
-    mockFetch.mockResolvedValue({
-      ok: false,
-      status: 502,
-      json: async () => {
-        throw new SyntaxError(PROMPT);
-      },
-    });
-    await askTry();
+    let run = startTry();
+    (await sentXhr()).fail();
+    await run.outcome;
 
-    expect(mockCapture).toHaveBeenCalledTimes(3);
+    run = startTry();
+    (await sentXhr()).respond(502).finish(PROMPT);
+    await run.outcome;
+
+    expect(mockCapture).toHaveBeenCalledTimes(2);
     const text = reportedText();
     expect(text).not.toContain(PROMPT);
     expect(text).not.toContain(TOKEN);
   });
+});
 
-  it("native error details (code, cause) go to the report, without the token", async () => {
-    // Так expo/fetch оборачивает ошибку iOS: FetchError «fetch failed: …» с cause и code.
-    const cause = Object.assign(new Error("Не удалось завершить операцию. Ошибка протокола"), {
-      code: "ERR_FETCH_NATIVE",
-    });
-    const failure = Object.assign(
-      new Error("fetch failed: Не удалось завершить операцию. Ошибка протокола", { cause }),
-      { code: "ERR_UNKNOWN" },
-    );
-    mockFetch.mockRejectedValue(failure);
+describe("usage and fill over XHR", () => {
+  it("usage: GET with the token, no body, no cookies", async () => {
+    const promise = fetchAiUsage();
+    const xhr = await sentXhr();
+    xhr.respond(200).finish(JSON.stringify(USAGE));
 
-    expect((await askTry()).code).toBe("network");
-    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
-      tags: { transport: "expo" },
-      extra: {
-        reasonCode: "ERR_UNKNOWN",
-        causeName: "Error",
-        causeMessage: "Не удалось завершить операцию. Ошибка протокола",
-        causeCode: "ERR_FETCH_NATIVE",
-      },
-    });
-    expect(reportedText()).not.toContain(TOKEN);
+    await expect(promise).resolves.toEqual(USAGE);
+    expect(xhr.method).toBe("GET");
+    expect(xhr.url).toBe("https://api.example.test/api/ai/usage");
+    expect(xhr.body).toBeNull();
+    expect(xhr.withCredentials).toBe(false);
   });
 
-  it("the report says what globalThis.fetch really is (expo/fetch under the Sentry wrapper)", async () => {
-    const expoBuiltin = Object.defineProperty(async () => undefined, Symbol.for("expo.builtin"), {
-      value: true,
-    });
-    const sentryWrapper = Object.assign(
-      (url: string, init: unknown) => mockGlobalFetch(url, init),
-      { __sentry_original__: expoBuiltin },
-    );
-    globalThis.fetch = sentryWrapper as unknown as typeof globalThis.fetch;
-    mockGlobalFetch.mockRejectedValue(new Error("fetch failed: offline"));
+  it("usage: broken JSON → unexpected, only the error name goes to Sentry", async () => {
+    const promise = fetchAiUsage();
+    (await sentXhr()).respond(200).finish(`{"oops": ${PROMPT}`);
 
-    await expect(fetchAiUsage()).rejects.toMatchObject({ code: "network" });
-    expect(mockFetch).not.toHaveBeenCalled();
+    await expect(promise).rejects.toMatchObject({ code: "unexpected" });
     expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
-      tags: { ai_operation: "usage", transport: "global", global_fetch: "expo" },
+      tags: { ai_operation: "usage", transport: "xhr" },
+      extra: { reasonName: "SyntaxError", reasonMessage: undefined },
     });
+    expect(reportedText()).not.toContain(PROMPT);
   });
 
-  it("«Stop» pressed → cancelled, not reported", async () => {
-    const controller = new AbortController();
-    mockFetch.mockImplementation(async () => {
-      controller.abort();
-      throw new Error("fetch failed: The operation was aborted.");
-    });
+  it("fill: POST JSON, string values only", async () => {
+    const request = { templateId: "tpl1", locale: "ru", situation: PROMPT } as Parameters<
+      typeof requestAiFill
+    >[0];
+    const promise = requestAiFill(request);
+    const xhr = await sentXhr();
+    xhr
+      .respond(200)
+      .finish(JSON.stringify({ values: { a: "1", b: 2 }, tip: "Tip", usage: USAGE }));
 
-    await expect(
-      streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, () => {}, controller.signal),
-    ).rejects.toMatchObject({ code: "cancelled" });
-    expect(mockCapture).not.toHaveBeenCalled();
+    await expect(promise).resolves.toEqual({ values: { a: "1" }, tip: "Tip", usage: USAGE });
+    expect(xhr.method).toBe("POST");
+    expect(xhr.url).toBe("https://api.example.test/api/ai/fill");
+    expect(JSON.parse(String(xhr.body))).toEqual(request);
   });
 });
 
 describe("AI request headers", () => {
-  type SentInit = { headers: Record<string, string>; credentials?: string };
-
-  // Параметры последнего запроса через этот fetch.
-  function lastInit(fetchMock: typeof mockFetch): SentInit {
-    return fetchMock.mock.calls.at(-1)?.[1] as SentInit;
-  }
-
   const VALID_NAME = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
   const VALID_VALUE = /^[\x21-\x7E]([\x20-\x7E]*[\x21-\x7E])?$/;
 
   it("every header of usage (GET) and try (POST) is printable ASCII, no control characters", async () => {
-    mockGlobalFetch.mockResolvedValue(jsonResponse(200, USAGE));
-    await fetchAiUsage();
-    const usageInit = lastInit(mockGlobalFetch);
-    const usageHeaders = usageInit.headers;
+    const usage = fetchAiUsage();
+    const usageXhr = await sentXhr();
+    usageXhr.respond(200).finish(JSON.stringify(USAGE));
+    await usage;
 
-    mockFetch.mockResolvedValue(streamResponse(['{"type":"done"}\n']));
-    await streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, () => {});
-    const tryInit = lastInit(mockFetch);
-    const tryHeaders = tryInit.headers;
+    const run = startTry();
+    const tryXhr = await sentXhr();
+    tryXhr.respond(200).finish(line({ type: "done" }));
+    await run.outcome;
 
-    // Cookie нашему API не нужны — ни в одном запросе.
-    expect(usageInit.credentials).toBe("omit");
-    expect(tryInit.credentials).toBe("omit");
-
-    expect(Object.keys(usageHeaders)).toEqual(["Authorization"]);
-    expect(Object.keys(tryHeaders).sort()).toEqual(["Authorization", "Content-Type"]);
+    expect(Object.keys(usageXhr.headers)).toEqual(["Authorization"]);
+    expect(Object.keys(tryXhr.headers).sort()).toEqual(["Authorization", "Content-Type"]);
     for (const [name, value] of [
-      ...Object.entries(usageHeaders),
-      ...Object.entries(tryHeaders),
+      ...Object.entries(usageXhr.headers),
+      ...Object.entries(tryXhr.headers),
     ]) {
       expect(name).toMatch(VALID_NAME);
       expect(value).toMatch(VALID_VALUE);
     }
     // Ни текста запроса, ни трассировки Sentry в заголовках.
-    expect(JSON.stringify(tryHeaders)).not.toContain(PROMPT);
-    const names = Object.keys(tryHeaders).map((name) => name.toLowerCase());
+    expect(JSON.stringify(tryXhr.headers)).not.toContain(PROMPT);
+    const names = Object.keys(tryXhr.headers).map((name) => name.toLowerCase());
     for (const tracing of ["sentry-trace", "baggage", "traceparent"]) {
       expect(names).not.toContain(tracing);
     }
@@ -368,8 +333,8 @@ describe("AI request headers", () => {
   ])("broken token (%s) is never sent, the error is reported without the token", async (_, token) => {
     mockGetSession.mockResolvedValue({ data: { session: { access_token: token } } });
 
-    expect((await askTry()).code).toBe("unexpected");
-    expect(mockFetch).not.toHaveBeenCalled();
+    expect((await startTry().outcome)?.code).toBe("unexpected");
+    expect(FakeXhr.instances).toHaveLength(0);
     expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
       extra: { reasonMessage: "invalid request header: Authorization" },
     });
