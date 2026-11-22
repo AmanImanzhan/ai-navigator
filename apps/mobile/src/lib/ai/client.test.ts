@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, jest } from "@jest/globals";
+import { afterAll, beforeEach, describe, expect, it, jest } from "@jest/globals";
 
 import { fetchAiUsage, isValidHeader, streamAiTry } from "@/lib/ai/client";
 import { AiClientError } from "@/lib/ai/errors";
@@ -6,12 +6,16 @@ import { captureError } from "@/lib/monitoring";
 
 // Клиент ИИ: «нет сети» — только при настоящем сбое связи, остальное — «unexpected»
 // и отчёт в Sentry с причиной, но без текста человека и токена.
-// fetch из Expo, Supabase и Sentry подменены — без сети и ключей.
+// fetch из Expo (поток «Попробуй сам»), глобальный fetch («сколько осталось»), Supabase и Sentry
+// подменены — без сети и ключей.
 
 const TOKEN = "secret-access-token";
 const PROMPT = "Напиши письмо начальнику про отпуск";
 
 const mockFetch = jest.fn<(url: string, init: unknown) => Promise<unknown>>();
+// Глобальный fetch — им ходит Supabase; им же теперь идёт GET /api/ai/usage.
+const mockGlobalFetch = jest.fn<(url: string, init: unknown) => Promise<unknown>>();
+const ORIGINAL_GLOBAL_FETCH = globalThis.fetch;
 const mockGetSession = jest.fn<() => Promise<unknown>>();
 
 jest.mock("expo/fetch", () => ({
@@ -89,11 +93,17 @@ function reportedText(): string {
 
 beforeEach(() => {
   mockFetch.mockReset();
+  mockGlobalFetch.mockReset();
+  globalThis.fetch = mockGlobalFetch as unknown as typeof globalThis.fetch;
   mockCapture.mockReset();
   mockGetSession.mockReset();
   mockGetSession.mockResolvedValue({
     data: { session: { access_token: TOKEN } },
   });
+});
+
+afterAll(() => {
+  globalThis.fetch = ORIGINAL_GLOBAL_FETCH;
 });
 
 describe("AI client errors", () => {
@@ -119,7 +129,9 @@ describe("AI client errors", () => {
     expect(init).toMatchObject({
       method: "POST",
       headers: { Authorization: `Bearer ${TOKEN}` },
+      credentials: "omit",
     });
+    expect(mockGlobalFetch).not.toHaveBeenCalled();
     expect(mockCapture).not.toHaveBeenCalled();
   });
 
@@ -132,10 +144,19 @@ describe("AI client errors", () => {
     expect(mockCapture).toHaveBeenCalledTimes(1);
     expect(mockCapture.mock.calls[0]?.[1]).toEqual({
       level: "warning",
-      tags: { ai_operation: "try", ai_error_code: "network" },
+      tags: {
+        ai_operation: "try",
+        ai_error_code: "network",
+        transport: "expo",
+        global_fetch: "other",
+      },
       extra: {
         reasonName: "Error",
         reasonMessage: "fetch failed: The Internet connection appears to be offline.",
+        reasonCode: undefined,
+        causeName: undefined,
+        causeMessage: undefined,
+        causeCode: undefined,
         status: undefined,
       },
     });
@@ -205,7 +226,7 @@ describe("AI client errors", () => {
   });
 
   it("broken JSON in a response: only the error name goes to Sentry", async () => {
-    mockFetch.mockResolvedValue({
+    mockGlobalFetch.mockResolvedValue({
       ok: true,
       status: 200,
       json: async () => {
@@ -215,7 +236,7 @@ describe("AI client errors", () => {
 
     await expect(fetchAiUsage()).rejects.toMatchObject({ code: "unexpected" });
     expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
-      tags: { ai_operation: "usage" },
+      tags: { ai_operation: "usage", transport: "global" },
       extra: { reasonName: "SyntaxError", reasonMessage: undefined },
     });
   });
@@ -240,6 +261,48 @@ describe("AI client errors", () => {
     expect(text).not.toContain(TOKEN);
   });
 
+  it("native error details (code, cause) go to the report, without the token", async () => {
+    // Так expo/fetch оборачивает ошибку iOS: FetchError «fetch failed: …» с cause и code.
+    const cause = Object.assign(new Error("Не удалось завершить операцию. Ошибка протокола"), {
+      code: "ERR_FETCH_NATIVE",
+    });
+    const failure = Object.assign(
+      new Error("fetch failed: Не удалось завершить операцию. Ошибка протокола", { cause }),
+      { code: "ERR_UNKNOWN" },
+    );
+    mockFetch.mockRejectedValue(failure);
+
+    expect((await askTry()).code).toBe("network");
+    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
+      tags: { transport: "expo" },
+      extra: {
+        reasonCode: "ERR_UNKNOWN",
+        causeName: "Error",
+        causeMessage: "Не удалось завершить операцию. Ошибка протокола",
+        causeCode: "ERR_FETCH_NATIVE",
+      },
+    });
+    expect(reportedText()).not.toContain(TOKEN);
+  });
+
+  it("the report says what globalThis.fetch really is (expo/fetch under the Sentry wrapper)", async () => {
+    const expoBuiltin = Object.defineProperty(async () => undefined, Symbol.for("expo.builtin"), {
+      value: true,
+    });
+    const sentryWrapper = Object.assign(
+      (url: string, init: unknown) => mockGlobalFetch(url, init),
+      { __sentry_original__: expoBuiltin },
+    );
+    globalThis.fetch = sentryWrapper as unknown as typeof globalThis.fetch;
+    mockGlobalFetch.mockRejectedValue(new Error("fetch failed: offline"));
+
+    await expect(fetchAiUsage()).rejects.toMatchObject({ code: "network" });
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
+      tags: { ai_operation: "usage", transport: "global", global_fetch: "expo" },
+    });
+  });
+
   it("«Stop» pressed → cancelled, not reported", async () => {
     const controller = new AbortController();
     mockFetch.mockImplementation(async () => {
@@ -255,23 +318,30 @@ describe("AI client errors", () => {
 });
 
 describe("AI request headers", () => {
-  // Заголовки, с которыми ушёл последний запрос.
-  function sentHeaders(): Record<string, string> {
-    const init = mockFetch.mock.calls.at(-1)?.[1] as { headers: Record<string, string> };
-    return init.headers;
+  type SentInit = { headers: Record<string, string>; credentials?: string };
+
+  // Параметры последнего запроса через этот fetch.
+  function lastInit(fetchMock: typeof mockFetch): SentInit {
+    return fetchMock.mock.calls.at(-1)?.[1] as SentInit;
   }
 
   const VALID_NAME = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
   const VALID_VALUE = /^[\x21-\x7E]([\x20-\x7E]*[\x21-\x7E])?$/;
 
   it("every header of usage (GET) and try (POST) is printable ASCII, no control characters", async () => {
-    mockFetch.mockResolvedValue(jsonResponse(200, USAGE));
+    mockGlobalFetch.mockResolvedValue(jsonResponse(200, USAGE));
     await fetchAiUsage();
-    const usageHeaders = sentHeaders();
+    const usageInit = lastInit(mockGlobalFetch);
+    const usageHeaders = usageInit.headers;
 
     mockFetch.mockResolvedValue(streamResponse(['{"type":"done"}\n']));
     await streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, () => {});
-    const tryHeaders = sentHeaders();
+    const tryInit = lastInit(mockFetch);
+    const tryHeaders = tryInit.headers;
+
+    // Cookie нашему API не нужны — ни в одном запросе.
+    expect(usageInit.credentials).toBe("omit");
+    expect(tryInit.credentials).toBe("omit");
 
     expect(Object.keys(usageHeaders)).toEqual(["Authorization"]);
     expect(Object.keys(tryHeaders).sort()).toEqual(["Authorization", "Content-Type"]);

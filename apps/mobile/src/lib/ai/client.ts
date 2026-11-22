@@ -7,7 +7,7 @@ import type {
   AiUsage,
 } from "@ai-navigator/shared";
 // fetch из Expo умеет читать ответ по кусочкам (response.body.getReader()) — для потока ответа ИИ.
-import { fetch } from "expo/fetch";
+import { fetch as expoFetch } from "expo/fetch";
 
 import {
   API_URL,
@@ -21,15 +21,23 @@ import {
   isFetchFailure,
   isServerErrorCode,
 } from "@/lib/ai/errors";
-import { reportAiError, type AiOperation } from "@/lib/ai/report";
+import {
+  reportAiError,
+  type AiOperation,
+  type AiTransport,
+} from "@/lib/ai/report";
 import { supabase } from "@/lib/supabase";
 
 // Клиент API ИИ-помощника (apps/web/src/app/api/ai). Экраны ходят к помощнику только отсюда.
 // Протокол (запросы, события потока, коды ошибок) — в @ai-navigator/shared, ai.ts.
 // Любая неудача — AiClientError с понятным кодом. «network» — только настоящий сбой связи;
 // всё неожиданное — «unexpected» и отчёт в Sentry (lib/ai/report.ts).
+//
+// Транспорт: поток «Попробуй сам» и «Заполнить» — expo/fetch; «сколько осталось» — глобальный
+// fetch, тот же, что у Supabase (диагностика сбоя в production-сборке: метка transport в Sentry).
 
-type FetchResponse = Awaited<ReturnType<typeof fetch>>;
+// Ответ, из которого читаем ошибку: годится и expo/fetch, и глобальный fetch.
+type ApiResponse = { status: number; json: () => Promise<unknown> };
 
 // Токен текущей сессии входа. getSession сам продлит его, если срок вышел.
 async function getAccessToken(): Promise<string> {
@@ -50,6 +58,7 @@ class RequestGuard {
 
   constructor(
     private readonly operation: AiOperation,
+    private readonly transport: AiTransport,
     private readonly external?: AbortSignal,
   ) {
     if (external?.aborted) this.controller.abort();
@@ -77,7 +86,7 @@ class RequestGuard {
       error instanceof AiClientError
         ? error
         : new AiClientError("unexpected", { reason: error });
-    reportAiError(this.operation, result);
+    reportAiError(this.operation, this.transport, result);
     return result;
   }
 
@@ -115,27 +124,39 @@ export function buildRequestHeaders(
   return headers;
 }
 
-async function send(
-  path: string,
-  token: string,
-  signal: AbortSignal,
-  body?: unknown,
-): Promise<FetchResponse> {
-  const headers = buildRequestHeaders(token, body !== undefined);
+// Параметры запроса. Cookie нашему API не нужны (вход — по токену), поэтому credentials: "omit":
+// iOS не подставит в запрос cookie из общего хранилища приложения.
+function requestInit(token: string, signal: AbortSignal, body?: unknown) {
+  return {
+    method: body === undefined ? "GET" : "POST",
+    headers: buildRequestHeaders(token, body !== undefined),
+    body: body === undefined ? undefined : JSON.stringify(body),
+    credentials: "omit" as const,
+    signal,
+  };
+}
+
+// Запрос не ушёл или ответ не пришёл из-за связи — «нет сети». Другое — разберёт explain.
+async function withNetworkErrors<T>(request: () => Promise<T>): Promise<T> {
   try {
-    return await fetch(`${API_URL}${path}`, {
-      method: body === undefined ? "GET" : "POST",
-      headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal,
-    });
+    return await request();
   } catch (error) {
-    // Запрос не ушёл или ответ не пришёл из-за связи — «нет сети». Другое — разберёт explain.
     if (isFetchFailure(error)) {
       throw new AiClientError("network", { reason: error });
     }
     throw error;
   }
+}
+
+function send(path: string, token: string, signal: AbortSignal, body?: unknown) {
+  const init = requestInit(token, signal, body);
+  return withNetworkErrors(() => expoFetch(`${API_URL}${path}`, init));
+}
+
+// Тот же fetch, что у Supabase-клиента (globalThis.fetch, обёрнутый Sentry).
+function sendGlobal(path: string, token: string, signal: AbortSignal) {
+  const init = requestInit(token, signal);
+  return withNetworkErrors(() => globalThis.fetch(`${API_URL}${path}`, init));
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
@@ -144,7 +165,7 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 // Ответ с ошибкой → AiClientError с кодом сервера. Не JSON (например, страница ошибки Vercel) —
 // «ИИ недоступен».
-async function readError(response: FetchResponse): Promise<AiClientError> {
+async function readError(response: ApiResponse): Promise<AiClientError> {
   const body: unknown = await response.json().catch(() => null);
   if (isObject(body) && isServerErrorCode(body.error)) {
     const { resetAt, maxLength } = body as Partial<AiErrorResponse>;
@@ -183,11 +204,11 @@ function toAiUsage(value: unknown): AiUsage | null {
 // ---------- Сколько запросов осталось сегодня: GET /api/ai/usage ----------
 
 export async function fetchAiUsage(signal?: AbortSignal): Promise<AiUsage> {
-  const guard = new RequestGuard("usage", signal);
+  const guard = new RequestGuard("usage", "global", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(USAGE_TIMEOUT_MS);
-    const response = await send("/api/ai/usage", token, guard.signal);
+    const response = await sendGlobal("/api/ai/usage", token, guard.signal);
     if (!response.ok) throw await readError(response);
     const body: unknown = await response.json();
     const usage = toAiUsage(body);
@@ -206,7 +227,7 @@ export async function requestAiFill(
   request: AiFillRequest,
   signal?: AbortSignal,
 ): Promise<AiFillResponse> {
-  const guard = new RequestGuard("fill", signal);
+  const guard = new RequestGuard("fill", "expo", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(FILL_TIMEOUT_MS);
@@ -275,7 +296,7 @@ export async function streamAiTry(
   onEvent: (event: AiTryStreamEvent) => void,
   signal?: AbortSignal,
 ): Promise<void> {
-  const guard = new RequestGuard("try", signal);
+  const guard = new RequestGuard("try", "expo", signal);
   try {
     const token = await getAccessToken();
     guard.restartTimer(TRY_START_TIMEOUT_MS);

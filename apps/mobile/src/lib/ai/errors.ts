@@ -59,10 +59,15 @@ export function isServerErrorCode(value: unknown): value is AiErrorCode {
   return SERVER_CODES.includes(value as AiErrorCode);
 }
 
-// fetch из Expo не смог отправить запрос или получить ответ: iOS сообщил о сбое связи
-// (FetchError с текстом «fetch failed: …»). Только это считаем «нет сети».
+// fetch не смог отправить запрос или получить ответ: iOS сообщил о сбое связи.
+// expo/fetch — FetchError «fetch failed: …», fetch из React Native — TypeError
+// «Network request failed». Только это считаем «нет сети».
 export function isFetchFailure(error: unknown): boolean {
-  return error instanceof Error && error.message.startsWith("fetch failed");
+  if (!(error instanceof Error)) return false;
+  return (
+    error.message.startsWith("fetch failed") ||
+    (error.name === "TypeError" && error.message === "Network request failed")
+  );
 }
 
 // Любую ошибку — в AiClientError (неизвестное — «unexpected», не «нет сети»).

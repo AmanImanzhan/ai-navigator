@@ -100,6 +100,10 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   stream broken); anything else is `unexpected`. Unexpected failures go to Sentry via lib/ai/report.ts
   (operation, code, error name/message, HTTP status — never prompts, answers or tokens).
   Request headers are validated (buildRequestHeaders: RFC token names, printable ASCII values).
+  All AI requests use `credentials: "omit"` (Bearer token only). Transport: try/fill — expo/fetch
+  (streaming), usage — globalThis.fetch (diagnostics; Sentry tags transport / global_fetch).
+  Dev builds route every NSURLSession request through the expo-dev-client network interceptor —
+  networking that works in dev can still fail in TestFlight; test network changes in a preview build.
 - Sentry `tracePropagationTargets: []` (lib/monitoring) — keep it: the native iOS SDK otherwise
   injects sentry-trace/baggage into every NSURLSession request, which broke expo/fetch AI requests
   in production ("fetch failed: Protocol error").
