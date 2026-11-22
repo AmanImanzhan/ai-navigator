@@ -85,6 +85,11 @@ export function initMonitoring(): void {
     // Скорость экранов и запросов — для части сессий, этого достаточно.
     tracesSampleRate: APP_ENV === "production" ? 0.1 : 1.0,
     integrations: [navigationIntegration],
+    // Не добавлять заголовки трассировки (sentry-trace, baggage) ни к каким запросам.
+    // Нативный Sentry на iOS дописывает их прямо в запрос NSURLSession — к запросам ИИ
+    // (expo/fetch) это давало «fetch failed: Ошибка протокола», и запрос не уходил.
+    // Список уходит и в нативный SDK: пустой — значит, ни к одному адресу.
+    tracePropagationTargets: [],
     // Без записи экрана и без формы отзыва.
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 0,

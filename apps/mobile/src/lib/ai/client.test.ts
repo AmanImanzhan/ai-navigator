@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 
-import { fetchAiUsage, streamAiTry } from "@/lib/ai/client";
+import { fetchAiUsage, isValidHeader, streamAiTry } from "@/lib/ai/client";
 import { AiClientError } from "@/lib/ai/errors";
 import { captureError } from "@/lib/monitoring";
 
@@ -251,5 +251,68 @@ describe("AI client errors", () => {
       streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, () => {}, controller.signal),
     ).rejects.toMatchObject({ code: "cancelled" });
     expect(mockCapture).not.toHaveBeenCalled();
+  });
+});
+
+describe("AI request headers", () => {
+  // Заголовки, с которыми ушёл последний запрос.
+  function sentHeaders(): Record<string, string> {
+    const init = mockFetch.mock.calls.at(-1)?.[1] as { headers: Record<string, string> };
+    return init.headers;
+  }
+
+  const VALID_NAME = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+  const VALID_VALUE = /^[\x21-\x7E]([\x20-\x7E]*[\x21-\x7E])?$/;
+
+  it("every header of usage (GET) and try (POST) is printable ASCII, no control characters", async () => {
+    mockFetch.mockResolvedValue(jsonResponse(200, USAGE));
+    await fetchAiUsage();
+    const usageHeaders = sentHeaders();
+
+    mockFetch.mockResolvedValue(streamResponse(['{"type":"done"}\n']));
+    await streamAiTry({ lessonId: "t1", locale: "ru", prompt: PROMPT }, () => {});
+    const tryHeaders = sentHeaders();
+
+    expect(Object.keys(usageHeaders)).toEqual(["Authorization"]);
+    expect(Object.keys(tryHeaders).sort()).toEqual(["Authorization", "Content-Type"]);
+    for (const [name, value] of [
+      ...Object.entries(usageHeaders),
+      ...Object.entries(tryHeaders),
+    ]) {
+      expect(name).toMatch(VALID_NAME);
+      expect(value).toMatch(VALID_VALUE);
+    }
+    // Ни текста запроса, ни трассировки Sentry в заголовках.
+    expect(JSON.stringify(tryHeaders)).not.toContain(PROMPT);
+    const names = Object.keys(tryHeaders).map((name) => name.toLowerCase());
+    for (const tracing of ["sentry-trace", "baggage", "traceparent"]) {
+      expect(names).not.toContain(tracing);
+    }
+  });
+
+  it.each([
+    ["line break", `${TOKEN}\n`],
+    ["trailing space", `${TOKEN} `],
+    ["non-ASCII", `${TOKEN}ё`],
+    ["control character", `${TOKEN}\u0000`],
+  ])("broken token (%s) is never sent, the error is reported without the token", async (_, token) => {
+    mockGetSession.mockResolvedValue({ data: { session: { access_token: token } } });
+
+    expect((await askTry()).code).toBe("unexpected");
+    expect(mockFetch).not.toHaveBeenCalled();
+    expect(mockCapture.mock.calls[0]?.[1]).toMatchObject({
+      extra: { reasonMessage: "invalid request header: Authorization" },
+    });
+    expect(reportedText()).not.toContain(TOKEN);
+  });
+
+  it("isValidHeader rejects bad names and values", () => {
+    expect(isValidHeader("Authorization", "Bearer a.b.c")).toBe(true);
+    expect(isValidHeader("X Test", "v")).toBe(false);
+    expect(isValidHeader("", "v")).toBe(false);
+    expect(isValidHeader("Х-Тест", "v")).toBe(false);
+    expect(isValidHeader("X-Test", "")).toBe(false);
+    expect(isValidHeader("X-Test", "a\r\nb")).toBe(false);
+    expect(isValidHeader("X-Test", "привет")).toBe(false);
   });
 });

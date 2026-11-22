@@ -87,19 +87,45 @@ class RequestGuard {
   }
 }
 
+// Имя заголовка — только символы token из HTTP (RFC 9110), значение — видимые ASCII и пробелы
+// внутри, без управляющих символов и переносов строк. Иначе iOS может оборвать запрос.
+const HEADER_NAME = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+const HEADER_VALUE = /^[\x21-\x7E]([\x20-\x7E]*[\x21-\x7E])?$/;
+
+export function isValidHeader(name: string, value: string): boolean {
+  return HEADER_NAME.test(name) && HEADER_VALUE.test(value);
+}
+
+// Заголовки запроса к API ИИ. Испорченный токен не отправляем: в отчёт — без самого токена.
+export function buildRequestHeaders(
+  token: string,
+  hasBody: boolean,
+): Record<string, string> {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+    ...(hasBody ? { "Content-Type": "application/json" } : {}),
+  };
+  for (const [name, value] of Object.entries(headers)) {
+    if (!isValidHeader(name, value)) {
+      throw new AiClientError("unexpected", {
+        reason: new Error(`invalid request header: ${name}`),
+      });
+    }
+  }
+  return headers;
+}
+
 async function send(
   path: string,
   token: string,
   signal: AbortSignal,
   body?: unknown,
 ): Promise<FetchResponse> {
+  const headers = buildRequestHeaders(token, body !== undefined);
   try {
     return await fetch(`${API_URL}${path}`, {
       method: body === undefined ? "GET" : "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
-      },
+      headers,
       body: body === undefined ? undefined : JSON.stringify(body),
       signal,
     });

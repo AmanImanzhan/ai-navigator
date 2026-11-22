@@ -99,6 +99,10 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   Error codes must be honest: `network` only for a real connection failure (expo/fetch «fetch failed»,
   stream broken); anything else is `unexpected`. Unexpected failures go to Sentry via lib/ai/report.ts
   (operation, code, error name/message, HTTP status — never prompts, answers or tokens).
+  Request headers are validated (buildRequestHeaders: RFC token names, printable ASCII values).
+- Sentry `tracePropagationTargets: []` (lib/monitoring) — keep it: the native iOS SDK otherwise
+  injects sentry-trace/baggage into every NSURLSession request, which broke expo/fetch AI requests
+  in production ("fetch failed: Protocol error").
 
 ## Subscription (RevenueCat, iOS only)
 - Business rules in packages/shared/src/subscription.ts: entitlement `premium`, product ids, AI limits.

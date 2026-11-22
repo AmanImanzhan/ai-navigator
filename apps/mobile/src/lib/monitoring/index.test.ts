@@ -60,6 +60,15 @@ describe("monitoring", () => {
     expect(monitoring.isMonitoringOn()).toBe(true);
   });
 
+  it("Sentry never adds trace headers to requests (iOS: they broke AI requests)", async () => {
+    const { sentry, monitoring } = await load(DSN, true);
+    monitoring.initMonitoring();
+
+    expect(sentry.init).toHaveBeenCalledWith(
+      expect.objectContaining({ tracePropagationTargets: [] }),
+    );
+  });
+
   it.each([
     "",
     "not-a-dsn",
