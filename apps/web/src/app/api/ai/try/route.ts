@@ -13,7 +13,8 @@ import { getUserFromRequest } from "@/lib/supabase/server";
 // POST /api/ai/try — «Попробуй сам»: человек пишет свой запрос в рамках урока,
 // ИИ отвечает и коротко разбирает запрос. Ответ — поток NDJSON (см. AiTryEvent в shared/ai.ts).
 export const dynamic = "force-dynamic";
-// Сколько секунд Vercel даёт функции на ответ.
+// Сколько секунд функция может отвечать (Netlify — 60 секунд и не больше,
+// см. HOSTING_FUNCTION_LIMIT_MS в lib/ai/config.ts).
 export const maxDuration = 60;
 
 const RequestSchema = z.object({

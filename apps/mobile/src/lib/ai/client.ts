@@ -147,7 +147,7 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-// Ответ с ошибкой → AiClientError с кодом сервера. Не JSON (например, страница ошибки Vercel) —
+// Ответ с ошибкой → AiClientError с кодом сервера. Не JSON (например, страница ошибки хостинга) —
 // «ИИ недоступен».
 function readError(response: XhrResponse): AiClientError {
   let body: unknown = null;

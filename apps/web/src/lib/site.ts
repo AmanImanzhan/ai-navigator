@@ -9,13 +9,13 @@ import {
 
 // Адрес сайта — для canonical-ссылок, sitemap и robots.
 // 1. NEXT_PUBLIC_SITE_URL — если задан (свой домен);
-// 2. VERCEL_PROJECT_PRODUCTION_URL — Vercel подставляет сам (…vercel.app);
+// 2. адрес деплоя — хостинг даёт его при сборке (Netlify: URL, …netlify.app), см. lib/deploy.ts;
 // 3. локально — localhost.
 export function getSiteUrl(): URL {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
   if (explicit) return new URL(explicit);
-  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
-  if (vercel) return new URL(`https://${vercel}`);
+  const deployed = process.env.NEXT_PUBLIC_DEPLOY_URL;
+  if (deployed) return new URL(deployed);
   return new URL("http://localhost:3000");
 }
 

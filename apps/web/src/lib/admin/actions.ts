@@ -46,7 +46,7 @@ const IdSchema = z.string().min(1).max(16);
 
 // ---------- Вход и выход ----------
 
-// Адрес сайта, с которого пришёл запрос: localhost, превью или основной домен на Vercel.
+// Адрес сайта, с которого пришёл запрос: localhost, превью или основной адрес сайта на Netlify.
 async function requestOrigin(): Promise<string> {
   const list = await headers();
   const origin = list.get("origin");

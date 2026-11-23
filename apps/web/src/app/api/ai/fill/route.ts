@@ -14,6 +14,8 @@ import { getUserFromRequest } from "@/lib/supabase/server";
 // POST /api/ai/fill — «Заполнить с помощником»: по шаблону и описанию ситуации ИИ предлагает
 // значения для полей в [квадратных скобках]. Ответ — JSON (AiFillResponse в shared/ai.ts).
 export const dynamic = "force-dynamic";
+// Сколько секунд функция может отвечать (Netlify — 60 секунд и не больше,
+// см. HOSTING_FUNCTION_LIMIT_MS в lib/ai/config.ts).
 export const maxDuration = 60;
 
 const RequestSchema = z.object({

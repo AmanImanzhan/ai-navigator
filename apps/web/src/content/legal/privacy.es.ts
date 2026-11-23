@@ -92,7 +92,7 @@ export const PRIVACY_ES: LegalDocument = {
       items: [
         "Supabase: nuestra base de datos y servicio de inicio de sesión, con servidores en la UE (Fráncfort, Alemania).",
         "Apple y Google: cuando inicias sesión con ellos, según sus políticas.",
-        "Vercel: alojamiento de este sitio web.",
+        "Netlify: alojamiento de este sitio web y su API.",
         "Anthropic: genera las respuestas del asistente de IA (servidores en EE. UU.).",
         "RevenueCat: comprueba la suscripción del App Store (servidores en EE. UU.).",
         "Sentry: informes de errores (Functional Software, Inc.; datos guardados en la UE, Fráncfort).",

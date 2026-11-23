@@ -60,7 +60,7 @@ export function scrubBreadcrumb(breadcrumb: Breadcrumb): Breadcrumb | null {
   return { ...breadcrumb, data: undefined };
 }
 
-// Окружение: production / preview / development (Vercel задаёт VERCEL_ENV сам).
+// Окружение: production / preview / development — вшито при сборке (lib/deploy.ts).
 export function sentryEnvironment(): string {
-  return process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? "development";
+  return process.env.NEXT_PUBLIC_DEPLOY_ENV || process.env.NODE_ENV || "development";
 }

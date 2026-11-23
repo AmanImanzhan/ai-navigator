@@ -5,7 +5,7 @@ import { API_URL } from "@/lib/ai/config";
 
 // Сайт AI Navigator (apps/web): тот же адрес, что и у API. Нет адреса в .env — основной сайт,
 // чтобы ссылки на Условия и Политику работали всегда (их проверяет Apple на экране подписки).
-const SITE_URL = API_URL || "https://ai-navigator-omega-dusky.vercel.app";
+const SITE_URL = API_URL || "https://ai-navigator-app.netlify.app";
 
 export type SitePage = "terms" | "privacy";
 

@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   );
 }
 
-// Как в документации Supabase: за балансировщиком (Vercel) настоящий адрес — в x-forwarded-host.
+// Как в документации Supabase: за балансировщиком хостинга (Netlify) настоящий адрес — в x-forwarded-host.
 function siteOrigin(request: Request, origin: string): string {
   if (process.env.NODE_ENV === "development") return origin;
   const forwardedHost = request.headers.get("x-forwarded-host");

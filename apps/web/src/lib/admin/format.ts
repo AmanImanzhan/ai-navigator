@@ -47,7 +47,7 @@ export function describeDetails(details: Json): string {
   return "";
 }
 
-// Дата и время по UTC: сервер на Vercel живёт в UTC, а часовой пояс админа мы не знаем.
+// Дата и время по UTC: сервер хостинга живёт в UTC, а часовой пояс админа мы не знаем.
 export function formatDateTime(iso: string): string {
   return `${new Date(iso).toLocaleString("ru-RU", {
     timeZone: "UTC",

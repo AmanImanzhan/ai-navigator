@@ -169,7 +169,7 @@ describe("streamAiTry over XHR", () => {
     expect(mockCapture).not.toHaveBeenCalled();
   });
 
-  it("not our format (e.g. Vercel error page) → ai_unavailable, reported with HTTP status", async () => {
+  it("not our format (e.g. hosting error page) → ai_unavailable, reported with HTTP status", async () => {
     const { outcome } = startTry();
     (await sentXhr()).respond(403).finish("<html>Forbidden</html>");
 

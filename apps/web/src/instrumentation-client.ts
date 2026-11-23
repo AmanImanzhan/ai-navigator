@@ -14,7 +14,7 @@ const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN?.trim();
 if (dsn) {
   Sentry.init({
     dsn,
-    environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? sentryEnvironment(),
+    environment: sentryEnvironment(),
     dataCollection: SENTRY_DATA_COLLECTION,
     tracesSampleRate: 0,
     beforeSend: scrubEvent,

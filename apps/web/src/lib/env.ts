@@ -29,13 +29,13 @@ export function getSupabaseSecretKey(): string {
   return read("SUPABASE_SECRET_KEY");
 }
 
-// Ключ Anthropic (ИИ-помощник). Только сервер; на Vercel — с пометкой Sensitive.
+// Ключ Anthropic (ИИ-помощник). Только сервер; на Netlify — с пометкой «Contains secret values».
 export function getAnthropicApiKey(): string {
   return read("ANTHROPIC_API_KEY");
 }
 
 // Секрет webhook RevenueCat: RevenueCat присылает его в заголовке Authorization.
-// Только сервер; на Vercel — с пометкой Sensitive.
+// Только сервер; на Netlify — с пометкой «Contains secret values».
 export function getRevenueCatWebhookSecret(): string {
   return read("REVENUECAT_WEBHOOK_SECRET");
 }

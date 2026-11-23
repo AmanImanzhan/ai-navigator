@@ -23,7 +23,8 @@
 - [ ] **Переменные EAS** (из `apps/mobile`, окружения preview и production) — значения из
       `apps/mobile/.env`; `SENTRY_AUTH_TOKEN` — visibility **secret**, вводить в терминале,
       не в чат и не в git. Проверка: `npx eas-cli@latest env:list --environment production`.
-      `EXPO_PUBLIC_API_URL` — адрес Vercel по https (не адрес компьютера в сети).
+      `EXPO_PUBLIC_API_URL` — адрес сайта на Netlify по https (`https://ai-navigator-app.netlify.app`,
+      не адрес компьютера в сети).
 - [ ] **Приложение создано в App Store Connect** (Мои приложения → «+» → Новое приложение,
       bundle id `com.amanimanzhan.ainavigator`, SKU любой). Apple ID приложения (число из
       «Информация о приложении») вписан в `apps/mobile/eas.json` → `submit.production.ios.ascAppId`
@@ -42,10 +43,10 @@
 
 ## Аккаунты и вход
 
-- [ ] **Google Auth Platform → Branding:** Application home page — `https://<проект>.vercel.app/`,
+- [ ] **Google Auth Platform → Branding:** Application home page — `https://ai-navigator-app.netlify.app/`,
       Privacy policy — `…/privacy`, Terms of service — `…/terms`; в Authorized domains — домен сайта.
       (По желанию) логотип: логотип и название на экране согласия требуют проверки бренда —
-      заложите несколько дней; для неё лучше свой домен, а не *.vercel.app.
+      заложите несколько дней; для неё лучше свой домен, а не *.netlify.app.
 - [ ] **Google Auth Platform → Audience:** нажать **Publish app** (сейчас Testing — войти могут
       только тест-пользователи). Для scopes `openid`, `email`, `profile` полная проверка Google
       не нужна.
@@ -58,10 +59,31 @@
       (`supabase secrets set`), затем `supabase functions deploy delete-account`.
       Проверить в логах функции, что нет записей «доступ Apple не отозван».
 
+## Netlify (Задача 36): хостинг сайта и API
+
+Переехали с Vercel: iOS-приложение в production не доставало до *.vercel.app (сервер, транспорт,
+Sentry и сеть исключены). Адрес: `https://ai-navigator-app.netlify.app`.
+
+- [ ] **Сайт создан из GitHub-репозитория:** Base directory — пусто, Package directory — `apps/web`;
+      сборка, Node 24 и npm 11.20.0 — из `apps/web/netlify.toml`. Next.js собирает адаптер OpenNext
+      (Netlify подключает сам).
+- [ ] **Environment variables** (Production): `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`,
+      `SUPABASE_SECRET_KEY`, `ANTHROPIC_API_KEY`, `REVENUECAT_WEBHOOK_SECRET`, `SENTRY_DSN`,
+      `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_SITE_URL`; для source maps — `SENTRY_ORG`, `SENTRY_PROJECT`,
+      `SENTRY_URL=https://de.sentry.io/`, `SENTRY_AUTH_TOKEN`. Секреты — с пометкой
+      «Contains secret values». После изменения переменных — новый деплой.
+- [ ] **Проверка:** `…/api/health` отвечает `ok` и `commit` — с Mac (curl) и с iPhone (Safari).
+- [ ] **EAS:** `EXPO_PUBLIC_API_URL` (preview и production) → адрес Netlify, затем новая сборка.
+- [ ] **RevenueCat:** вебхук → `https://ai-navigator-app.netlify.app/api/revenuecat/webhook`, Send test event → 200.
+- [ ] **Supabase → URL Configuration:** Site URL и Redirect URL админки — на адрес Netlify.
+- [ ] **ИИ в TestFlight работает** (usage, «Попробуй сам», «Заполнить»), вебхук — покупка в Sandbox.
+- [ ] **Vercel удалить** только после всех проверок выше (до этого он — запасной вариант).
+- [ ] **Лимиты Netlify:** функции — до 60 секунд (ИИ укладывается: `HOSTING_FUNCTION_LIMIT_MS` в
+      `apps/web/src/lib/ai/config.ts`). Раз в месяц смотреть расход бесплатного тарифа (Usage).
+
 ## Сайт (apps/web)
 
-- [ ] **Деплой на Vercel** (Root Directory `apps/web`) и переменные `SUPABASE_URL`,
-      `SUPABASE_PUBLISHABLE_KEY` для Production и Preview. Проверка: `…/api/health` отвечает `ok`.
+- [ ] **Деплой на Netlify** — см. раздел «Netlify». Проверка: `…/api/health` отвечает `ok`.
 - [ ] **Заполнить все `[TODO: …]`** в политике, условиях и поддержке
       (`apps/web/src/content/legal/*`, `support.email` в `src/i18n/dictionaries/*`): имя
       разработчика, страна, почта, дата, возраст, срок резервных копий, список сервисов.
@@ -72,15 +94,14 @@
       по правилам Apple Marketing Guidelines.
 - [x] **Иконка сайта:** `src/app/icon.png`, `favicon.ico`, `apple-icon.png` и картинки для ссылок
       `public/og/og-{en,ru,es}.png` — из рисунка робота (`npm run brand:assets`).
-- [ ] **Свой домен** (по желанию) — затем `NEXT_PUBLIC_SITE_URL` на Vercel.
-- [ ] **Тариф Vercel.** Hobby разрешён только для некоммерческих проектов. Перед запуском платной
-      подписки перейти на Vercel Pro (или на другой хостинг).
+- [ ] **Свой домен** (по желанию) — затем `NEXT_PUBLIC_SITE_URL` на Netlify, Supabase URL
+      Configuration, вебхук RevenueCat и `EXPO_PUBLIC_API_URL` (новая сборка приложения).
 
 ## ИИ-помощник (apps/web/src/app/api/ai)
 
 - [ ] **Миграция лимитов** `20261117120000_ai_usage_limits.sql` применена (`npm run db:push`).
-- [ ] **`ANTHROPIC_API_KEY` на Vercel** (Production, при желании Preview) с пометкой **Sensitive**,
-      затем Redeploy. Ключ — только в `.env.local` и в Vercel, никогда в git и в приложении.
+- [ ] **`ANTHROPIC_API_KEY` на Netlify** (Production) с пометкой **Contains secret values**,
+      затем новый деплой. Ключ — только в `.env.local` и в Netlify, никогда в git и в приложении.
 - [ ] **Лимит расходов в Anthropic Console** (Settings → Limits): месячный потолок, чтобы ошибка
       или злоупотребление не обошлись дорого. Включить уведомление о расходах.
 - [x] **Дневной лимит:** 3 запроса без подписки, 30 с подпиской — `AI_DAILY_LIMITS` в
@@ -115,9 +136,10 @@
       Production и Sandbox — так RevenueCat узнаёт об отменах и возвратах сразу.
 - [ ] **Webhook RevenueCat** → `https://<домен>/api/revenuecat/webhook`, Authorization header =
       `Bearer <REVENUECAT_WEBHOOK_SECRET>`, окружение — Both. Кнопка Send test event → 200
-      (в журнале Vercel: `revenuecat webhook: TEST → ignore:…`).
-- [ ] **`REVENUECAT_WEBHOOK_SECRET` на Vercel** (Production) с пометкой **Sensitive**, затем Redeploy.
-      Секрет — длинная случайная строка (`openssl rand -hex 32`), только в Vercel, RevenueCat и
+      (в журнале функций Netlify: `revenuecat webhook: TEST → ignore:…`).
+- [ ] **`REVENUECAT_WEBHOOK_SECRET` на Netlify** (Production) с пометкой **Contains secret values**,
+      затем новый деплой. Секрет — длинная случайная строка (`openssl rand -hex 32`), только в Netlify,
+      RevenueCat и
       `.env.local`; в git, чат и приложение — никогда.
 - [ ] **Webhook работает:** покупка в Sandbox → строка в `subscriptions`
       (`select status, product_id, expires_at, environment from public.subscriptions;`), в приложении
@@ -133,7 +155,6 @@
       AI Navigator Premium» или «Больше запросов с Premium», когда кончились 3 запроса; покупка
       требует входа через Apple. Указать, что все уроки бесплатные, а подписка увеличивает лимит ИИ.
 - [ ] **App Store → App Privacy:** добавить «Покупки» (Purchase History) — их видит RevenueCat.
-- [ ] **Тариф Vercel Pro** перед запуском подписки (см. «Сайт»).
 - [ ] **Скриншот для проверки товаров.** App Store Connect → оба товара (`ainavigator_premium_yearly`
       и `ainavigator_premium_monthly`) → «Информация для проверки»: сейчас стоит временный скриншот
       онбординга. Заменить на скриншот экрана подписки `/paywall` с ценой и кнопкой покупки, без кнопки
@@ -149,10 +170,11 @@
 - [ ] **Миграция** `20261118120000_admin.sql` применена (`npm run db:push`), типы обновлены
       (`npm run db:types`).
 - [ ] **Supabase → Authentication → URL Configuration:** Site URL — адрес сайта (сейчас
-      `https://ai-navigator-omega-dusky.vercel.app`); в Redirect URLs есть
+      `https://ai-navigator-app.netlify.app`); в Redirect URLs есть
       `https://<домен>/admin/auth/callback`. Перед релизом убрать `http://localhost:3000/**`.
       При смене домена — обновить оба поля.
-- [ ] **`SUPABASE_SECRET_KEY` на Vercel** (Production) с пометкой **Sensitive**, затем Redeploy.
+- [ ] **`SUPABASE_SECRET_KEY` на Netlify** (Production) с пометкой **Contains secret values**,
+      затем новый деплой.
       Только сервер; в приложении и в `NEXT_PUBLIC_` — никогда.
 - [ ] **Список админов** проверен: `select a.user_id, u.email from public.admins a join auth.users u on u.id = a.user_id;`
       Лишних удалить: `delete from public.admins where user_id = '…';` (действует сразу).
@@ -188,9 +210,9 @@
       (все `EXPO_PUBLIC_*`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_URL` и секрет `SENTRY_AUTH_TOKEN`).
       Организация в EU, поэтому `SENTRY_URL=https://de.sentry.io/` обязателен: sentry-cli берёт адрес
       из того же места, что и токен (переменные EAS), иначе загрузка уходит на sentry.io.
-- [ ] **Vercel → Environment Variables (Production):** `SENTRY_DSN` и `NEXT_PUBLIC_SENTRY_DSN`
+- [ ] **Netlify → Environment variables (Production):** `SENTRY_DSN` и `NEXT_PUBLIC_SENTRY_DSN`
       (DSN проекта Next.js). По желанию для source maps: `SENTRY_ORG`, `SENTRY_PROJECT`,
-      `SENTRY_AUTH_TOKEN` (Sensitive). Затем Redeploy.
+      `SENTRY_URL=https://de.sentry.io/` и `SENTRY_AUTH_TOKEN` (Contains secret values). Затем новый деплой.
 - [ ] **Проверка:** в production-сборке (TestFlight) ошибки и события приходят с environment
       `production` (Sentry → Issues; PostHog → свойство `environment` у событий). В development-сборке Настройки → Конфиденциальность → «Тест Sentry» → ошибка в
       Sentry (Issues, environment development). В PostHog → Activity появляются `app_opened`,

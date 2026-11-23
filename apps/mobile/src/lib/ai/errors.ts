@@ -20,7 +20,7 @@ export class AiClientError extends Error {
   readonly resetAt?: string;
   // Для input_too_long: сколько символов можно.
   readonly maxLength?: number;
-  // HTTP-статус, если сервер ответил не в нашем формате (например, страница ошибки Vercel).
+  // HTTP-статус, если сервер ответил не в нашем формате (например, страница ошибки хостинга).
   readonly status?: number;
   // Исходная ошибка (сеть, движок JS) — для отчёта в Sentry, человеку не показываем.
   readonly reason?: unknown;

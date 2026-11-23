@@ -1,0 +1,24 @@
+# Netlify: сайт, админка и API для приложения (apps/web, Next.js 16).
+#
+# Настройки сайта в интерфейсе Netlify (монорепо npm workspaces):
+# - Base directory — пусто (корень репозитория: там package-lock.json и workspaces,
+#   Netlify ставит зависимости и запускает сборку из корня);
+# - Package directory — apps/web (задаётся только в интерфейсе; этот файл Netlify ищет там).
+# Next.js собирает адаптер OpenNext (@netlify/plugin-nextjs): Netlify подключает его сам
+# и обновляет при каждой сборке — версию не закрепляем (так советует документация Netlify).
+#
+# Функции (API) — не дольше 60 секунд, это не настраивается. Поэтому ИИ ограничен по времени
+# (apps/web/src/lib/ai/config.ts).
+
+[build]
+  command = "npm run build --workspace web"
+  # Путь — от корня репозитория (Base directory).
+  publish = "apps/web/.next"
+
+[build.environment]
+  # Node 24: функции Netlify работают на той же версии, что и сборка, если это действующая
+  # среда AWS Lambda (иначе — Node 24). Держим их одинаковыми.
+  NODE_VERSION = "24"
+  # npm — ровно как packageManager в корневом package.json (иначе lock-файл читается иначе).
+  NPM_VERSION = "11.20.0"
+  NEXT_TELEMETRY_DISABLED = "1"

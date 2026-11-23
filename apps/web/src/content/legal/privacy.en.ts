@@ -92,7 +92,7 @@ export const PRIVACY_EN: LegalDocument = {
       items: [
         "Supabase — our database and sign-in service, servers in the EU (Frankfurt, Germany).",
         "Apple and Google — when you sign in with them, according to their policies.",
-        "Vercel — hosting of this website.",
+        "Netlify — hosting of this website and its API.",
         "Anthropic — generates the AI assistant's answers (servers in the USA).",
         "RevenueCat — checks the App Store subscription (servers in the USA).",
         "Sentry — error reports (Functional Software, Inc.; data stored in the EU, Frankfurt).",

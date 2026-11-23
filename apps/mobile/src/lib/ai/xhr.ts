@@ -1,7 +1,7 @@
-// Запросы к нашему API — через XMLHttpRequest React Native (нативно — RCTNetworking),
-// а не через expo/fetch: в production-сборке iOS expo/fetch не мог соединиться с *.vercel.app
-// («fetch failed: Ошибка протокола»), хотя тот же хост работал в Safari и через RCTNetworking.
+// Запросы к нашему API — через XMLHttpRequest React Native (нативно — RCTNetworking).
 // Поток ответа читаем по кусочкам: RN присылает onprogress с растущим responseText.
+// (Ни expo/fetch, ни XHR из iOS-приложения не доходили до *.vercel.app — поэтому API переехал
+// на Netlify, а транспорт остался XHR: он проверен тестами и не зависит от expo/fetch.)
 
 export type XhrRequest = {
   url: string;

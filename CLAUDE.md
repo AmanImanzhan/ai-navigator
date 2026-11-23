@@ -10,7 +10,7 @@ After changes, explain what each new file/function does. Keep tasks small.
 ## Stack
 - Monorepo with npm workspaces:
   - apps/mobile — Expo SDK 58 + React Native + TypeScript + Expo Router
-  - apps/web — Next.js 16 (App Router, TypeScript): public site (en/ru/es) + API for the app, deployed on Vercel
+  - apps/web — Next.js 16 (App Router, TypeScript): public site (en/ru/es) + API for the app, deployed on Netlify
   - packages/shared — shared types, AI protocol, subscription rules, content validation
 - Backend (later): Supabase (Postgres, Auth with Apple/Google), Next.js API, Vercel AI SDK
 - Payments: RevenueCat (iOS subscription, see below). Languages: English (default), Russian, Spanish
@@ -67,6 +67,12 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - API routes in src/app/api. Check the user with getUserFromRequest (lib/supabase/server.ts);
   the secret key only via lib/supabase/admin.ts (server-only), never NEXT_PUBLIC_.
 - Keep react/react-dom versions identical to apps/mobile (one React copy in the monorepo).
+- Hosting: Netlify (https://ai-navigator-app.netlify.app), config in apps/web/netlify.toml
+  (Base directory empty, Package directory apps/web — set in the Netlify UI). Next.js runs via the
+  OpenNext adapter (automatic). Functions: 60 s hard limit, streaming up to 20 MB — AI time limits in
+  src/lib/ai/config.ts must fit HOSTING_FUNCTION_LIMIT_MS (config.test.ts).
+- No hosting-specific env in code: deploy env / commit / site URL come from src/lib/deploy.ts
+  (next.config.ts inlines NEXT_PUBLIC_DEPLOY_* at build from Netlify CONTEXT / COMMIT_REF / URL).
 
 ## Admin panel (apps/web/src/app/admin, logic in src/lib/admin)
 - Own root layout, Russian only, no [lang]; noindex (metadata + X-Robots-Tag in next.config.ts), not in sitemap.
@@ -97,8 +103,8 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - Mobile client: apps/mobile/src/lib/ai (API_URL from EXPO_PUBLIC_API_URL, NDJSON stream, AiClientError
   codes), hooks useAiTry / useAiFill / useAiUsage, UI in src/components/ai.
   Transport: React Native XMLHttpRequest (lib/ai/xhr.ts → RCTNetworking), stream read incrementally via
-  onprogress, withCredentials=false, abort via AbortSignal. NOT expo/fetch: in iOS production builds
-  expo/fetch failed to reach *.vercel.app ("fetch failed: Protocol error") while dev builds worked.
+  onprogress, withCredentials=false, abort via AbortSignal. (In iOS production builds neither expo/fetch
+  nor XHR reached *.vercel.app — the reason the API moved to Netlify.)
   Tests use src/test/fakeXhr.ts (no network).
   Error codes must be honest: `network` only for a real connection failure (XHR error, stream broken);
   anything else is `unexpected`. Unexpected failures go to Sentry via lib/ai/report.ts (operation,
