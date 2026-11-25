@@ -244,6 +244,9 @@
     "privacy": "Privacy",
     "telemetryTitle": "Help improve the app",
     "telemetryText": "Anonymous usage statistics (which lessons are opened) and error reports. No texts you write, no email or name. You can turn it off at any time.",
+    "aiConsentTitle": "AI assistant",
+    "aiConsentOn": "Allowed: your prompts are sent to Anthropic (Claude) to get answers. Turn off to withdraw consent.",
+    "aiConsentOff": "Not allowed. The AI helper will ask for your consent before the first request.",
     "testSentry": "Test Sentry",
     "testSentrySent": "Test error sent — check Issues in Sentry.",
     "testSentryOff": "Sentry is off: no EXPO_PUBLIC_SENTRY_DSN or the switch is off."
@@ -359,7 +362,28 @@
       "timeout": "The answer is taking too long — the connection may be weak. Please try again.",
       "unexpected": "Something went wrong. Please try again.",
       "cancelled": "Request stopped.",
-      "retry": "Try again"
+      "retry": "Try again",
+      "consent_required": "Your text wasn't sent: the AI helper needs your consent first. Tap the button again to read it."
+    },
+    "consent": {
+      "title": "Before you ask AI",
+      "intro": "To answer you, the AI helper sends your text to an outside AI service. Here's what happens to it.",
+      "whatTitle": "What is sent",
+      "whatText": "The text you write for the helper — your prompt or the description of your situation — and which lesson or template it's for. Not your name, email or account.",
+      "whoTitle": "To whom",
+      "whoText": "Anthropic, the company that makes the Claude AI models, through our server.",
+      "whyTitle": "Why",
+      "whyText": "Only to write the answer or fill in the template fields for you.",
+      "trainingTitle": "AI training",
+      "trainingText": "Anthropic doesn't use this text to train its models.",
+      "retentionTitle": "How long it's kept",
+      "retentionText": "Anthropic deletes it within 30 days.",
+      "oursTitle": "On our side",
+      "oursText": "We don't store your text or the answers — only how many requests you used today.",
+      "withdraw": "You can withdraw consent anytime: Profile → Settings → Privacy → “AI assistant”. Please don't include document or card numbers, phone numbers or addresses in your requests.",
+      "privacyLink": "Privacy Policy",
+      "agree": "I agree",
+      "notNow": "Not now"
     }
   },
   "premium": {

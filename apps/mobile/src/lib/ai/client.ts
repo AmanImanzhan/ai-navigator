@@ -17,12 +17,19 @@ import { AiClientError, isServerErrorCode } from "@/lib/ai/errors";
 import { reportAiError, type AiOperation } from "@/lib/ai/report";
 import { XhrNetworkError, xhrRequest, type XhrResponse } from "@/lib/ai/xhr";
 import { supabase } from "@/lib/supabase";
+import { hasAiConsent } from "@/store/useAiConsentStore";
 
 // Клиент API ИИ-помощника (apps/web/src/app/api/ai). Экраны ходят к помощнику только отсюда.
 // Протокол (запросы, события потока, коды ошибок) — в @ai-navigator/shared, ai.ts.
 // Любая неудача — AiClientError с понятным кодом. «network» — только настоящий сбой связи;
 // всё неожиданное — «unexpected» и отчёт в Sentry (lib/ai/report.ts).
 // Транспорт — XMLHttpRequest React Native (lib/ai/xhr.ts), поток читаем по кусочкам.
+
+// Текст человека уходит в Anthropic только с его согласия (правило Apple 5.1.2(i)).
+// Экраны сначала показывают лист согласия; это последняя проверка — без согласия запрос не уходит.
+function requireAiConsent(): void {
+  if (!hasAiConsent()) throw new AiClientError("consent_required");
+}
 
 // Токен текущей сессии входа. getSession сам продлит его, если срок вышел.
 async function getAccessToken(): Promise<string> {
@@ -218,6 +225,7 @@ export async function requestAiFill(
 ): Promise<AiFillResponse> {
   const guard = new RequestGuard("fill", signal);
   try {
+    requireAiConsent();
     const token = await getAccessToken();
     guard.restartTimer(FILL_TIMEOUT_MS);
     const response = await send("/api/ai/fill", token, guard.signal, {
@@ -294,6 +302,7 @@ export async function streamAiTry(
   };
 
   try {
+    requireAiConsent();
     const token = await getAccessToken();
     guard.restartTimer(TRY_START_TIMEOUT_MS);
     const response = await send("/api/ai/try", token, guard.signal, {

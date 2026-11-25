@@ -41,3 +41,9 @@ example
 # generated native folders
 /ios
 /android
+
+# Локальные сборки EAS (eas build --local) — .ipa/.apk в git не кладём
+/build/
+*.ipa
+*.apk
+*.aab

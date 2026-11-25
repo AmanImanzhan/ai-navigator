@@ -5,22 +5,19 @@ import type { LegalDocument } from "@/content/legal";
 type LegalArticleProps = {
   title: string;
   document: LegalDocument;
-  draftNote: string;
   updatedLabel: string;
 };
 
-// Юридический документ: заголовок, пометка «черновик», дата и разделы.
+// Юридический документ: заголовок, дата и разделы.
 export function LegalArticle({
   title,
   document,
-  draftNote,
   updatedLabel,
 }: LegalArticleProps) {
   return (
     <article className={styles.article}>
       <header className={styles.header}>
         <h1 className={styles.title}>{title}</h1>
-        <p className={styles.draft}>{draftNote}</p>
         <p className={styles.updated}>
           {updatedLabel}: <TodoText text={document.updated} />
         </p>

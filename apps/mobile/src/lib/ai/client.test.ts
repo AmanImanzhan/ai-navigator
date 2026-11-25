@@ -33,6 +33,13 @@ jest.mock("@/lib/ai/config", () => ({
 
 jest.mock("@/lib/monitoring", () => ({ captureError: jest.fn() }));
 
+// Согласие отправлять текст ИИ (store/useAiConsentStore). По умолчанию дано; без него — свои тесты.
+const mockHasAiConsent = jest.fn<() => boolean>();
+
+jest.mock("@/store/useAiConsentStore", () => ({
+  hasAiConsent: () => mockHasAiConsent(),
+}));
+
 const mockCapture = jest.mocked(captureError);
 
 const USAGE = {
@@ -77,6 +84,7 @@ beforeEach(() => {
   mockCapture.mockReset();
   mockGetSession.mockReset();
   mockGetSession.mockResolvedValue({ data: { session: { access_token: TOKEN } } });
+  mockHasAiConsent.mockReturnValue(true);
 });
 
 afterEach(() => {
@@ -349,5 +357,44 @@ describe("AI request headers", () => {
     expect(isValidHeader("X-Test", "")).toBe(false);
     expect(isValidHeader("X-Test", "a\r\nb")).toBe(false);
     expect(isValidHeader("X-Test", "привет")).toBe(false);
+  });
+});
+
+describe("without consent to send text to AI", () => {
+  beforeEach(() => {
+    mockHasAiConsent.mockReturnValue(false);
+  });
+
+  it("'Ask AI' sends nothing: no request, no token, consent_required", async () => {
+    const { events, outcome } = startTry();
+    const error = await outcome;
+
+    expect(error?.code).toBe("consent_required");
+    expect(FakeXhr.instances).toHaveLength(0);
+    expect(mockGetSession).not.toHaveBeenCalled();
+    expect(events).toEqual([]);
+    // Это не сбой — в Sentry не сообщаем.
+    expect(mockCapture).not.toHaveBeenCalled();
+  });
+
+  it("'Fill in with the helper' sends nothing", async () => {
+    const error = await requestAiFill({
+      templateId: "1.1",
+      locale: "en",
+      situation: PROMPT,
+    }).catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(AiClientError);
+    expect((error as AiClientError).code).toBe("consent_required");
+    expect(FakeXhr.instances).toHaveLength(0);
+    expect(mockCapture).not.toHaveBeenCalled();
+  });
+
+  it("the remaining-requests counter still works: it sends no text", async () => {
+    const usage = fetchAiUsage();
+    const xhr = await sentXhr();
+    expect(xhr.url).toBe("https://api.example.test/api/ai/usage");
+    xhr.respond(200).finish(JSON.stringify(USAGE));
+    await expect(usage).resolves.toEqual(USAGE);
   });
 });

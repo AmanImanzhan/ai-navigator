@@ -41,15 +41,79 @@
 - [ ] **Проверка на iPhone по списку** из отчёта Задачи 35: вход Apple и Google, уроки и синхронизация,
       ИИ (лимит 3), покупка в Sandbox без списания, отмена, Sentry и PostHog с `production`.
 
+## Локальная сборка iOS (если кончился лимит облачных сборок EAS)
+
+Бесплатный тариф EAS — 15 облачных iOS-сборок; сборка на своём Mac их не тратит, отправка
+(Expo Submit) входит в бесплатный тариф.
+
+- [ ] **Инструменты:** Xcode 26.4+ (SDK 58), `xcode-select -p` → `/Applications/Xcode.app/…`,
+      лицензия принята (`xcodebuild -license check` → 0; иначе `sudo xcodebuild -license accept`),
+      Node `^22.13` / 24 / 26, npm 11.20.0, Homebrew, `brew install cocoapods fastlane`.
+      Свободно 20+ ГБ.
+- [ ] **Номер сборки:** `npx eas-cli@latest build:version:get -p ios --profile production` — сборка
+      возьмёт «это число + 1». Если число больше последней загруженной сборки (неудачная попытка уже
+      подняла счётчик), вернуть: `npx eas-cli@latest build:version:set -p ios --profile production`.
+- [ ] **Сборка** (из `apps/mobile`, 20–40 минут):
+      `npx eas-cli@latest build --platform ios --profile production --local --output ./build/AINavigator.ipa`.
+      Переменные plaintext/sensitive окружения production EAS подтягивает сам; secret
+      (`SENTRY_AUTH_TOKEN`) — нет, поэтому source maps не загружаются (сборка не падает).
+      Сертификат и профиль — с серверов EAS (remote credentials).
+- [ ] **Отправка:** `npx eas-cli@latest submit --platform ios --path ./build/AINavigator.ipa`.
+      Запасной путь — приложение Transporter (Mac App Store): войти Apple ID → перетащить .ipa → Deliver.
+- [ ] **Source maps для этой сборки** (по желанию): без токена Sentry покажет код без понятных строк.
+- [ ] `apps/mobile/build/` — в `.gitignore` (.ipa в git не попадает).
+
+## App Store (Задача 36): страница, анкеты, скриншоты
+
+Тексты и ответы — в `docs/app-store/`: `listing.md` (страница, категории, адреса, заметки для
+ревью), `privacy-answers.md` (App Privacy), `age-rating.md` (возрастной рейтинг).
+
+- [x] **Сайт без заглушек** (правило 2.1(a)): `/privacy`, `/terms`, `/support` (en/ru/es) заполнены
+      (Amangali Imanzhan, Грузия, imanzhanaman2@gmail.com, дата 1 декабря 2026), пометки «Черновик»
+      нет. Тест `apps/web/src/content/legal/legal.test.ts` не даст вернуть `[TODO`.
+      После деплоя открыть страницы и проверить глазами. Меняете текст — обновите дату.
+- [x] **Согласие на отправку текста ИИ** (правило 5.1.2(i), «third-party AI»): лист
+      `AiConsentSheet` перед первым запросом («Спросите AI» и «Заполнить с помощником»): что, кому
+      (Anthropic, Claude), зачем, без обучения, удаление через 30 дней, ссылка на политику. Без
+      согласия клиент (`lib/ai/client.ts`) не отправляет запрос. Хранится на телефоне с версией
+      текста (`AI_CONSENT_VERSION`); отозвать — Настройки → Конфиденциальность → «AI-помощник».
+- [ ] **Проверить согласие в TestFlight:** первый запрос → лист; «Не сейчас» → ничего не ушло
+      (счётчик запросов не изменился); «Согласен» → ответ; в Настройках выключить → следующий
+      запрос снова показывает лист. Изменили смысл текста листа — увеличить `AI_CONSENT_VERSION`.
+- [ ] **App Information:** Name, Subtitle, Category (Education / Productivity), Privacy Policy URL —
+      для EN, RU, Spanish (Mexico), Spanish (Spain); Content Rights — честно ответить,
+      есть ли в приложении чужой контент (тексты уроков и справочника — наши).
+- [ ] **Версия 1.0:** Promotional Text, Description, Keywords, Support URL, Marketing URL — из
+      `listing.md`; Copyright — `2026 <имя или компания>`. Подписки (обе) прикреплены к версии в
+      разделе In-App Purchases and Subscriptions.
+- [ ] **App Privacy** — по `privacy-answers.md` → Publish. Совпадает с `/privacy`.
+- [ ] **Age Rating** — по `age-rating.md`; Override → тот же возраст, что в `/privacy` («Children»).
+- [ ] **App Review Information:** Sign-in required — No; Notes — из `listing.md`; контакты.
+      Google-вход опубликован (Testing → In production), иначе ревьюер не войдёт через Google.
+- [ ] **Скриншоты** — iPhone 6.9" (1320×2868), 3–10 штук на каждый язык; iPad не нужен
+      (`supportsTablet` в app.json нет — приложение только для iPhone). Сборка для симулятора
+      (облачный лимит не тратит, нужны CocoaPods):
+      `cd apps/mobile && npx expo run:ios --configuration Release --device "iPhone 17 Pro Max"`
+      (Release — без меню разработчика; 10–20 минут первый раз). Затем из корня:
+      `bash scripts/app-store-screenshots.sh en` (и `ru`, `es` после смены языка в приложении).
+      Файлы — в `apps/mobile/build/screenshots/` (не в git). Без личных данных на экране:
+      войти тестовым Apple ID, в полях — выдуманные примеры.
+- [ ] **Перед «Submit for Review»:** сборка выбрана (TestFlight прошла), Export Compliance —
+      `usesNonExemptEncryption: false` уже в app.json; цена приложения — Free; страны доступности.
+
 ## Аккаунты и вход
 
-- [ ] **Google Auth Platform → Branding:** Application home page — `https://ai-navigator-app.netlify.app/`,
-      Privacy policy — `…/privacy`, Terms of service — `…/terms`; в Authorized domains — домен сайта.
-      (По желанию) логотип: логотип и название на экране согласия требуют проверки бренда —
-      заложите несколько дней; для неё лучше свой домен, а не *.netlify.app.
-- [ ] **Google Auth Platform → Audience:** нажать **Publish app** (сейчас Testing — войти могут
-      только тест-пользователи). Для scopes `openid`, `email`, `profile` полная проверка Google
-      не нужна.
+- [ ] **Google Auth Platform → Branding:** App name `AI Navigator`, User support email и Developer
+      contact — твоя почта; Application home page — `https://ai-navigator-app.netlify.app/`,
+      Privacy policy — `…/privacy`, Terms of service — `…/terms`; Authorized domains —
+      `ai-navigator-app.netlify.app` (netlify.app в Public Suffix List, поэтому поддомен считается
+      отдельным доменом) и уже добавленный домен Supabase — не удалять (через него вход в админку).
+      **Логотип не загружать:** логотип включает проверку бренда, а для неё все Authorized domains
+      нужно подтвердить в Search Console — домен `*.supabase.co` подтвердить нельзя.
+- [ ] **Google Auth Platform → Audience:** нажать **Publish app** → Confirm (статус Testing →
+      In production). Пока Testing — войти через Google могут только тест-пользователи (и ревьюер
+      Apple — нет!). Для scopes `openid`, `email`, `profile` проверка Google не нужна, публикация
+      сразу. Проверка: войти через Google аккаунтом, которого нет в Test users.
 - [x] **Удаление аккаунта в приложении** — требование App Store 5.1.1(v) (Задача 25.2):
       Настройки → «Удалить аккаунт»; Edge Function `delete-account` отзывает доступ Apple
       и удаляет пользователя (данные — каскадом); Google — `revokeAccess`; отзыв «Входа с Apple»
@@ -235,7 +299,8 @@ Sentry и сеть исключены). Адрес: `https://ai-navigator-app.ne
       срок хранения отчётов и статистики (как в настройках Sentry и PostHog).
 - [x] **Условия использования** (`/terms`): подписка, цены, пробный период, автопродление, как
       отменить — по требованиям Apple. При смене цен — обновить текст.
-- [ ] **App Store → App Privacy:** заполнить, какие данные собираются (контактная информация,
+- [ ] **App Store → App Privacy** (готовые ответы — `docs/app-store/privacy-answers.md`):
+      заполнить, какие данные собираются (контактная информация,
       идентификатор пользователя, контент пользователя, покупки), а также:
       **Diagnostics** — Crash Data и Performance Data (Sentry); **Usage Data** — Product Interaction
       (PostHog). Для обоих: используется для App Functionality / Analytics, **связано с пользователем**

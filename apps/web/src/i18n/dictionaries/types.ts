@@ -47,7 +47,6 @@ export type Dictionary = {
     languagesNote: string;
   };
   legal: {
-    draftNote: string;
     updated: string;
   };
   support: {
@@ -55,7 +54,7 @@ export type Dictionary = {
     lead: string;
     contactTitle: string;
     contactText: string;
-    // Почта поддержки. Пока не заполнена — показываем пометку TODO.
+    // Почта поддержки (та же, что в политике и условиях).
     email: string;
     faqTitle: string;
     faq: FaqItem[];

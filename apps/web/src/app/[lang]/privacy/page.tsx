@@ -35,7 +35,6 @@ export default async function Privacy({
       <LegalArticle
         title={dict.meta.privacyTitle}
         document={getPrivacyPolicy(lang)}
-        draftNote={dict.legal.draftNote}
         updatedLabel={dict.legal.updated}
       />
     </SiteShell>

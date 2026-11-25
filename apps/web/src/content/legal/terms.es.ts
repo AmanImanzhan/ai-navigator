@@ -1,14 +1,14 @@
 import type { LegalDocument } from "@/content/legal/types";
 
 export const TERMS_ES: LegalDocument = {
-  updated: "[TODO: fecha]",
+  updated: "1 de diciembre de 2026",
   intro:
     "Estas son las normas de uso de la app y del sitio web de AI Navigator. Al usarlos, aceptas estas condiciones.",
   sections: [
     {
       heading: "Quién ofrece el servicio",
       paragraphs: [
-        "AI Navigator lo ofrece [TODO: nombre del desarrollador o empresa], [TODO: país]. Contacto: [TODO: correo].",
+        "AI Navigator lo ofrece Amangali Imanzhan, Georgia. Contacto: imanzhanaman2@gmail.com.",
       ],
     },
     {
@@ -52,7 +52,7 @@ export const TERMS_ES: LegalDocument = {
     {
       heading: "Propiedad intelectual",
       paragraphs: [
-        "Las lecciones, plantillas, textos y diseño de AI Navigator pertenecen a [TODO: titular]. Puedes usar las plantillas para tus propias necesidades, también en el trabajo. Los textos que creas con herramientas de IA te pertenecen, según las condiciones de esas herramientas.",
+        "Las lecciones, plantillas, textos y diseño de AI Navigator pertenecen a Amangali Imanzhan. Puedes usar las plantillas para tus propias necesidades, también en el trabajo. Los textos que creas con herramientas de IA te pertenecen, según las condiciones de esas herramientas.",
       ],
     },
     {
@@ -70,7 +70,7 @@ export const TERMS_ES: LegalDocument = {
     {
       heading: "Cambios y ley aplicable",
       paragraphs: [
-        "Podemos actualizar estas condiciones: cambiaremos la fecha de arriba y avisaremos de los cambios importantes en la app. Estas condiciones se rigen por la ley de [TODO: país].",
+        "Podemos actualizar estas condiciones: cambiaremos la fecha de arriba y avisaremos de los cambios importantes en la app. Estas condiciones se rigen por la ley de Georgia.",
       ],
     },
   ],

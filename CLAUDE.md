@@ -31,6 +31,11 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
 - Build environment (development/preview/production) → `APP_ENV` (src/lib/appEnv.ts): Sentry
   `environment` and PostHog super property `environment`.
 - iOS system dialogs language: `locales` (languages/en|ru|es.json).
+- Local iOS build (when the EAS cloud quota is used up): `eas build --local` from apps/mobile needs Xcode 26.4+,
+  CocoaPods and fastlane (Homebrew). Remote credentials and plaintext/sensitive EAS env are used;
+  secret SENTRY_AUTH_TOKEN is not → source map upload is skipped. Check/set the remote build number first
+  (`build:version:get` / `build:version:set`). Submit: `eas submit --path <ipa>` (or Transporter).
+  Steps: docs/release-checklist.md → «Локальная сборка iOS».
 - No web version: keep `web.output: "single"` in app.json. "server"/"static" (or +api files,
   server functions) make `expo export:embed` run _layout.tsx in Node during the iOS build.
   Persistent storage only via `appStorage` (src/lib/storage.ts), never AsyncStorage directly —
@@ -97,6 +102,9 @@ Follow @apps/mobile/AGENTS.md — always check current Expo docs, don't rely on 
   Consume before calling the model; refund if the model fails.
 - Lesson/template context is loaded from the database, never taken from the request.
 - Never log user prompts or model answers — only error types and codes.
+- AI consent (Apple 5.1.2(i)): text goes to Anthropic only after the consent sheet (components/ai/AiConsentSheet,
+  hook useAiConsentGate, store useAiConsentStore; client.ts refuses with `consent_required`). Any new AI request
+  goes through the gate. Changed what is sent or to whom → bump AI_CONSENT_VERSION and update /privacy.
 - API protocol types (requests, NDJSON events, error codes) live in packages/shared/src/ai.ts.
 - Manual check: `npm run ai:smoke` (root) prints a test user token and curl commands
   (needs Email sign-in temporarily enabled in Supabase — it's off in the project; see the script header).

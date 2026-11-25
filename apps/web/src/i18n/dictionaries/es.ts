@@ -63,8 +63,6 @@ export const ES: Dictionary = {
     languagesNote: "Disponible en español, inglés y ruso.",
   },
   legal: {
-    draftNote:
-      "Borrador. Este documento se está preparando y se completará antes del lanzamiento de la app.",
     updated: "Última actualización",
   },
   support: {
@@ -72,7 +70,7 @@ export const ES: Dictionary = {
     lead: "¿Tienes una pregunta, un problema o una idea? Te ayudamos.",
     contactTitle: "Escríbenos",
     contactText: "Escríbenos y te responderemos lo antes posible:",
-    email: "[TODO: correo de soporte]",
+    email: "imanzhanaman2@gmail.com",
     faqTitle: "Preguntas frecuentes",
     faq: [
       {

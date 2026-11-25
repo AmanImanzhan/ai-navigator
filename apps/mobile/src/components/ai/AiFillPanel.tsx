@@ -8,10 +8,12 @@ import {
   View,
 } from "react-native";
 
+import { AiConsentSheet } from "@/components/ai/AiConsentSheet";
 import { AiErrorNotice } from "@/components/ai/AiErrorNotice";
 import { AiSignInPrompt } from "@/components/ai/AiSignInPrompt";
 import { AiUsageNote } from "@/components/ai/AiUsageNote";
 import { Button } from "@/components/Button";
+import { useAiConsentGate } from "@/hooks/useAiConsentGate";
 import { useAiFill } from "@/hooks/useAiFill";
 import { useAiUsage } from "@/hooks/useAiUsage";
 import { useAuth } from "@/hooks/useAuth";
@@ -58,9 +60,16 @@ function AiFillForm({ templateId, fields, onValues }: AiFillPanelProps) {
   const loading = status === "loading";
   const trimmed = situation.trim();
 
+  // Первый запрос — только после согласия отправлять текст в Anthropic.
+  const consent = useAiConsentGate();
+
   async function handleFill() {
     const values = await fill(trimmed);
     if (values) onValues(values);
+  }
+
+  function requestFill() {
+    consent.run(() => void handleFill());
   }
 
   // VoiceOver: одно сообщение, когда поля заполнены.
@@ -89,7 +98,7 @@ function AiFillForm({ templateId, fields, onValues }: AiFillPanelProps) {
       <Button
         title={loading ? t("ai.fill.loading") : t("ai.fill.submit")}
         disabled={loading || !trimmed}
-        onPress={handleFill}
+        onPress={requestFill}
       />
 
       {error?.code !== "limit_reached" ? <AiUsageNote usage={usage} /> : null}
@@ -108,8 +117,14 @@ function AiFillForm({ templateId, fields, onValues }: AiFillPanelProps) {
       ) : null}
 
       {status === "error" && error ? (
-        <AiErrorNotice error={error} onRetry={handleFill} />
+        <AiErrorNotice error={error} onRetry={requestFill} />
       ) : null}
+
+      <AiConsentSheet
+        visible={consent.visible}
+        onAgree={consent.agree}
+        onDecline={consent.decline}
+      />
     </View>
   );
 }

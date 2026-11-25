@@ -28,7 +28,6 @@ export default async function Terms({ params }: PageProps<"/[lang]/terms">) {
       <LegalArticle
         title={dict.meta.termsTitle}
         document={getTerms(lang)}
-        draftNote={dict.legal.draftNote}
         updatedLabel={dict.legal.updated}
       />
     </SiteShell>

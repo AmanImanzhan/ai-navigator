@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 
 import styles from "@/app/[lang]/support/page.module.css";
 import { SiteShell } from "@/components/SiteShell";
-import { TodoText } from "@/components/TodoText";
 import { hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { pageMetadata } from "@/lib/site";
@@ -29,7 +28,6 @@ export default async function Support({
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const { support } = getDictionary(lang);
-  const hasEmail = !support.email.startsWith("[TODO");
 
   return (
     <SiteShell lang={lang} path="/support">
@@ -43,11 +41,7 @@ export default async function Support({
           <h2 className={styles.heading}>{support.contactTitle}</h2>
           <p>{support.contactText}</p>
           <p className={styles.email}>
-            {hasEmail ? (
-              <a href={`mailto:${support.email}`}>{support.email}</a>
-            ) : (
-              <TodoText text={support.email} />
-            )}
+            <a href={`mailto:${support.email}`}>{support.email}</a>
           </p>
         </section>
 

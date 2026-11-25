@@ -61,8 +61,6 @@ export const RU: Dictionary = {
     languagesNote: "На русском, английском и испанском.",
   },
   legal: {
-    draftNote:
-      "Черновик. Документ готовится и будет окончательно оформлен до выхода приложения.",
     updated: "Обновлено",
   },
   support: {
@@ -70,7 +68,7 @@ export const RU: Dictionary = {
     lead: "Вопрос, проблема или идея? Мы поможем.",
     contactTitle: "Напишите нам",
     contactText: "Напишите нам, и мы ответим, как только сможем:",
-    email: "[TODO: почта поддержки]",
+    email: "imanzhanaman2@gmail.com",
     faqTitle: "Частые вопросы",
     faq: [
       {

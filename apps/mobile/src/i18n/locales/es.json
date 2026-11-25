@@ -244,6 +244,9 @@
     "privacy": "Privacidad",
     "telemetryTitle": "Ayudar a mejorar la app",
     "telemetryText": "Estadísticas de uso anónimas (qué lecciones se abren) e informes de errores. Sin tus textos, correo ni nombre. Puedes desactivarlo cuando quieras.",
+    "aiConsentTitle": "Asistente de IA",
+    "aiConsentOn": "Permitido: tus prompts se envían a Anthropic (Claude) para obtener respuestas. Desactívalo para retirar el consentimiento.",
+    "aiConsentOff": "No permitido. El asistente te pedirá tu consentimiento antes de la primera consulta.",
     "testSentry": "Probar Sentry",
     "testSentrySent": "Error de prueba enviado: revisa Issues en Sentry.",
     "testSentryOff": "Sentry está desactivado: falta EXPO_PUBLIC_SENTRY_DSN o el interruptor está apagado."
@@ -359,7 +362,28 @@
       "timeout": "La respuesta tarda demasiado; puede que la conexión sea débil. Inténtalo de nuevo.",
       "unexpected": "Algo salió mal. Inténtalo de nuevo.",
       "cancelled": "Petición detenida.",
-      "retry": "Intentar de nuevo"
+      "retry": "Intentar de nuevo",
+      "consent_required": "Tu texto no se envió: primero el asistente necesita tu consentimiento. Vuelve a tocar el botón para leerlo."
+    },
+    "consent": {
+      "title": "Antes de preguntar a la IA",
+      "intro": "Para responderte, el asistente de IA envía tu texto a un servicio de IA externo. Esto es lo que pasa con él.",
+      "whatTitle": "Qué se envía",
+      "whatText": "El texto que escribes para el asistente (tu prompt o la descripción de tu situación) y a qué lección o plantilla corresponde. No tu nombre, correo ni cuenta.",
+      "whoTitle": "A quién",
+      "whoText": "A Anthropic, la empresa que desarrolla los modelos de IA Claude, a través de nuestro servidor.",
+      "whyTitle": "Para qué",
+      "whyText": "Solo para escribir la respuesta o completar los campos de la plantilla.",
+      "trainingTitle": "Entrenamiento de IA",
+      "trainingText": "Anthropic no usa este texto para entrenar sus modelos.",
+      "retentionTitle": "Cuánto tiempo se guarda",
+      "retentionText": "Anthropic lo elimina en un plazo de 30 días.",
+      "oursTitle": "Por nuestra parte",
+      "oursText": "No guardamos tu texto ni las respuestas, solo cuántas consultas hiciste hoy.",
+      "withdraw": "Puedes retirar el consentimiento cuando quieras: Perfil → Ajustes → Privacidad → «Asistente de IA». No incluyas en tus consultas números de documentos o tarjetas, teléfonos ni direcciones.",
+      "privacyLink": "Política de privacidad",
+      "agree": "Acepto",
+      "notNow": "Ahora no"
     }
   },
   "premium": {

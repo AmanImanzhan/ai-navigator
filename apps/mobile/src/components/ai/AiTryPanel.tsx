@@ -9,11 +9,13 @@ import {
   View,
 } from "react-native";
 
+import { AiConsentSheet } from "@/components/ai/AiConsentSheet";
 import { AiErrorNotice } from "@/components/ai/AiErrorNotice";
 import { AiSignInPrompt } from "@/components/ai/AiSignInPrompt";
 import { AiUsageNote } from "@/components/ai/AiUsageNote";
 import { Button } from "@/components/Button";
 import { CopyButton } from "@/components/CopyButton";
+import { useAiConsentGate } from "@/hooks/useAiConsentGate";
 import { useAiTry } from "@/hooks/useAiTry";
 import { useAiUsage } from "@/hooks/useAiUsage";
 import { useAuth } from "@/hooks/useAuth";
@@ -55,6 +57,8 @@ function AiTryForm({ lessonId, initialPrompt }: AiTryPanelProps) {
   const [prompt, setPrompt] = useState(initialPrompt);
   const usage = useAiUsage();
   const { status, answer, review, error, ask, stop } = useAiTry(lessonId);
+  // Первый запрос — только после согласия отправлять текст в Anthropic.
+  const consent = useAiConsentGate();
 
   const streaming = status === "streaming";
   const trimmed = prompt.trim();
@@ -88,7 +92,7 @@ function AiTryForm({ lessonId, initialPrompt }: AiTryPanelProps) {
         <Button
           title={status === "idle" ? t("ai.try.ask") : t("ai.try.askAgain")}
           disabled={!trimmed}
-          onPress={() => ask(trimmed)}
+          onPress={() => consent.run(() => ask(trimmed))}
         />
       )}
 
@@ -132,8 +136,17 @@ function AiTryForm({ lessonId, initialPrompt }: AiTryPanelProps) {
       ) : null}
 
       {status === "error" && error ? (
-        <AiErrorNotice error={error} onRetry={() => ask(trimmed)} />
+        <AiErrorNotice
+          error={error}
+          onRetry={() => consent.run(() => ask(trimmed))}
+        />
       ) : null}
+
+      <AiConsentSheet
+        visible={consent.visible}
+        onAgree={consent.agree}
+        onDecline={consent.decline}
+      />
     </View>
   );
 }

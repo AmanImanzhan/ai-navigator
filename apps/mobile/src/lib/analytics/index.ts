@@ -37,6 +37,8 @@ export type AnalyticsEvents = {
   template_copied: { template_id: string };
   ai_request_sent: { feature: "try" | "fill"; lesson_id?: string; template_id?: string };
   ai_limit_reached: { feature: "try" | "fill"; premium: boolean };
+  // Лист согласия на отправку текста ИИ: показан / «Согласен» / «Не сейчас» / отозвано в Настройках.
+  ai_consent: { action: "shown" | "given" | "declined" | "revoked" };
   paywall_viewed: { source: string };
   purchase_started: { plan: "monthly" | "annual" };
   purchase_completed: { plan: "monthly" | "annual" };

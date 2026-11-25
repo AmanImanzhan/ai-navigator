@@ -1,14 +1,14 @@
 import type { LegalDocument } from "@/content/legal/types";
 
 export const PRIVACY_EN: LegalDocument = {
-  updated: "[TODO: date]",
+  updated: "December 1, 2026",
   intro:
     "This policy explains what data the AI Navigator app and website collect, why, where it is stored and how you can delete it. We collect as little as possible: the app works fully without an account.",
   sections: [
     {
       heading: "Who we are",
       paragraphs: [
-        "AI Navigator is developed by [TODO: developer name or company], [TODO: country]. Contact: [TODO: email].",
+        "AI Navigator is developed by Amangali Imanzhan, Georgia. Contact: imanzhanaman2@gmail.com.",
       ],
     },
     {
@@ -41,7 +41,8 @@ export const PRIVACY_EN: LegalDocument = {
       heading: "AI assistant",
       paragraphs: [
         "In lessons you can use the built-in AI assistant: it answers a prompt you wrote and briefly reviews it, or suggests values for the fields of a prompt template. The assistant is available only after you sign in.",
-        "To generate an answer, the text you send to the assistant (your prompt or the description of your situation), together with the lesson or template it belongs to, is sent to Anthropic, the company that makes the Claude AI models. Under Anthropic's commercial terms, this data isn't used to train their models. [TODO: check how long Anthropic keeps API data]",
+        "To generate an answer, the text you send to the assistant (your prompt or the description of your situation), together with the lesson or template it belongs to, is sent to Anthropic, the company that makes the Claude AI models. Under Anthropic's commercial terms, this data isn't used to train their models, and Anthropic deletes it within 30 days.",
+        "Before your first request, the app shows what will be sent and to whom, and asks for your consent. Without it, nothing is sent to the assistant. You can withdraw consent at any time: Profile → Settings → Privacy → “AI assistant”. If we change how the assistant handles your text, the app will ask again.",
         "We don't store the text of your requests or the assistant's answers. We only store how many times you used the assistant today (to apply the daily limit) and a technical record of each use, without its content, for up to 2 days.",
         "Please don't include personal data in your requests: document or card numbers, phone numbers, addresses.",
       ],
@@ -56,7 +57,7 @@ export const PRIVACY_EN: LegalDocument = {
       heading: "Subscription (AI Navigator Premium)",
       paragraphs: [
         "You can buy the AI Navigator Premium subscription in the app (it raises the AI assistant's daily limit). The subscription is bought through the App Store: payment is handled by Apple — we never see your card details or your Apple ID.",
-        "To check the subscription, the app uses RevenueCat (RevenueCat, Inc., USA). The app sends RevenueCat your AI Navigator account identifier (a random code, without your name or email) and the App Store purchase information from your device. RevenueCat also receives technical data about the device and the app, such as the system version and the App Store country. [TODO: check against RevenueCat's privacy guide]",
+        "To check the subscription, the app uses RevenueCat (RevenueCat, Inc., USA). The app sends RevenueCat your AI Navigator account identifier (a random code, without your name or email) and the App Store purchase information from your device. RevenueCat also receives technical data about the device and the app, such as the system version and the App Store country.",
         "From RevenueCat we receive and store only: the subscription status (trial, active, cancelled, expired), the plan (monthly or yearly), the end date and whether it was a test purchase. We use this only to apply the AI assistant's daily limit.",
       ],
     },
@@ -73,7 +74,7 @@ export const PRIVACY_EN: LegalDocument = {
         "We never send: the texts you write, your requests to the AI assistant or its answers, your saved prompts, name, email, passwords or sign-in tokens. We don't record the screen, don't use the advertising identifier (IDFA), don't track you across other apps and websites, and don't determine your location from your IP address.",
         "You can turn this off at any time: Profile → Settings → Privacy → “Help improve the app”. After that, the app sends neither statistics nor error reports.",
         "The website has no analytics and no advertising cookies. Website errors are reported to Sentry without personal data.",
-        "Error reports and statistics are kept for up to [TODO: number] days.",
+        "Error reports are kept for up to 30 days, usage statistics for up to 365 days.",
       ],
     },
     {
@@ -81,6 +82,7 @@ export const PRIVACY_EN: LegalDocument = {
       items: [
         "To provide the app and keep your progress across devices (performance of our agreement with you).",
         "To keep the service secure, find and fix errors and understand which features are useful (our legitimate interest; you can object by turning off “Help improve the app”).",
+        "To answer your requests to the AI assistant — only with your consent, which you can withdraw at any time.",
         "To answer your support requests.",
       ],
       afterItems: [
@@ -98,26 +100,24 @@ export const PRIVACY_EN: LegalDocument = {
         "Sentry — error reports (Functional Software, Inc.; data stored in the EU, Frankfurt).",
         "PostHog — anonymous usage statistics (PostHog, Inc.; EU Cloud, Frankfurt).",
       ],
-      afterItems: ["[TODO: check the list of service providers before launch]"],
     },
     {
       heading: "How long we keep it and how to delete it",
       paragraphs: [
         "We keep your account data until you delete your account. In the app: Profile → Settings → Delete account. Your account, progress, saved prompts and settings are deleted from our servers right away; if you signed in with Apple, we also revoke the app's access to your Apple ID. The subscription record is deleted too, but the App Store subscription itself is not cancelled — cancel it in iPhone Settings → your name → Subscriptions. RevenueCat keeps the purchase history linked to the random account code; write to us if you want it deleted.",
-        "Server backups may keep data for up to [TODO: number of days] days after deletion.",
         "Data stored only on your phone is removed when you delete it in the app (Settings → Reset data) or uninstall the app.",
       ],
     },
     {
       heading: "Your rights",
       paragraphs: [
-        "You can ask us for a copy of your data, to correct it or to delete it, and you can object to its use. If you are in the EU or UK, you can also complain to your data protection authority. Write to [TODO: email].",
+        "You can ask us for a copy of your data, to correct it or to delete it, and you can object to its use. If you are in the EU or UK, you can also complain to your data protection authority. Write to imanzhanaman2@gmail.com.",
       ],
     },
     {
       heading: "Children",
       paragraphs: [
-        "AI Navigator is not intended for children under [TODO: 13 or 16]. Some AI services used in lessons have their own age limits (for example, 18+).",
+        "AI Navigator is not intended for children under 13. Some AI services used in lessons have their own age limits (for example, 18+).",
       ],
     },
     {

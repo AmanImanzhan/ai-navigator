@@ -62,8 +62,6 @@ export const EN: Dictionary = {
     languagesNote: "Available in English, Russian and Spanish.",
   },
   legal: {
-    draftNote:
-      "Draft. This document is being prepared and will be finalized before the app launches.",
     updated: "Last updated",
   },
   support: {
@@ -71,7 +69,7 @@ export const EN: Dictionary = {
     lead: "Questions, problems or ideas? We're happy to help.",
     contactTitle: "Contact us",
     contactText: "Write to us and we'll reply as soon as we can:",
-    email: "[TODO: support email]",
+    email: "imanzhanaman2@gmail.com",
     faqTitle: "Common questions",
     faq: [
       {

@@ -5,6 +5,7 @@ import type { AiErrorCode } from "@ai-navigator/shared";
 // - timeout — ответ не пришёл вовремя (обычно слабая связь);
 // - not_configured — в сборке нет адреса API (EXPO_PUBLIC_API_URL) или ключей Supabase;
 // - cancelled — человек сам остановил запрос («Стоп» или ушёл с экрана). Это не ошибка, её не показываем;
+// - consent_required — нет согласия отправлять текст ИИ (store/useAiConsentStore); запрос не ушёл;
 // - unexpected — что-то другое сломалось в самом приложении (не сеть и не сервер).
 export type AiClientErrorCode =
   | AiErrorCode
@@ -12,6 +13,7 @@ export type AiClientErrorCode =
   | "timeout"
   | "not_configured"
   | "cancelled"
+  | "consent_required"
   | "unexpected";
 
 export class AiClientError extends Error {
