@@ -9,21 +9,18 @@ type ResultCardViewProps = {
   card: ResultCard;
 };
 
-const IMAGE_HEIGHT = 220;
-
-// Карточка «Вот что получится»: картинка результата, заголовок и описание.
+// Карточка «Вот что получится»: пример результата текстом в отдельной карточке.
+// Картинок у уроков нет — поэтому без места под картинку, чтобы не было пустой рамки.
 export function ResultCardView({ card }: ResultCardViewProps) {
   const { t } = useTranslation();
 
   return (
     <View style={styles.container}>
       <LessonLabel text={t("lesson.labels.result")} />
-      {/* Место под картинку. Настоящую добавим позже. */}
-      <View style={styles.image} />
-      {card.title ? <Text style={styles.title}>{card.title}</Text> : null}
-      <Text style={card.title ? styles.text : styles.textOnly}>
-        {card.text}
-      </Text>
+      <View testID="result-preview" style={styles.preview}>
+        {card.title ? <Text style={styles.title}>{card.title}</Text> : null}
+        <Text style={styles.text}>{card.text}</Text>
+      </View>
     </View>
   );
 }
@@ -32,21 +29,19 @@ const styles = StyleSheet.create({
   container: {
     gap: theme.spacing.sm,
   },
-  image: {
-    height: IMAGE_HEIGHT,
+  preview: {
+    gap: theme.spacing.xs,
+    padding: theme.spacing.lg,
     borderRadius: theme.radius.lg,
-    backgroundColor: theme.colors.track,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.card,
   },
   title: {
     ...theme.typography.title,
     color: theme.colors.text,
   },
   text: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
-  },
-  // Без заголовка текст — главное на карточке, делаем его основным цветом.
-  textOnly: {
     ...theme.typography.body,
     color: theme.colors.text,
   },
