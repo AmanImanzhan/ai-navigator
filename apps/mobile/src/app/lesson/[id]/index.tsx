@@ -12,9 +12,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button } from "@/components/Button";
 import { LessonCardView } from "@/components/lesson/LessonCardView";
+import { LessonCover } from "@/components/lesson/LessonCover";
 import { ProgressHeader } from "@/components/ProgressHeader";
 import { getLessonTool, getTrackIdForLesson } from "@/data/lessons";
-import { useLesson } from "@/hooks/useLessons";
+import { useLesson, useTracks } from "@/hooks/useLessons";
 import { track } from "@/lib/analytics";
 import { theme } from "@/theme";
 
@@ -22,8 +23,13 @@ import { theme } from "@/theme";
 export default function LessonScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const lesson = useLesson(id);
   // У урока «скоро» содержимого нет — для экрана это то же, что «не найден».
-  const content = useLesson(id)?.content;
+  const content = lesson?.content;
+  // Направление урока — для обложки (иконка и название).
+  const lessonTrack = useTracks().find((item) =>
+    item.lessons.some((entry) => entry.id === id),
+  );
   // Номер текущей карточки, начиная с 0.
   const [index, setIndex] = useState(0);
   // Ответил ли пользователь на вопрос текущей карточки quiz.
@@ -37,7 +43,7 @@ export default function LessonScreen() {
     }
   }, [id, hasContent]);
 
-  if (!content) {
+  if (!lesson || !content) {
     return (
       <SafeAreaView style={styles.notFound} edges={["top", "bottom"]}>
         <Text style={styles.notFoundText}>{t("lesson.notFound")}</Text>
@@ -83,12 +89,25 @@ export default function LessonScreen() {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="interactive"
         >
-          <LessonCardView
-            card={card}
-            lessonId={id}
-            tool={getLessonTool(content)}
-            onQuizAnswered={() => setQuizAnswered(true)}
-          />
+          {/* Первая карточка (вступление) — обложка урока. */}
+          {index === 0 && card.type === "result" ? (
+            <LessonCover
+              lesson={lesson}
+              track={
+                lessonTrack
+                  ? { id: lessonTrack.id, title: lessonTrack.title }
+                  : undefined
+              }
+              result={card}
+            />
+          ) : (
+            <LessonCardView
+              card={card}
+              lessonId={id}
+              tool={getLessonTool(content)}
+              onQuizAnswered={() => setQuizAnswered(true)}
+            />
+          )}
         </ScrollView>
 
         <View style={styles.actions}>

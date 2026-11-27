@@ -80,13 +80,16 @@
     "finish": "Terminar",
     "openTool": "Abrir {{name}}",
     "labels": {
-      "result": "Esto es lo que vas a crear",
       "tool": "Qué herramienta usar",
       "howto": "Cómo hacerlo",
       "summary": "¡Listo!",
       "formula": "La fórmula",
       "quiz": "Pon a prueba lo aprendido",
       "practice": "Pruébalo tú"
+    },
+    "cover": {
+      "minutes": "{{minutes}} min",
+      "level": "Nivel {{level}}"
     },
     "quiz": {
       "correct": "¡Correcto!",

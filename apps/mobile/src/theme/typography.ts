@@ -5,6 +5,8 @@ export const typography = {
   display: { fontSize: 28, lineHeight: 34, fontWeight: "700" },
   title: { fontSize: 22, lineHeight: 28, fontWeight: "600" },
   headline: { fontSize: 17, lineHeight: 22, fontWeight: "600" },
+  // Вводный абзац (вступление к уроку) — чуть крупнее основного текста.
+  lead: { fontSize: 19, lineHeight: 28, fontWeight: "400" },
   body: { fontSize: 17, lineHeight: 24, fontWeight: "400" },
   callout: { fontSize: 15, lineHeight: 20, fontWeight: "400" },
   label: { fontSize: 13, lineHeight: 18, fontWeight: "500" },

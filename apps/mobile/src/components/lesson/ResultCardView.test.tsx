@@ -4,35 +4,28 @@ import { render, screen, within } from "@testing-library/react-native";
 import { ResultCardView } from "@/components/lesson/ResultCardView";
 import "@/i18n";
 
-// «Вот что получится»: картинок у уроков нет — пример результата показывается текстом
-// в карточке, без пустой серой рамки под картинку.
+// Карточка result — вступление к уроку: вводный абзац, без подписи «Вот что получится».
 
 describe("ResultCardView", () => {
-  it("shows the example result as text inside the preview card", async () => {
+  it("shows the text as a lead paragraph without a label", async () => {
     await render(
       <ResultCardView card={{ type: "result", text: "Three recipes from your fridge." }} />,
     );
 
-    expect(screen.getByText("Here's what you'll make")).toBeOnTheScreen();
-    const preview = screen.getByTestId("result-preview");
-    expect(within(preview).getByText("Three recipes from your fridge.")).toBeOnTheScreen();
+    const lead = screen.getByTestId("lesson-lead");
+    expect(within(lead).getByText("Three recipes from your fridge.")).toBeOnTheScreen();
+    expect(screen.queryByText("Here's what you'll make")).toBeNull();
   });
 
-  it("shows the title inside the preview card when there is one", async () => {
+  it("shows the title before the paragraph when there is one", async () => {
     await render(
       <ResultCardView
         card={{ type: "result", title: "A birthday card for Mom", text: "Spring flowers." }}
       />,
     );
 
-    const preview = screen.getByTestId("result-preview");
-    expect(within(preview).getByText("A birthday card for Mom")).toBeOnTheScreen();
-    expect(within(preview).getByText("Spring flowers.")).toBeOnTheScreen();
-  });
-
-  it("has no empty image placeholder: the preview card holds only the texts", async () => {
-    await render(<ResultCardView card={{ type: "result", text: "A plain explanation." }} />);
-
-    expect(screen.getByTestId("result-preview").children).toHaveLength(1);
+    const lead = within(screen.getByTestId("lesson-lead"));
+    expect(lead.getByText("A birthday card for Mom")).toBeOnTheScreen();
+    expect(lead.getByText("Spring flowers.")).toBeOnTheScreen();
   });
 });

@@ -82,13 +82,16 @@
     "finish": "Завершить",
     "openTool": "Открыть {{name}}",
     "labels": {
-      "result": "Вот что получится",
       "tool": "Какой инструмент",
       "howto": "Как сделать",
       "summary": "Готово",
       "formula": "Формула",
       "quiz": "Проверка",
       "practice": "Попробуй сам"
+    },
+    "cover": {
+      "minutes": "{{minutes}} мин",
+      "level": "Уровень {{level}}"
     },
     "quiz": {
       "correct": "Верно!",

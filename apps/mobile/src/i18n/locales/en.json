@@ -80,13 +80,16 @@
     "finish": "Finish",
     "openTool": "Open {{name}}",
     "labels": {
-      "result": "Here's what you'll make",
       "tool": "Which tool to use",
       "howto": "How to do it",
       "summary": "All done",
       "formula": "The formula",
       "quiz": "Quick check",
       "practice": "Try it yourself"
+    },
+    "cover": {
+      "minutes": "{{minutes}} min",
+      "level": "Level {{level}}"
     },
     "quiz": {
       "correct": "That's right!",
